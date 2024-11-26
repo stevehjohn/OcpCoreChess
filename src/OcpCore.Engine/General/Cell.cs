@@ -14,7 +14,7 @@ public static class Cell
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetFile(int cell)
     {
-        return cell & Masks.FileMask;
+        return cell & Masks.File;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,6 +37,6 @@ public static class Cell
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Colour Colour(int piece)
     {
-        return (Colour) (piece & Masks.ColourMask);
+        return (Colour) (piece & Masks.Colour);
     }
 }

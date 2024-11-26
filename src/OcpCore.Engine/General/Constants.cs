@@ -3,8 +3,10 @@ namespace OcpCore.Engine.General;
 public static class Constants
 {
     public const int Cells = 64;
+    
     public const int Ranks = 8;
     public const int Files = 8;
+    
     public const int MaxRank = 7;
     public const int MaxFile = 7;
 
@@ -17,8 +19,6 @@ public static class Constants
 
     public const int RankOffset = 3;
 
-    public const int CastleStatusMask = 0b0000_1111;
-    public const int PlayerTurnBit = 0b0001_0000;
     public const int EnPassantOffset = 5;
     
     public const int MaxMoveDistance = 7;
