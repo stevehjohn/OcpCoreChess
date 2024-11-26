@@ -2,7 +2,6 @@ namespace OcpCore.Engine.Pieces;
 
 public enum Kind : byte
 {
-    None   = 0,
     Pawn   = 1,
     Rook   = 2,
     Knight = 3,

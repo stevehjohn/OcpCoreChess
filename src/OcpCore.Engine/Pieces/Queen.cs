@@ -6,7 +6,7 @@ public class Queen : Piece
 {
     public override int Value => 90;
     
-    public override void GetMoves(Board board, int position, byte colour, List<int> moveList)
+    public override void GetMoves(Board board, int position, Colour colour, List<int> moveList)
     {
         GetDirectionalMoves(board, position, colour, moveList, Constants.DirectionalMoves);
     }

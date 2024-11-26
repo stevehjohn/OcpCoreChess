@@ -4,6 +4,8 @@ public static class Constants
 {
     public const int Cells = 64;
 
+    public const int Ranks = 8;
+    
     public const int MaxRank = 7;
 
     public const int MaxFile = 7;

@@ -1,8 +1,7 @@
 namespace OcpCore.Engine.Pieces;
 
-public static class Colour
+public enum Colour : byte
 {
-    public const byte White = 0;
-
-    public const byte Black = 8;
+    White = 0,
+    Black = 8
 }
