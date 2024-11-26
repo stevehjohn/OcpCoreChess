@@ -25,7 +25,7 @@ public class BishopTests : PieceTestBase<Bishop>
     [Theory]
     [InlineData("8/8/8/8/3p4/8/8/b7 b - - 0 1", 0, "9,18")]
     [InlineData("p7/8/8/3b4/8/1p6/8/8 b - - 0 1", 35, "42,49,26,44,53,62,28,21,14,7")]
-    [InlineData("8/1p6/8/3b4/8/8/8/7p", 35, "42,26,17,8,44,53,62,28,21,14")]
+    [InlineData("8/1p6/8/3b4/8/8/8/7p b - - 0 1", 35, "42,26,17,8,44,53,62,28,21,14")]
     public void IsBlockedByPieceOfOwnColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
