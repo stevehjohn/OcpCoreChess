@@ -12,20 +12,19 @@ public class King : Piece
     {
         if (colour == Colour.White)
         {
-            // TODO: Replace magic numbers with constants
-            if (board[2] == 0 && board[3] == 0 && board[4] == 0)
+            if (board[Constants.LeftKnightFile] == 0 && board[Constants.LeftBishopFile] == 0 && board[Constants.QueenFile] == 0)
             {
                 if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
                 {
-                    moveList.Add(new Move(2, false));
+                    moveList.Add(new Move(Constants.LeftBishopFile, false));
                 }
             }
 
-            if (board[5] == 0 && board[6] == 0)
+            if (board[Constants.RightBishopFile] == 0 && board[Constants.RightKnightFile] == 0)
             {
                 if ((board.State.CastleStatus & Castle.WhiteKingSide) > 0)
                 {
-                    moveList.Add(new Move(6, false));
+                    moveList.Add(new Move(Constants.RightKnightFile, false));
                 }
             }
         }
@@ -34,19 +33,19 @@ public class King : Piece
         {
             if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
             {
-                if (board[57] == 0 && board[58] == 0 && board[59] == 0)
+                if (board[Constants.BlackRankCellStart + Constants.LeftKnightFile] == 0 && board[Constants.BlackRankCellStart + Constants.LeftBishopFile] == 0 && board[Constants.BlackRankCellStart + Constants.QueenFile] == 0)
                 {
-                    moveList.Add(new Move(58, false));
+                    moveList.Add(new Move(Constants.BlackRankCellStart + Constants.LeftBishopFile, false));
                 }
             }
 
             if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
             {
-                if (board[61] == 0 && board[62] == 0)
+                if (board[Constants.BlackRankCellStart + Constants.RightBishopFile] == 0 && board[Constants.BlackRankCellStart + Constants.RightKnightFile] == 0)
                 {
                     if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
                     {
-                        moveList.Add(new Move(62, false));
+                        moveList.Add(new Move(Constants.BlackRankCellStart + Constants.RightKnightFile, false));
                     }
                 }
             }
