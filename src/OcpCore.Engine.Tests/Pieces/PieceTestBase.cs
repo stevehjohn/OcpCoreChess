@@ -41,6 +41,8 @@ public class PieceTestBase<T> where T : Piece, new()
     {
         var cell = board[position];
 
-        Assert.True((cell & (byte) Piece.Kind) > 0);
+        Assert.True((cell & (byte) Piece.Kind) == (byte) Piece.Kind);
+
+        Assert.True((cell & Constants.ColourMask) == (byte) colour);
     }
 }

@@ -7,17 +7,19 @@ namespace OcpCore.Engine.Tests.Pieces;
 public class PawnTests : PieceTestBase<Pawn>
 {
     [Theory]
-    [InlineData(8, Colour.White, "16,24")]
-    [InlineData(48, Colour.Black, "40,32")]
-    [InlineData(10, Colour.White, "18,26")]
-    [InlineData(50, Colour.Black, "42,34")]
-    [InlineData(16, Colour.White, "24")]
-    [InlineData(40, Colour.Black, "32")]
-    [InlineData(18, Colour.White, "26")]
-    [InlineData(42, Colour.Black, "34")]
-    public void MovesAccordingToPawnRulesOnEmptyBoard(int position, Colour colour, string expectedMoves)
+    [InlineData("8/8/8/8/8/8/P7/8 w - - 0 1", 8, Colour.White, "16,24")]
+    [InlineData("8/p7/8/8/8/8/p7/8 b - - 0 1", 48, Colour.Black, "40,32")]
+    [InlineData("8/8/8/8/8/8/2P5/8 w - - 0 1", 10, Colour.White, "18,26")]
+    [InlineData("8/2p5/8/8/8/8/8/8 b - - 0 1", 50, Colour.Black, "42,34")]
+    [InlineData("8/8/8/8/8/P7/8/8 b - - 0 1", 16, Colour.White, "24")]
+    [InlineData("8/8/p7/8/8/8/8/8 b - - 0 1", 40, Colour.Black, "32")]
+    [InlineData("8/8/8/8/8/2P5/8/8 b - - 0 1", 18, Colour.White, "26")]
+    [InlineData("8/8/2p5/8/8/8/8/8 b - - 0 1", 42, Colour.Black, "34")]
+    public void MovesAccordingToPawnRulesOnEmptyBoard(string fen, int position, Colour colour, string expectedMoves)
     {
-        var board = new Board();
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, colour);
 
         var piece = Piece;
 
@@ -41,6 +43,8 @@ public class PawnTests : PieceTestBase<Pawn>
     {
         var board = new Board(fen);
 
+        AssertPieceIsWhereExpected(board, position, colour);
+
         var piece = Piece;
 
         var moves = new List<Move>();
@@ -62,6 +66,8 @@ public class PawnTests : PieceTestBase<Pawn>
     public void IsBlockedByPieceOfOOpposingColour(string fen, int position, Colour colour, string expectedMoves)
     {
         var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, colour);
 
         var piece = Piece;
 

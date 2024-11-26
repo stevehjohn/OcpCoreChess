@@ -7,11 +7,13 @@ namespace OcpCore.Engine.Tests.Pieces;
 public class KnightTests : PieceTestBase<Knight>
 {
     [Theory]
-    [InlineData(0, "17,10")]
-    [InlineData(35, "41,25,45,29,50,52,18,20")]
-    public void MovesAccordingToKnightRulesOnEmptyBoard(int position, string expectedMoves)
+    [InlineData("8/8/8/8/8/8/8/n7 b - - 0 1", 0, "17,10")]
+    [InlineData("8/8/8/3n4/8/8/8/8 b - - 0 1", 35, "41,25,45,29,50,52,18,20")]
+    public void MovesAccordingToKnightRulesOnEmptyBoard(string fen, int position, string expectedMoves)
     {
-        var board = new Board();
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, Colour.Black);
 
         var piece = Piece;
 
