@@ -4,7 +4,7 @@ using Xunit;
 
 namespace OcpCore.Engine.Tests.Piece;
 
-public class KnightTests : PieceTestBase
+public class KnightTests : PieceTestBase<Knight>
 {
     [Theory]
     [InlineData(0, "17,10")]
@@ -13,11 +13,11 @@ public class KnightTests : PieceTestBase
     {
         var board = new Board();
 
-        var knight = new Knight();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        knight.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -31,11 +31,11 @@ public class KnightTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var knight = new Knight();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        knight.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -49,11 +49,11 @@ public class KnightTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var knight = new Knight();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        knight.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -65,11 +65,11 @@ public class KnightTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var knight = new Knight();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        knight.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
 
         if (captureExpected)
         {

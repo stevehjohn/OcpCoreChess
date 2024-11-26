@@ -4,7 +4,7 @@ using Xunit;
 
 namespace OcpCore.Engine.Tests.Piece;
 
-public class KingTests : PieceTestBase
+public class KingTests : PieceTestBase<King>
 {
     [Theory]
     [InlineData(0, "8,9,1")]
@@ -13,11 +13,11 @@ public class KingTests : PieceTestBase
     {
         var board = new Board();
 
-        var king = new King();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        king.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -31,12 +31,12 @@ public class KingTests : PieceTestBase
     public void IsBlockedByPieceOfOwnColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
-    
-        var king = new King();
+
+        var piece = Piece;
     
         var moves = new List<Move>();
         
-        king.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -50,12 +50,12 @@ public class KingTests : PieceTestBase
     public void TakesPieceOfOpposingColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
-    
-        var king = new King();
+        
+        var piece = Piece;
     
         var moves = new List<Move>();
         
-        king.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -67,11 +67,11 @@ public class KingTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var king = new King();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        king.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
 
         if (captureExpected)
         {

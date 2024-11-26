@@ -4,7 +4,7 @@ using Xunit;
 
 namespace OcpCore.Engine.Tests.Piece;
 
-public class QueenTests : PieceTestBase
+public class QueenTests : PieceTestBase<Queen>
 {
     [Theory]
     [InlineData(0, "1,2,3,4,5,6,7,8,16,24,32,40,48,56,9,18,27,36,45,54,63")]
@@ -13,11 +13,11 @@ public class QueenTests : PieceTestBase
     {
         var board = new Board();
 
-        var queen = new Queen();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        queen.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -34,11 +34,11 @@ public class QueenTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var queen = new Queen();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        queen.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -55,11 +55,11 @@ public class QueenTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var queen = new Queen();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        queen.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -71,11 +71,11 @@ public class QueenTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var queen = new Queen();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        queen.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
 
         if (captureExpected)
         {

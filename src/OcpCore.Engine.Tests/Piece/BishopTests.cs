@@ -4,7 +4,7 @@ using Xunit;
 
 namespace OcpCore.Engine.Tests.Piece;
 
-public class BishopTests : PieceTestBase
+public class BishopTests : PieceTestBase<Bishop>
 {
     [Theory]
     [InlineData(0, "9,18,27,36,45,54,63")]
@@ -13,11 +13,11 @@ public class BishopTests : PieceTestBase
     {
         var board = new Board();
 
-        var bishop = new Bishop();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        bishop.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -30,11 +30,11 @@ public class BishopTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var bishop = new Bishop();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        bishop.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -47,11 +47,11 @@ public class BishopTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var bishop = new Bishop();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        bishop.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -63,11 +63,11 @@ public class BishopTests : PieceTestBase
     {
         var board = new Board(fen);
 
-        var bishop = new Bishop();
+        var piece = Piece;
 
         var moves = new List<Move>();
         
-        bishop.GetMoves(board, position, Colour.Black, moves);
+        piece.GetMoves(board, position, Colour.Black, moves);
 
         if (captureExpected)
         {

@@ -3,8 +3,10 @@ using Xunit;
 
 namespace OcpCore.Engine.Tests.Piece;
 
-public class PieceTestBase
+public class PieceTestBase<T> where T : Pieces.Piece, new()
 {
+    protected Pieces.Piece Piece => new T();
+    
     protected static void AssertExpectedMoves(string expected, List<Move> moves)
     {
         var expectedMoves = expected.Split(',').Select(int.Parse).ToArray();
