@@ -7,6 +7,10 @@
 ### TODOs
 
 - Get movement working before adding state and pooling to `_cells` in `Board`.
+- Move ordering?
+  - Captures preferred. 
+  - Lower valur taking higher even better.
+  - Moves that don't go onto an attacked square.
 
 ### Cell Arrangement
 
