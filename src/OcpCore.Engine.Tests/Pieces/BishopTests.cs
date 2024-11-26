@@ -7,11 +7,13 @@ namespace OcpCore.Engine.Tests.Pieces;
 public class BishopTests : PieceTestBase<Bishop>
 {
     [Theory]
-    [InlineData(0, "9,18,27,36,45,54,63")]
-    [InlineData(35, "42,49,56,26,17,8,44,53,62,28,21,14,7")]
-    public void MovesDiagonallyAsExpectedOnEmptyBoard(int position, string expectedMoves)
+    [InlineData("8/8/8/8/8/8/8/b7 b - - 0 1", 0, "9,18,27,36,45,54,63")]
+    [InlineData("8/8/8/3b4/8/8/8/8 b - - 0 1", 35, "42,49,56,26,17,8,44,53,62,28,21,14,7")]
+    public void MovesDiagonallyAsExpectedOnEmptyBoard(string fen, int position, string expectedMoves)
     {
-        var board = new Board();
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, Colour.Black);
 
         var piece = Piece;
 
