@@ -4,6 +4,6 @@ public static class IntExtensions
 {
     public static string ToStandardNotation(this int cell)
     {
-        return $"{(char) ('a' + (cell & 7))}{8 - (cell >> 3)}";
+        return $"{(char) ('a' + (cell & 7))}{(cell >> 3) + 1}";
     }
 }

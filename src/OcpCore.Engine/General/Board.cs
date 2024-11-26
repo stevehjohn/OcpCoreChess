@@ -8,15 +8,15 @@ public class Board
 {
     private readonly byte[] _cells;
 
-    private State _state;
-
     public byte this[int index] => _cells[index];
+
+    public State State { get; private set; }
 
     public Board()
     {
         _cells = new byte[Constants.Cells];
 
-        _state = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0);
+        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0);
     }
 
     public Board(string fen)
@@ -130,6 +130,6 @@ public class Board
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
-        _state = new State(player, castleAvailability, enPassantTarget);
+        State = new State(player, castleAvailability, enPassantTarget);
     }
 }

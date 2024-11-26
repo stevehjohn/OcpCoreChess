@@ -6,6 +6,8 @@
 
 ### TODOs
 
+- Check to standard notation method~~~~.
+
 - Get movement working before adding state and pooling to `_cells` in `Board`.
 - Move ordering?
   - Captures preferred. 

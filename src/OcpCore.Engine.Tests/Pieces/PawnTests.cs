@@ -89,4 +89,26 @@ public class PawnTests : PieceTestBase<Pawn>
         
         AssertExpectedMoves(expectedMoves, moves);
     }
+
+    [Theory]
+    [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq b6 0 1", 34, Colour.White, "41,42")]
+    [InlineData("8/8/8/2Pp4/8/8/8/8 w KQkq d6 0 1", 34, Colour.White, "42,43")]
+    [InlineData("8/8/8/8/5pP1/8/8/8 b KQkq g3 0 1", 29, Colour.Black, "21,22")]
+    [InlineData("8/8/8/8/4Pp2/8/8/8 b KQkq e3 0 1", 29, Colour.Black, "20,21")]
+    [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq - 0 1", 34, Colour.White, "42")]
+    [InlineData("8/8/8/2Pp4/8/8/8/8 w KQkq - 0 1", 34, Colour.White, "42")]
+    [InlineData("8/8/8/8/5pP1/8/8/8 b KQkq - 0 1", 29, Colour.Black, "21")]
+    [InlineData("8/8/8/8/4Pp2/8/8/8 b KQkq - 0 1", 29, Colour.Black, "21")]
+    public void DetectsEnPassantOpportunity(string fen, int position, Colour colour, string expectedMoves)
+    {
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, colour);
+
+        var moves = new List<Move>();
+        
+        Piece.GetMoves(board, position, colour, moves);
+        
+        AssertExpectedMoves(expectedMoves, moves);
+    }
 }

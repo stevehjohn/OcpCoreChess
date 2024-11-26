@@ -6,7 +6,7 @@ public static class StringExtensions
     {
         var file = cell[0] - 'a';
 
-        var rank = 8 - (cell[1] - '0');
+        var rank = cell[1] - '1';
 
         return rank * 8 + file;
     }

@@ -39,7 +39,7 @@ public class Pawn : Piece
         {
             var content = board[cell];
 
-            if (content > 0 && (Colour) (content & Constants.ColourMask) != colour)
+            if (cell == board.State.EnPassantTarget || (content > 0 && (Colour) (content & Constants.ColourMask) != colour))
             {
                 moveList.Add(new Move(cell, true));
             }
@@ -51,7 +51,7 @@ public class Pawn : Piece
         {
             var content = board[cell];
 
-            if (content > 0 && (Colour) (content & Constants.ColourMask) != colour)
+            if (cell == board.State.EnPassantTarget || (content > 0 && (Colour) (content & Constants.ColourMask) != colour))
             {
                 moveList.Add(new Move(cell, true));
             }
