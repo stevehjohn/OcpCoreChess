@@ -2,14 +2,14 @@ using OcpCore.Engine.General;
 using OcpCore.Engine.Pieces;
 using Xunit;
 
-namespace OcpCore.Engine.Tests.Piece;
+namespace OcpCore.Engine.Tests.Pieces;
 
-public class BishopTests : PieceTestBase<Bishop>
+public class KingTests : PieceTestBase<King>
 {
     [Theory]
-    [InlineData(0, "9,18,27,36,45,54,63")]
-    [InlineData(35, "42,49,56,26,17,8,44,53,62,28,21,14,7")]
-    public void MovesDiagonallyAsExpectedOnEmptyBoard(int position, string expectedMoves)
+    [InlineData(0, "8,9,1")]
+    [InlineData(35, "42,43,44,34,36,26,27,28")]
+    public void MovesDirectionallyAsExpectedOnEmptyBoard(int position, string expectedMoves)
     {
         var board = new Board();
 
@@ -23,15 +23,17 @@ public class BishopTests : PieceTestBase<Bishop>
     }
     
     [Theory]
-    [InlineData("8/8/8/8/3p4/8/8/8 b - - 0 1", 0, "9,18")]
-    [InlineData("p7/8/8/8/8/1p6/8/8 b - - 0 1", 35, "42,49,26,44,53,62,28,21,14,7")]
-    [InlineData("8/1p6/8/8/8/8/8/7p", 35, "42,26,17,8,44,53,62,28,21,14")]
+    [InlineData("8/8/8/8/8/8/p7/8 b - - 0 1", 0, "9,1")]
+    [InlineData("8/8/8/8/8/8/1p6/8 b - - 0 1", 0, "8,1")]
+    [InlineData("8/8/8/8/8/8/8/1p6 b - - 0 1", 0, "8,9")]
+    [InlineData("8/8/2pp4/8/8/8/8/8 b - - 0 1", 35, "44,34,36,26,27,28")]
+    [InlineData("8/8/8/4p3/4p3/8/8/8 b - - 0 1", 35, "42,43,44,34,26,27")]
     public void IsBlockedByPieceOfOwnColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
 
         var piece = Piece;
-
+    
         var moves = new List<Move>();
         
         piece.GetMoves(board, position, Colour.Black, moves);
@@ -40,15 +42,17 @@ public class BishopTests : PieceTestBase<Bishop>
     }
     
     [Theory]
-    [InlineData("8/8/8/8/3P4/8/8/8 b - - 0 1", 0, "9,18,27")]
-    [InlineData("P7/8/8/8/8/1P6/8/8 b - - 0 1", 35, "42,49,56,26,17,44,53,62,28,21,14,7")]
-    [InlineData("8/1P6/8/8/8/8/8/7P", 35, "42,49,26,17,8,44,53,62,28,21,14,7")]
+    [InlineData("8/8/8/8/8/8/P7/8 b - - 0 1", 0, "8,9,1")]
+    [InlineData("8/8/8/8/8/8/1P6/8 b - - 0 1", 0, "8,9,1")]
+    [InlineData("8/8/8/8/8/8/8/1P6 b - - 0 1", 0, "8,9,1")]
+    [InlineData("8/8/2PP4/8/8/8/8/8 b - - 0 1", 35, "42,43,44,34,36,26,27,28")]
+    [InlineData("8/8/8/4P3/4P3/8/8/8 b - - 0 1", 35, "42,43,44,34,36,26,27,28")]
     public void TakesPieceOfOpposingColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
-
+        
         var piece = Piece;
-
+    
         var moves = new List<Move>();
         
         piece.GetMoves(board, position, Colour.Black, moves);
@@ -57,8 +61,8 @@ public class BishopTests : PieceTestBase<Bishop>
     }
 
     [Theory]
-    [InlineData("8/8/8/8/8/2P5/8/8 b - - 0 1", 0, true, 18)]
-    [InlineData("8/8/8/8/8/2p5/8/8 b - - 0 1", 0, false, 0)]
+    [InlineData("8/8/8/8/8/8/1P6/8 b - - 0 1", 0, true, 9)]
+    [InlineData("8/8/8/8/8/8/1p6/8 b - - 0 1", 0, false, 0)]
     public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
     {
         var board = new Board(fen);

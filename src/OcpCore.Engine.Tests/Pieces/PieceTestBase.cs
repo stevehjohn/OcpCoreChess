@@ -1,11 +1,12 @@
 using OcpCore.Engine.General;
+using OcpCore.Engine.Pieces;
 using Xunit;
 
-namespace OcpCore.Engine.Tests.Piece;
+namespace OcpCore.Engine.Tests.Pieces;
 
-public class PieceTestBase<T> where T : Pieces.Piece, new()
+public class PieceTestBase<T> where T : Piece, new()
 {
-    protected Pieces.Piece Piece => new T();
+    protected Piece Piece => new T();
     
     protected static void AssertExpectedMoves(string expected, List<Move> moves)
     {

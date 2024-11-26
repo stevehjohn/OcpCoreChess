@@ -2,7 +2,7 @@ using OcpCore.Engine.General;
 using OcpCore.Engine.Pieces;
 using Xunit;
 
-namespace OcpCore.Engine.Tests.Piece;
+namespace OcpCore.Engine.Tests.Pieces;
 
 public class QueenTests : PieceTestBase<Queen>
 {
