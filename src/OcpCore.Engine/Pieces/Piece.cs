@@ -4,8 +4,10 @@ namespace OcpCore.Engine.Pieces;
 
 public abstract class Piece
 {
-    public abstract int Value { get; }
+    public abstract Kind Kind { get; }
     
+    public abstract int Value { get; }
+
     public abstract void GetMoves(Board board, int position, Colour colour, List<Move> moveList);
 
     protected static void GetDirectionalMoves(Board board, int position, Colour colour, List<Move> moveList, params (int RankDelta, int FileDelta)[] directions)

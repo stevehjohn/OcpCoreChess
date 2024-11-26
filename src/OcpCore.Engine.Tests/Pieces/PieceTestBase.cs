@@ -6,7 +6,12 @@ namespace OcpCore.Engine.Tests.Pieces;
 
 public class PieceTestBase<T> where T : Piece, new()
 {
-    protected Piece Piece => new T();
+    protected Piece Piece { get; }
+
+    protected PieceTestBase()
+    {
+        Piece = new T();
+    }
     
     protected static void AssertExpectedMoves(string expected, List<Move> moves)
     {
@@ -30,5 +35,12 @@ public class PieceTestBase<T> where T : Piece, new()
         }
         
         Assert.Equal(expectedMoves.Length, moves.Count);
+    }
+
+    protected void AssertPieceIsWhereExpected(Board board, int position, Colour colour)
+    {
+        var cell = board[position];
+
+        Assert.True((cell & (byte) Piece.Kind) > 0);
     }
 }

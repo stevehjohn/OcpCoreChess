@@ -4,6 +4,8 @@ namespace OcpCore.Engine.Pieces;
 
 public class King : Piece
 {
+    public override Kind Kind => Kind.King;
+    
     public override int Value => 0;
         
     public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
