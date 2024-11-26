@@ -1,6 +1,6 @@
 namespace OcpCore.Engine.General;
 
-public class Ranks
+public static class Ranks
 {
     public const int BlackHomeRank = 7;
     public const int BlackPawnRank = 6;
