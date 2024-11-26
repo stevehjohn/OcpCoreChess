@@ -25,4 +25,6 @@ public static class Constants
     public static readonly (int RankDelta, int FileDelta)[] DiagonalMoves = [(-1, -1), (-1, 1), (1, -1), (1, 1)];
 
     public static readonly (int RankDelta, int FileDelta)[] DirectionalMoves = [(-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)];
+
+    public static readonly (int RankDelta, int FileDelta)[] KnightMoves = [(2, -1), (2, 1), (-2, -1), (-2, 1), (1, -2), (-1, -2), (1, 2), (-1, 2)];
 }

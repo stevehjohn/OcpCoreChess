@@ -14,8 +14,10 @@ public abstract class Piece
 
         var file = Cell.GetFile(position);
         
-        foreach (var direction in directions)
+        for (var i = 0; i < directions.Length; i++)
         {
+            var direction = directions[i];
+            
             for (var distance = 1; distance <= Constants.MaxMoveDistance; distance++)
             {
                 var newRank = rank + distance * direction.RankDelta;
