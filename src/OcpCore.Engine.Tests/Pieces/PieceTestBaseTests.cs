@@ -12,6 +12,10 @@ public class PieceTestBaseTests : PieceTestBase<Pawn>
     [InlineData("8/8/8/8/8/8/8/P7 b - - 0 1", 0, Colour.Black, true)]
     [InlineData("8/8/8/8/8/8/8/k7 b - - 0 1", 0, Colour.Black, true)]
     [InlineData("8/8/8/8/8/8/8/K7 b - - 0 1", 0, Colour.Black, true)]
+    [InlineData("8/8/8/8/8/8/8/P7 b - - 0 1", 0, Colour.White, false)]
+    [InlineData("8/8/8/8/8/8/8/p7 b - - 0 1", 0, Colour.White, true)]
+    [InlineData("8/8/8/8/8/8/8/k7 b - - 0 1", 0, Colour.White, true)]
+    [InlineData("8/8/8/8/8/8/8/K7 b - - 0 1", 0, Colour.White, true)]
     public void TestAssertPieceIsWhereExpected(string fen, int position, Colour colour, bool shouldThrow)
     {
         var board = new Board(fen);

@@ -42,7 +42,7 @@ public abstract class Piece
                     continue;
                 }
 
-                if ((content & (byte) colour) > 0)
+                if ((content & Constants.ColourMask) == (byte) colour)
                 {
                     break;
                 }

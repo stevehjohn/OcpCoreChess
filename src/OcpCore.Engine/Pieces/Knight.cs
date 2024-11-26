@@ -38,7 +38,7 @@ public class Knight : Piece
                 continue;
             }
 
-            if ((Colour) (content & (byte) colour) != colour)
+            if ((Colour) (content & Constants.ColourMask) != colour)
             {
                 moveList.Add(new Move(cell, true));
             }

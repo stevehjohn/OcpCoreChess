@@ -15,7 +15,7 @@ public static class Constants
 
     public const int RankOffset = 3;
     public const int FileMask = 0b0000_0111;
-    public const int ColourMask = 0b0000_1000;
+    public const byte ColourMask = 0b0000_1000;
     
     public const int MaxMoveDistance = 7;
 
