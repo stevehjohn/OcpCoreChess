@@ -56,4 +56,34 @@ public class StateTests
         
         Assert.Equal(expectedRights, state.CastleStatus);
     }
+    
+    [Theory]
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, 32)]
+    [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.BlackKingSide, 42, null)]
+    // [InlineData(Colour.White, Castle.NotAvailable, 18, 55)]
+    // [InlineData(Colour.Black, Castle.NotAvailable, 34, null)]
+    // [InlineData(Colour.White, Castle.WhiteQueenSide, 30, 50)]
+    // [InlineData(Colour.Black, Castle.BlackKingSide, 50, null)]
+    // [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 33, 54)]
+    // [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 29, null)]
+    // [InlineData(Colour.White, Castle.NotAvailable, null, 12)]
+    // [InlineData(Colour.Black, Castle.NotAvailable, null, null)]
+    public void SetEnPassantTargetOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int? newEnPassantTarget)
+    {
+        var state = new State(player, castleStatus, enPassantTarget);
+        
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(enPassantTarget, state.EnPassantTarget);
+        
+        Assert.Equal(castleStatus, state.CastleStatus);
+        
+        state.SetEnPassantTarget(newEnPassantTarget);
+        
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(newEnPassantTarget, state.EnPassantTarget);
+        
+        Assert.Equal(castleStatus, state.CastleStatus);
+    }
 }
