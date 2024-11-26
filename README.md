@@ -4,6 +4,10 @@
 
 ## Developer Notes
 
+### TODOs
+
+- Get movement working before adding state and pooling to `_cells` in `Board`.
+
 ### Cell Arrangement
 
 ```

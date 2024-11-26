@@ -12,12 +12,12 @@ public class Board
 
     public Board()
     {
-        _cells = ArrayPool<byte>.Shared.Rent(Constants.BoardBufferSize);
+        _cells = new byte[Constants.Cells];
     }
 
     public Board(string fen)
     {
-        _cells = ArrayPool<byte>.Shared.Rent(Constants.BoardBufferSize);
+        _cells = new byte[Constants.Cells];
         
         ParseFen(fen);
     }
@@ -33,7 +33,7 @@ public class Board
             throw new FenParseException($"Incorrect number of ranks in FEN string: {ranks.Length}.");
         }
 
-        for (var rank = 0; rank < Constants.MaxRank; rank++)
+        for (var rank = 0; rank < Constants.Ranks; rank++)
         {
             var files = ranks[Constants.MaxRank - rank];
 
@@ -41,8 +41,13 @@ public class Board
 
             var index = 0;
 
-            while (file < Constants.MaxFile)
+            while (file < Constants.Files)
             {
+                if (index >= files.Length)
+                {
+                    throw new FenParseException($"Not enough files in rank {files}.");
+                }
+
                 var cell = files[index];
 
                 index++;
@@ -50,11 +55,11 @@ public class Board
                 if (char.IsNumber(cell))
                 {
                     file += cell - '0';
-                    //
-                    // if (file > Constants.MaxFile)
-                    // {
-                    //     throw new FenParseException($"Too many files in rank: {files}");
-                    // }
+
+                    if (file > Constants.Files)
+                    {
+                        throw new FenParseException($"Too many files in rank: {files}.");
+                    }
 
                     continue;
                 }
