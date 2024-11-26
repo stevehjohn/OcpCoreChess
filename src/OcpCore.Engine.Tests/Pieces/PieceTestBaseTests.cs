@@ -12,7 +12,7 @@ public class PieceTestBaseTests : PieceTestBase<Pawn>
     [InlineData("8/8/8/8/8/8/8/P7 b - - 0 1", 0, Colour.Black, true)]
     [InlineData("8/8/8/8/8/8/8/k7 b - - 0 1", 0, Colour.Black, true)]
     [InlineData("8/8/8/8/8/8/8/K7 b - - 0 1", 0, Colour.Black, true)]
-    public void SelfTestAssertPieceIsWhereExpected(string fen, int position, Colour colour, bool shouldThrow)
+    public void TestAssertPieceIsWhereExpected(string fen, int position, Colour colour, bool shouldThrow)
     {
         var board = new Board(fen);
 
