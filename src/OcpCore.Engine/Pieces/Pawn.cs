@@ -32,5 +32,29 @@ public class Pawn : Piece
         {
             moveList.Add(new Move(cell, false));
         }
+
+        cell = Cell.GetCell(rank + direction, file - 1);
+
+        if (cell >= 0)
+        {
+            var content = board[cell];
+
+            if (content > 0 && (Colour) (content & Constants.ColourMask) != colour)
+            {
+                moveList.Add(new Move(cell, true));
+            }
+        }
+
+        cell = Cell.GetCell(rank + direction, file + 1);
+
+        if (cell >= 0)
+        {
+            var content = board[cell];
+
+            if (content > 0 && (Colour) (content & Constants.ColourMask) != colour)
+            {
+                moveList.Add(new Move(cell, true));
+            }
+        }
     }
 }

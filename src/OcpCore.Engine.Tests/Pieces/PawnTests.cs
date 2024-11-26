@@ -71,4 +71,22 @@ public class PawnTests : PieceTestBase<Pawn>
         
         AssertExpectedMoves(expectedMoves, moves);
     }
+    
+    [Theory]
+    [InlineData("8/8/8/8/8/p7/1P6/8 w - - 0 1", 9, Colour.White, "16,17,25")]
+    [InlineData("8/8/8/8/8/2p5/1P6/8 w - - 0 1", 9, Colour.White, "18,17,25")]
+    [InlineData("8/1p6/2P5/8/8/8/8/8 b - - 0 1", 49, Colour.Black, "42,41,33")]
+    [InlineData("8/1p6/P7/8/8/8/8/8 b - - 0 1", 49, Colour.Black, "40,41,33")]
+    public void TakesPieceOfOpposingColour(string fen, int position, Colour colour, string expectedMoves)
+    {
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, colour);
+
+        var moves = new List<Move>();
+        
+        Piece.GetMoves(board, position, colour, moves);
+        
+        AssertExpectedMoves(expectedMoves, moves);
+    }
 }
