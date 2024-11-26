@@ -10,35 +10,51 @@ public class King : Piece
         
     public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
+        if (colour == Colour.White)
+        {
+            // TODO: Replace magic numbers with constants
+            if (board[2] == 0 && board[3] == 0 && board[4] == 0)
+            {
+                if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
+                {
+                    moveList.Add(new Move(2, false));
+                }
+            }
+
+            if (board[5] == 0 && board[6] == 0)
+            {
+                if ((board.State.CastleStatus & Castle.WhiteKingSide) > 0)
+                {
+                    moveList.Add(new Move(6, false));
+                }
+            }
+        }
+
+        if (colour == Colour.Black)
+        {
+            if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
+            {
+                if (board[57] == 0 && board[58] == 0 && board[59] == 0)
+                {
+                    moveList.Add(new Move(58, false));
+                }
+            }
+
+            if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
+            {
+                if (board[61] == 0 && board[62] == 0)
+                {
+                    if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
+                    {
+                        moveList.Add(new Move(62, false));
+                    }
+                }
+            }
+        }
+        
         var rank = Cell.GetRank(position);
 
         var file = Cell.GetFile(position);
-
-        if (rank == Constants.WhiteHomeRank)
-        {
-            if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
-            {
-                moveList.Add(new Move(Cell.GetCell(rank, file - 2), false));
-            }
-
-            if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
-            {
-                moveList.Add(new Move(Cell.GetCell(rank, file + 2), false));
-            }
-        }
-
-        if (rank == Constants.BlackHomeRank)
-        {
-            if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
-            {
-                moveList.Add(new Move(Cell.GetCell(rank, file - 2), false));
-            }
-
-            if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
-            {
-                moveList.Add(new Move(Cell.GetCell(rank, file + 2), false));
-            }
-        }
         
         for (var i = 0; i < Constants.DirectionalMoves.Length; i++)
         {

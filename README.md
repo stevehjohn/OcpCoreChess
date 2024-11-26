@@ -6,6 +6,7 @@
 
 ### TODOs
 
+- Do not castle through check.
 - Promotions.
 - Get movement working before adding state and pooling to `_cells` in `Board`.
 - Move ordering?

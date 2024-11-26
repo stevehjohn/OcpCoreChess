@@ -82,4 +82,23 @@ public class KingTests : PieceTestBase<King>
             Assert.DoesNotContain(moves, m => m.Captures);
         }
     }
+    
+    [Theory]
+    [InlineData("r3kbnr/ppp1pppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 60, Colour.Black, "58,59,51")]
+    [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 60, Colour.Black, "58,59,51,61,62")]
+    [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR w KQq - 0 1", 60, Colour.Black, "58,59,51,61")]
+    [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR w KQk - 0 1", 60, Colour.Black, "59,51,61,62")]
+    [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1", 60, Colour.Black, "59,51,61")]
+    public void DetectsCastlingOpportunity(string fen, int position, Colour colour, string expectedMoves)
+    {
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, colour);
+
+        var moves = new List<Move>();
+        
+        Piece.GetMoves(board, position, colour, moves);
+        
+        AssertExpectedMoves(expectedMoves, moves);
+    }
 }
