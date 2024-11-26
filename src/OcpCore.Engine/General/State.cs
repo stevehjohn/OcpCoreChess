@@ -4,7 +4,7 @@ namespace OcpCore.Engine.General;
 
 public class State
 {
-    private readonly int _state;
+    private int _state;
 
     public Colour Player => (_state & Masks.PlayerTurn) > 0 ? Colour.Black : Colour.White;
 
@@ -27,5 +27,6 @@ public class State
 
     public void RemoveCastleRights(Castle castle)
     {
+        _state &= ~(int) castle;
     }
 }
