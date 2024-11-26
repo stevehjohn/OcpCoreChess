@@ -15,7 +15,7 @@ public class QueenTests : PieceTestBase
 
         var queen = new Queen();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         queen.GetMoves(board, position, Colour.Black, moves);
         
@@ -36,7 +36,7 @@ public class QueenTests : PieceTestBase
 
         var queen = new Queen();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         queen.GetMoves(board, position, Colour.Black, moves);
         
@@ -57,7 +57,7 @@ public class QueenTests : PieceTestBase
 
         var queen = new Queen();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         queen.GetMoves(board, position, Colour.Black, moves);
         

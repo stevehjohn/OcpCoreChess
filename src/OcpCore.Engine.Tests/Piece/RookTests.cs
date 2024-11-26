@@ -15,7 +15,7 @@ public class RookTests : PieceTestBase
 
         var rook = new Rook();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         rook.GetMoves(board, position, Colour.Black, moves);
         
@@ -33,7 +33,7 @@ public class RookTests : PieceTestBase
 
         var rook = new Rook();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         rook.GetMoves(board, position, Colour.Black, moves);
         
@@ -51,7 +51,7 @@ public class RookTests : PieceTestBase
 
         var rook = new Rook();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         rook.GetMoves(board, position, Colour.Black, moves);
         

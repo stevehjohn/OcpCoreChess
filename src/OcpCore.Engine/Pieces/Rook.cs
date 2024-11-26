@@ -6,7 +6,7 @@ public class Rook : Piece
 {
     public override int Value => 50;
     
-    public override void GetMoves(Board board, int position, Colour colour, List<int> moveList)
+    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
         GetDirectionalMoves(board, position, colour, moveList, Constants.OrthogonalMoves);
     }

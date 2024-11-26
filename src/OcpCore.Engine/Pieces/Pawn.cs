@@ -6,8 +6,12 @@ public class Pawn : Piece
 {
     public override int Value => 10;
     
-    public override void GetMoves(Board board, int position, Colour colour, List<int> moveList)
+    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
-        throw new NotImplementedException();
+        var rank = Cell.GetRank(position);
+
+        var file = Cell.GetFile(position);
+
+        var direction = colour == Colour.Black ? - 1 : 1;
     }
 }

@@ -15,7 +15,7 @@ public class KingTests : PieceTestBase
 
         var king = new King();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         king.GetMoves(board, position, Colour.Black, moves);
         
@@ -34,7 +34,7 @@ public class KingTests : PieceTestBase
     
         var king = new King();
     
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         king.GetMoves(board, position, Colour.Black, moves);
         
@@ -53,7 +53,7 @@ public class KingTests : PieceTestBase
     
         var king = new King();
     
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         king.GetMoves(board, position, Colour.Black, moves);
         

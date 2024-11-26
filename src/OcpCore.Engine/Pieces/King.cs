@@ -6,7 +6,7 @@ public class King : Piece
 {
     public override int Value => 0;
         
-    public override void GetMoves(Board board, int position, Colour colour, List<int> moveList)
+    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
         var rank = Cell.GetRank(position);
 
@@ -31,14 +31,14 @@ public class King : Piece
 
             if (content == 0)
             {
-                moveList.Add(cell);
+                moveList.Add(new Move(cell, false));
 
                 continue;
             }
 
             if ((Colour) (content & (byte) colour) != colour)
             {
-                moveList.Add(cell);
+                moveList.Add(new Move(cell, true));
             }
         }
     }

@@ -6,9 +6,9 @@ public abstract class Piece
 {
     public abstract int Value { get; }
     
-    public abstract void GetMoves(Board board, int position, Colour colour, List<int> moveList);
+    public abstract void GetMoves(Board board, int position, Colour colour, List<Move> moveList);
 
-    protected static void GetDirectionalMoves(Board board, int position, Colour colour, List<int> moveList, params (int RankDelta, int FileDelta)[] directions)
+    protected static void GetDirectionalMoves(Board board, int position, Colour colour, List<Move> moveList, params (int RankDelta, int FileDelta)[] directions)
     {
         var rank = Cell.GetRank(position);
 
@@ -35,7 +35,7 @@ public abstract class Piece
 
                 if (content == 0)
                 {
-                    moveList.Add(cell);
+                    moveList.Add(new Move(cell, false));
                     
                     continue;
                 }
@@ -45,7 +45,7 @@ public abstract class Piece
                     break;
                 }
 
-                moveList.Add(cell);
+                moveList.Add(new Move(cell, true));
                 
                 break;    
             }

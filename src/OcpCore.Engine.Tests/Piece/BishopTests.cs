@@ -15,7 +15,7 @@ public class BishopTests : PieceTestBase
 
         var bishop = new Bishop();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         bishop.GetMoves(board, position, Colour.Black, moves);
         
@@ -32,7 +32,7 @@ public class BishopTests : PieceTestBase
 
         var bishop = new Bishop();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         bishop.GetMoves(board, position, Colour.Black, moves);
         
@@ -49,7 +49,7 @@ public class BishopTests : PieceTestBase
 
         var bishop = new Bishop();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         bishop.GetMoves(board, position, Colour.Black, moves);
         

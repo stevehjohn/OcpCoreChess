@@ -15,7 +15,7 @@ public class KnightTests : PieceTestBase
 
         var knight = new Knight();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         knight.GetMoves(board, position, Colour.Black, moves);
         
@@ -33,7 +33,7 @@ public class KnightTests : PieceTestBase
 
         var knight = new Knight();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         knight.GetMoves(board, position, Colour.Black, moves);
         
@@ -51,7 +51,7 @@ public class KnightTests : PieceTestBase
 
         var knight = new Knight();
 
-        var moves = new List<int>();
+        var moves = new List<Move>();
         
         knight.GetMoves(board, position, Colour.Black, moves);
         
