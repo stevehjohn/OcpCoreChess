@@ -14,6 +14,32 @@ public class King : Piece
 
         var file = Cell.GetFile(position);
 
+        if (rank == Constants.WhiteHomeRank)
+        {
+            if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
+            {
+                moveList.Add(new Move(Cell.GetCell(rank, file - 2), false));
+            }
+
+            if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
+            {
+                moveList.Add(new Move(Cell.GetCell(rank, file + 2), false));
+            }
+        }
+
+        if (rank == Constants.BlackHomeRank)
+        {
+            if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
+            {
+                moveList.Add(new Move(Cell.GetCell(rank, file - 2), false));
+            }
+
+            if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
+            {
+                moveList.Add(new Move(Cell.GetCell(rank, file + 2), false));
+            }
+        }
+        
         for (var i = 0; i < Constants.DirectionalMoves.Length; i++)
         {
             var direction = Constants.DirectionalMoves[i];

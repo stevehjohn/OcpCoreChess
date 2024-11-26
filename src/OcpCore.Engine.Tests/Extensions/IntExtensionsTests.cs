@@ -14,7 +14,7 @@ public class IntExtensionsTests
     [InlineData(36, "e5")]
     [InlineData(27, "d4")]
     [InlineData(28, "e4")]
-    public void TotandardNotationReturnsCorrectCell(int cell, string expectedCell)
+    public void ToStandardNotationReturnsCorrectCell(int cell, string expectedCell)
     {
         Assert.Equal(expectedCell, cell.ToStandardNotation());
     }

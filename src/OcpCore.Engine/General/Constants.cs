@@ -8,8 +8,10 @@ public static class Constants
     public const int MaxRank = 7;
     public const int MaxFile = 7;
 
+    public const int BlackHomeRank = 7;
     public const int BlackPawnRank = 6;
     public const int WhitePawnRank = 1;
+    public const int WhiteHomeRank = 0;
 
     public const int RankOffset = 3;
     public const int FileMask = 0b0000_0111;
