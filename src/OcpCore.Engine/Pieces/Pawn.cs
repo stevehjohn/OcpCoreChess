@@ -18,7 +18,7 @@ public class Pawn : Piece
 
         var cell = Cell.GetCell(rank + direction * 2, file);
         
-        if ((rank == Constants.BlackPawnRank && colour == Colour.Black) || (rank == Constants.WhitePawnRank && colour == Colour.White))
+        if ((rank == Ranks.BlackPawnRank && colour == Colour.Black) || (rank == Ranks.WhitePawnRank && colour == Colour.White))
         {
             if (board[cell] == 0 && board[cell - direction * 8] == 0)
             {
