@@ -83,22 +83,22 @@ public class Board
 
             switch (position, colour)
             {
-                case (Constants.LeftRookFile, Colour.White):
+                case (Files.LeftRook, Colour.White):
                     State.RemoveCastleRights(Castle.WhiteKingSide);
                     
                     break;
 
-                case (Constants.RightRookFile, Colour.White):
+                case (Files.RightRook, Colour.White):
                     State.RemoveCastleRights(Castle.WhiteQueenSide);
                     
                     break;
                 
-                case (Constants.BlackRankCellStart + Constants.LeftRookFile, Colour.Black):
+                case (Constants.BlackRankCellStart + Files.LeftRook, Colour.Black):
                     State.RemoveCastleRights(Castle.BlackKingSide);
                     
                     break;
 
-                case (Constants.BlackRankCellStart + Constants.RightRookFile, Colour.Black):
+                case (Constants.BlackRankCellStart + Files.RightRook, Colour.Black):
                     State.RemoveCastleRights(Castle.BlackQueenSide);
                     
                     break;

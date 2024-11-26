@@ -13,15 +13,6 @@ public static class Constants
     public const int WhitePawnRank = 1;
     public const int WhiteHomeRank = 0;
     
-    public const int LeftRookFile = 0;
-    public const int LeftKnightFile = 1;
-    public const int LeftBishopFile = 2;
-    public const int QueenFile = 3;
-    public const int KingFile = 4;
-    public const int RightBishopFile = 5;
-    public const int RightKnightFile = 6;
-    public const int RightRookFile = 7;
-
     public const int BlackRankCellStart = 56;
 
     public const int RankOffset = 3;
