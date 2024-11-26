@@ -50,6 +50,10 @@ public class StateTests
         
         state.RemoveCastleRights(rightToRemove);
         
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(enPassantTarget, state.EnPassantTarget);
+        
         Assert.Equal(expectedRights, state.CastleStatus);
     }
 }
