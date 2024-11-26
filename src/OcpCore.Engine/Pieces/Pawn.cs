@@ -13,5 +13,19 @@ public class Pawn : Piece
         var file = Cell.GetFile(position);
 
         var direction = colour == Colour.Black ? - 1 : 1;
+
+        var cell = Cell.GetCell(rank + direction * 2, file);
+        
+        if (((rank == Constants.BlackPawnRank && colour == Colour.Black) || (rank == Constants.WhitePawnRank && colour == Colour.White)) && board[cell] == 0)
+        {
+            moveList.Add(new Move(cell, false));
+        }
+
+        cell = Cell.GetCell(rank + direction, file);
+        
+        if (board[cell] == 0)
+        {
+            moveList.Add(new Move(cell, false));
+        }
     }
 }
