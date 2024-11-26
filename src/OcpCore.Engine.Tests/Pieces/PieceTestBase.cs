@@ -10,6 +10,13 @@ public class PieceTestBase<T> where T : Piece, new()
     
     protected static void AssertExpectedMoves(string expected, List<Move> moves)
     {
+        if (expected == null)
+        {
+            Assert.Empty(moves);
+            
+            return;
+        }
+
         var expectedMoves = expected.Split(',').Select(int.Parse).ToArray();
 
         foreach (var move in expectedMoves)
