@@ -11,8 +11,6 @@ public static class Constants
     public const int BlackPawnRank = 6;
     public const int WhitePawnRank = 1;
 
-    public const int BoardBufferSize = Cells + 2;
-
     public const int RankOffset = 3;
     public const int FileMask = 0b0000_0111;
     public const byte ColourMask = 0b0000_1000;

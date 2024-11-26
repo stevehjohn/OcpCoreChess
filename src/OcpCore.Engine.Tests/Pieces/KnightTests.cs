@@ -77,7 +77,7 @@ public class KnightTests : PieceTestBase<Knight>
         }
         else
         {
-            Assert.True(! moves.Any(m => m.Captures));
+            Assert.DoesNotContain(moves, m => m.Captures);
         }
     }
 }

@@ -77,7 +77,7 @@ public class RookTests : PieceTestBase<Rook>
         }
         else
         {
-            Assert.True(! moves.Any(m => m.Captures));
+            Assert.DoesNotContain(moves, m => m.Captures);
         }
     }
 }
