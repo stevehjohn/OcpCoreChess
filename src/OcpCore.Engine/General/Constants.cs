@@ -16,8 +16,6 @@ public static class Constants
     public const int BlackRankCellStart = 56;
 
     public const int RankOffset = 3;
-    public const int FileMask = 0b0000_0111;
-    public const byte ColourMask = 0b0000_1000;
 
     public const int CastleStatusMask = 0b0000_1111;
     public const int PlayerTurnBit = 0b0001_0000;

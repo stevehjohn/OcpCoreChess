@@ -42,7 +42,7 @@ public abstract class Piece
                     continue;
                 }
 
-                if ((content & Constants.ColourMask) == (byte) colour)
+                if (Cell.Colour(content) == colour)
                 {
                     break;
                 }

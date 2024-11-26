@@ -79,7 +79,7 @@ public class King : Piece
                 continue;
             }
 
-            if ((Colour) (content & Constants.ColourMask) != colour)
+            if (Cell.Colour(content) != colour)
             {
                 moveList.Add(new Move(cell, true));
             }

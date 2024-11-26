@@ -43,6 +43,6 @@ public class PieceTestBase<T> where T : Piece, new()
 
         Assert.True((cell & (byte) Piece.Kind) == (byte) Piece.Kind);
 
-        Assert.True((cell & Constants.ColourMask) == (byte) colour);
+        Assert.True(Cell.Colour(cell) == colour);
     }
 }
