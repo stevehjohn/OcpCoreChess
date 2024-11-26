@@ -8,17 +8,17 @@ public class State
 
     public Colour Player => (_state & Constants.PlayerTurnBit) > 0 ? Colour.Black : Colour.White;
 
-    public int EnPassantTarget => _state >> Constants.EnPassantOffset;
-
     public Castle CastleStatus => (Castle) (_state & Constants.CastleStatusMask);
 
-    public State(Colour player, int enPassantTarget, Castle castleStatus)
+    public int? EnPassantTarget => _state >> Constants.EnPassantOffset == 255 ? null : _state >> Constants.EnPassantOffset;
+
+    public State(Colour player, Castle castleStatus, int? enPassantTarget)
     {
         var state = 0;
 
         state |= player == Colour.White ? 0 : Constants.PlayerTurnBit;
         
-        state |= enPassantTarget << Constants.EnPassantOffset;
+        state |= (enPassantTarget ?? 255) << Constants.EnPassantOffset;
         
         state |= (int) castleStatus;
 

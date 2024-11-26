@@ -1,4 +1,5 @@
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;
@@ -7,11 +8,15 @@ public class Board
 {
     private readonly byte[] _cells;
 
+    private State _state;
+
     public byte this[int index] => _cells[index];
 
     public Board()
     {
         _cells = new byte[Constants.Cells];
+
+        _state = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0);
     }
 
     public Board(string fen)
@@ -23,7 +28,12 @@ public class Board
 
     private void ParseFen(string fen)
     {
-        var parts = fen.Split(' ');
+        var parts = fen.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length < 6)
+        {
+            throw new FenParseException($"Invalid number of parts to FEN string: {parts.Length}.");
+        }
 
         var ranks = parts[0].Split('/');
 
@@ -88,5 +98,38 @@ public class Board
                 file++;
             }
         }
+
+        var player = parts[1][0] switch
+        {
+            'b' => Colour.Black,
+            'w' => Colour.White,
+            _ => throw new FenParseException($"Invalid turn indicator: {parts[1][0]}.")
+        };
+
+        var castleAvailability = Castle.NotAvailable;
+        
+        if (parts[2] != "-")
+        {
+            foreach (var character in parts[2])
+            {
+                castleAvailability |= character switch
+                {
+                    'K' => Castle.WhiteKingSide,
+                    'Q' => Castle.WhiteQueenSide,
+                    'k' => Castle.BlackKingSide,
+                    'q' => Castle.BlackQueenSide,
+                    _ => throw new FenParseException($"Invalid castling status indicator: {character}")
+                };
+            }
+        }
+
+        var enPassantTarget = 0;
+        
+        if (parts[3] != "-")
+        {
+            enPassantTarget = parts[3].FromStandardNotation();
+        }
+
+        _state = new State(player, castleAvailability, enPassantTarget);
     }
 }

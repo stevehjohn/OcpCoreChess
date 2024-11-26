@@ -7,17 +7,19 @@ namespace OcpCore.Engine.Tests.General;
 public class StateTests
 {
     [Theory]
-    [InlineData(Colour.White, 49, Castle.WhiteQueenSide | Castle.BlackKingSide)]
-    [InlineData(Colour.Black, 42, Castle.WhiteQueenSide | Castle.BlackKingSide)]
-    [InlineData(Colour.White, 18, Castle.NotAvailable)]
-    [InlineData(Colour.Black, 34, Castle.NotAvailable)]
-    [InlineData(Colour.White, 30, Castle.WhiteQueenSide)]
-    [InlineData(Colour.Black, 50, Castle.BlackKingSide)]
-    [InlineData(Colour.White, 33, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide)]
-    [InlineData(Colour.Black, 29, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide)]
-    public void PacksAndUnpacksStateCorrectly(Colour player, int enPassantTarget, Castle castleStatus)
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49)]
+    [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.BlackKingSide, 42)]
+    [InlineData(Colour.White, Castle.NotAvailable, 18)]
+    [InlineData(Colour.Black, Castle.NotAvailable, 34)]
+    [InlineData(Colour.White, Castle.WhiteQueenSide, 30)]
+    [InlineData(Colour.Black, Castle.BlackKingSide, 50)]
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 33)]
+    [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 29)]
+    [InlineData(Colour.White, Castle.NotAvailable, null)]
+    [InlineData(Colour.Black, Castle.NotAvailable, null)]
+    public void PacksAndUnpacksStateCorrectly(Colour player, Castle castleStatus, int? enPassantTarget)
     {
-        var state = new State(player, enPassantTarget, castleStatus);
+        var state = new State(player, castleStatus, enPassantTarget);
         
         Assert.Equal(player, state.Player);
         

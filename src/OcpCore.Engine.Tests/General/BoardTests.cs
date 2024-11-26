@@ -14,6 +14,7 @@ public class BoardTests
     [InlineData("pppppppp/8/8/8/8/8/8 w - - 0 1", "Incorrect number of ranks in FEN string: 7.")]
     [InlineData("pppppppp/8/8/8/8/8/8/8/8 w - - 0 1", "Incorrect number of ranks in FEN string: 9.")]
     [InlineData("pppppppp/8/8/8/8/8/8/ppgppppp w - - 0 1", "Invalid piece token in rank 1: g.")]
+    [InlineData("pppppppp/8/8/8/8/8/8/pppppppp - - 0 1", "Invalid number of parts to FEN string: 5.")]
     public void BoardDetectsInvalidFenSituations(string fen, string expectedMessage)
     {
         var exception =Assert.Throws<FenParseException>(() => new Board(fen));
