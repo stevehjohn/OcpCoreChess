@@ -44,7 +44,7 @@ public class Board
             {
                 if (index >= files.Length)
                 {
-                    throw new FenParseException($"Not enough files in rank {files}.");
+                    throw new FenParseException($"Not enough files in rank {rank + 1}: {files}.");
                 }
 
                 var cell = files[index];
@@ -57,7 +57,7 @@ public class Board
 
                     if (file > Constants.Files)
                     {
-                        throw new FenParseException($"Too many files in rank: {files}.");
+                        throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
                     }
 
                     continue;
@@ -73,14 +73,14 @@ public class Board
                     'B' => (byte) Kind.Bishop | (byte) colour,
                     'Q' => (byte) Kind.Queen | (byte) colour,
                     'K' => (byte) Kind.King | (byte) colour,
-                    _ => throw new FenParseException($"Invalid piece token: {cell}.")
+                    _ => throw new FenParseException($"Invalid piece token in rank {rank + 1}: {cell}.")
                 };
 
                 var cellIndex = Cell.GetCell(rank, file);
 
                 if (cellIndex < 0)
                 {
-                    throw new FenParseException($"Too many files in rank: {files}.");
+                    throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
                 }
 
                 _cells[cellIndex] = (byte) kind;
