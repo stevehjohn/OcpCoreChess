@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;
 
@@ -25,5 +26,17 @@ public static class Cell
         }
 
         return (rank << Constants.RankOffset) | file;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Is(int piece, Kind kind)
+    {
+        return (piece & (byte) kind) > 0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Colour Colour(int piece)
+    {
+        return (Colour) (piece & Constants.ColourMask);
     }
 }

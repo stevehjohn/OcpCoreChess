@@ -24,4 +24,8 @@ public class State
 
         _state = state;
     }
+
+    public void RemoveCastleRights(Castle castle)
+    {
+    }
 }

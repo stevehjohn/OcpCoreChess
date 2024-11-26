@@ -26,6 +26,86 @@ public class Board
         ParseFen(fen);
     }
 
+    public void MakeMove(int position, int target)
+    {
+        var piece = _cells[position];
+        
+        _cells[target] = piece;
+
+        _cells[position] = 0;
+
+        CheckCastlingRightsForKing(piece, position, target);
+
+        CheckCastlingRightsForRook(piece, position);
+    }
+
+    private void CheckCastlingRightsForKing(byte piece, int position, int target)
+    {
+        if (Cell.Is(piece, Kind.King))
+        {
+            var delta = position - target;
+
+            var colour = Cell.Colour(piece); 
+
+            if (Math.Abs(delta) == 2)
+            {
+                switch (delta, colour)
+                {
+                    case (2, Colour.White):
+                        State.RemoveCastleRights(Castle.WhiteKingSide);
+                        
+                        break;
+
+                    case (-2, Colour.White):
+                        State.RemoveCastleRights(Castle.WhiteQueenSide);
+                        
+                        break;
+                    
+                    case (2, Colour.Black):
+                        State.RemoveCastleRights(Castle.BlackKingSide);
+                        
+                        break;
+
+                    case (-2, Colour.Black):
+                        State.RemoveCastleRights(Castle.BlackQueenSide);
+                        
+                        break;
+                }
+            }
+        }
+    }
+    
+    private void CheckCastlingRightsForRook(byte piece, int position)
+    {
+        if (Cell.Is(piece, Kind.Rook))
+        {
+            var colour = Cell.Colour(piece); 
+
+            switch (position, colour)
+            {
+                case (Constants.LeftRookFile, Colour.White):
+                    State.RemoveCastleRights(Castle.WhiteKingSide);
+                    
+                    break;
+
+                case (Constants.RightRookFile, Colour.White):
+                    State.RemoveCastleRights(Castle.WhiteQueenSide);
+                    
+                    break;
+                
+                case (Constants.BlackRankCellStart + Constants.LeftRookFile, Colour.Black):
+                    State.RemoveCastleRights(Castle.BlackKingSide);
+                    
+                    break;
+
+                case (Constants.BlackRankCellStart + Constants.RightRookFile, Colour.Black):
+                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    
+                    break;
+            }
+        }
+    }
+
     private void ParseFen(string fen)
     {
         var parts = fen.Split(' ', StringSplitOptions.RemoveEmptyEntries);
