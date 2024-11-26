@@ -63,4 +63,27 @@ public class QueenTests : PieceTestBase
         
         AssertExpectedMoves(expectedMoves, moves);
     }
+
+    [Theory]
+    [InlineData("8/8/8/P7/8/8/8/8 b - - 0 1", 0, true, 32)]
+    [InlineData("8/8/8/p7/8/8/8/8 b - - 0 1", 0, false, 0)]
+    public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
+    {
+        var board = new Board(fen);
+
+        var queen = new Queen();
+
+        var moves = new List<Move>();
+        
+        queen.GetMoves(board, position, Colour.Black, moves);
+
+        if (captureExpected)
+        {
+            Assert.Single(moves, m => m.Captures && m.NewPosition == captureCell);
+        }
+        else
+        {
+            Assert.True(! moves.Any(m => m.Captures));
+        }
+    }
 }

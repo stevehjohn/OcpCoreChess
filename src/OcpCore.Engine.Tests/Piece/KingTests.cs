@@ -59,4 +59,27 @@ public class KingTests : PieceTestBase
         
         AssertExpectedMoves(expectedMoves, moves);
     }
+
+    [Theory]
+    [InlineData("8/8/8/8/8/8/1P6/8 b - - 0 1", 0, true, 9)]
+    [InlineData("8/8/8/8/8/8/1p6/8 b - - 0 1", 0, false, 0)]
+    public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
+    {
+        var board = new Board(fen);
+
+        var king = new King();
+
+        var moves = new List<Move>();
+        
+        king.GetMoves(board, position, Colour.Black, moves);
+
+        if (captureExpected)
+        {
+            Assert.Single(moves, m => m.Captures && m.NewPosition == captureCell);
+        }
+        else
+        {
+            Assert.True(! moves.Any(m => m.Captures));
+        }
+    }
 }
