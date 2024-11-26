@@ -10,7 +10,7 @@ public class State
 
     public Castle CastleStatus => (Castle) (_state & Masks.CastleStatus);
 
-    public int? EnPassantTarget => _state >> Offsets.EnPassantOffset == 255 ? null : _state >> Offsets.EnPassantOffset;
+    public int? EnPassantTarget => _state >> Offsets.EnPassantOffset == Masks.NoEnPassant ? null : _state >> Offsets.EnPassantOffset;
 
     public State(Colour player, Castle castleStatus, int? enPassantTarget)
     {
@@ -18,7 +18,7 @@ public class State
 
         state |= player == Colour.White ? 0 : Masks.PlayerTurn;
         
-        state |= (enPassantTarget ?? 255) << Offsets.EnPassantOffset;
+        state |= (enPassantTarget ?? Masks.NoEnPassant) << Offsets.EnPassantOffset;
         
         state |= (int) castleStatus;
 
@@ -28,5 +28,17 @@ public class State
     public void RemoveCastleRights(Castle castle)
     {
         _state &= ~(int) castle;
+    }
+
+    public void SetEnPassantTarget(int? target)
+    {
+        if (target == null)
+        {
+            _state &= Masks.NoEnPassant << Offsets.EnPassantOffset;
+        }
+        else
+        {
+            _state &= (~Masks.NoEnPassant << Offsets.EnPassantOffset) | target.Value << Offsets.EnPassantOffset;
+        }
     }
 }

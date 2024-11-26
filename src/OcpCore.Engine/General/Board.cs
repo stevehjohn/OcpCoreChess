@@ -37,6 +37,8 @@ public class Board
         CheckCastlingRightsForKing(piece, position, target);
 
         CheckCastlingRightsForRook(piece, position);
+
+        UpdateEnPassantState(piece, position, target);
     }
 
     private void CheckCastlingRightsForKing(byte piece, int position, int target)
@@ -102,6 +104,23 @@ public class Board
                     State.RemoveCastleRights(Castle.BlackQueenSide);
                     
                     break;
+            }
+        }
+    }
+
+    private void UpdateEnPassantState(byte piece, int position, int target)
+    {
+        if (Cell.Is(piece, Kind.Pawn))
+        {
+            var delta = position - target;
+
+            if (Math.Abs(delta) == Constants.Ranks * 2)
+            {
+                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
+            }
+            else
+            {
+                State.SetEnPassantTarget(null);
             }
         }
     }
