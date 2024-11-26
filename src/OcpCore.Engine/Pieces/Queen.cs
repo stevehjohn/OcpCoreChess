@@ -4,7 +4,7 @@ namespace OcpCore.Engine.Pieces;
 
 public class Queen : Piece
 {
-    public override Kind Kind => Kind.Knight;
+    public override Kind Kind => Kind.Queen;
     
     public override int Value => 90;
     

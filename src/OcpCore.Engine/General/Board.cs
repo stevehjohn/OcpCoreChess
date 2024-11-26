@@ -40,7 +40,7 @@ public class Board
 
             var index = 0;
 
-            while (file < Constants.Files)
+            while (index < files.Length)
             {
                 if (index >= files.Length)
                 {
@@ -76,7 +76,14 @@ public class Board
                     _ => throw new FenParseException($"Invalid piece token: {cell}.")
                 };
 
-                _cells[Cell.GetCell(rank, file)] = (byte) kind;
+                var cellIndex = Cell.GetCell(rank, file);
+
+                if (cellIndex < 0)
+                {
+                    throw new FenParseException($"Too many files in rank: {files}.");
+                }
+
+                _cells[cellIndex] = (byte) kind;
 
                 file++;
             }
