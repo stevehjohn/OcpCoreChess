@@ -12,7 +12,7 @@ public class PieceTestBase<T> where T : Piece, new()
     {
         Piece = new T();
     }
-    
+
     protected static void AssertExpectedMoves(string expected, List<Move> moves)
     {
         if (expected == null)
