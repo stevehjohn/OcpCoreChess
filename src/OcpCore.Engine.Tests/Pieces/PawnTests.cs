@@ -21,11 +21,9 @@ public class PawnTests : PieceTestBase<Pawn>
 
         AssertPieceIsWhereExpected(board, position, colour);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, colour, moves);
+        Piece.GetMoves(board, position, colour, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -45,11 +43,9 @@ public class PawnTests : PieceTestBase<Pawn>
 
         AssertPieceIsWhereExpected(board, position, colour);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, colour, moves);
+        Piece.GetMoves(board, position, colour, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -69,11 +65,9 @@ public class PawnTests : PieceTestBase<Pawn>
 
         AssertPieceIsWhereExpected(board, position, colour);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, colour, moves);
+        Piece.GetMoves(board, position, colour, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }

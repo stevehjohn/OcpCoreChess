@@ -15,11 +15,9 @@ public class KingTests : PieceTestBase<King>
 
         AssertPieceIsWhereExpected(board, position, Colour.Black);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, Colour.Black, moves);
+        Piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -36,11 +34,9 @@ public class KingTests : PieceTestBase<King>
 
         AssertPieceIsWhereExpected(board, position, Colour.Black);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, Colour.Black, moves);
+        Piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -57,11 +53,9 @@ public class KingTests : PieceTestBase<King>
 
         AssertPieceIsWhereExpected(board, position, Colour.Black);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, Colour.Black, moves);
+        Piece.GetMoves(board, position, Colour.Black, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
     }
@@ -75,11 +69,9 @@ public class KingTests : PieceTestBase<King>
 
         AssertPieceIsWhereExpected(board, position, Colour.Black);
 
-        var piece = Piece;
-
         var moves = new List<Move>();
         
-        piece.GetMoves(board, position, Colour.Black, moves);
+        Piece.GetMoves(board, position, Colour.Black, moves);
 
         if (captureExpected)
         {
