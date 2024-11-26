@@ -23,10 +23,10 @@ public class KnightTests : PieceTestBase
     }
     
     [Theory]
-    [InlineData("8/8/8/8/8/1p6/8/8", 0, "10")]
-    [InlineData("8/8/8/8/8/8/2p5/8", 0, "17")]
-    [InlineData("8/8/1p6/8/8/4p3/8/8", 35, "25,45,29,50,52,18")]
-    [InlineData("8/8/5p2/8/5p2/8/8/8", 35, "41,25,50,52,18,20")]
+    [InlineData("8/8/8/8/8/1p6/8/8 b - - 0 1", 0, "10")]
+    [InlineData("8/8/8/8/8/8/2p5/8 b - - 0 1", 0, "17")]
+    [InlineData("8/8/1p6/8/8/4p3/8/8 b - - 0 1", 35, "25,45,29,50,52,18")]
+    [InlineData("8/8/5p2/8/5p2/8/8/8 b - - 0 1", 35, "41,25,50,52,18,20")]
     public void IsBlockedByPieceOfOwnColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
@@ -41,10 +41,10 @@ public class KnightTests : PieceTestBase
     }
     
     [Theory]
-    [InlineData("8/8/8/8/8/1P6/8/8", 0, "17,10")]
-    [InlineData("8/8/8/8/8/8/2P5/8", 0, "17,10")]
-    [InlineData("8/8/1P6/8/8/4P3/8/8", 35, "41,25,45,29,50,52,18,20")]
-    [InlineData("8/8/5P2/8/5P2/8/8/8", 35, "41,25,45,29,50,52,18,20")]
+    [InlineData("8/8/8/8/8/1P6/8/8 b - - 0 1", 0, "17,10")]
+    [InlineData("8/8/8/8/8/8/2P5/8 b - - 0 1", 0, "17,10")]
+    [InlineData("8/8/1P6/8/8/4P3/8/8 b - - 0 1", 35, "41,25,45,29,50,52,18,20")]
+    [InlineData("8/8/5P2/8/5P2/8/8/8 b - - 0 1", 35, "41,25,45,29,50,52,18,20")]
     public void TakesPieceOfOpposingColour(string fen, int position, string expectedMoves)
     {
         var board = new Board(fen);
