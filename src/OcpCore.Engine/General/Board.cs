@@ -266,6 +266,7 @@ public class Board
         State = new State(player, castleAvailability, enPassantTarget);
     }
 
+#pragma warning disable CS8524 - Cannot happen
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -292,8 +293,7 @@ public class Board
                     Kind.Knight => 'N',
                     Kind.Bishop => 'B',
                     Kind.Queen => 'Q',
-                    Kind.King => 'K',
-                    _ => throw new GeneralException($"Invalid piece value {piece}.")
+                    Kind.King => 'K'
                 };
 
                 if (Cell.Colour(piece) == Colour.Black)
@@ -312,4 +312,5 @@ public class Board
 
         return builder.ToString();
     }
+#pragma warning restore CS8524
 }
