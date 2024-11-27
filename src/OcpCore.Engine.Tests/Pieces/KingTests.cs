@@ -89,6 +89,10 @@ public class KingTests : PieceTestBase<King>
     [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQq - 0 1", 60, Colour.Black, "58,59,51,61")]
     [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQk - 0 1", 60, Colour.Black, "59,51,61,62")]
     [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQ - 0 1", 60, Colour.Black, "59,51,61")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/RNBQK2R w KQkq - 0 1", 4, Colour.White, "5,6,12")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/R3K2R w KQkq - 0 1", 4, Colour.White, "5,6,12,3,2")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/RNBQK2R w Qkq - 0 1", 4, Colour.White, "5,12")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/R3K2R w Kkq - 0 1", 4, Colour.White, "3,5,6,12")]
     public void DetectsCastlingOpportunity(string fen, int position, Colour colour, string expectedMoves)
     {
         var board = new Board(fen);
