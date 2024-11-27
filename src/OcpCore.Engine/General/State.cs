@@ -13,6 +13,10 @@ public class State
 
     public int? EnPassantTarget => (_state & Masks.EnPassantTarget) == Masks.EnPassantTarget ? null : (_state & Masks.EnPassantTarget) >> Offsets.EnPassantTargetOffset;
 
+    public int WhiteScore => (_state >> Offsets.WhiteScoreOffset) & Masks.ByteMask;
+
+    public int BlackScore => (_state >> Offsets.BlackScoreOffset) & Masks.ByteMask;
+    
     public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore)
     {
         var state = 0;

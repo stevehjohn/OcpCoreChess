@@ -26,37 +26,45 @@ public class StateTests
         Assert.Equal(enPassantTarget, state.EnPassantTarget);
         
         Assert.Equal(castleStatus, state.CastleStatus);
+        
+        Assert.Equal(whiteScore, state.WhiteScore);
+        
+        Assert.Equal(blackScore, state.BlackScore);
     }
     
-    // [Theory]
-    // [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, Castle.WhiteQueenSide, Castle.BlackKingSide)]
-    // [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, Castle.WhiteKingSide, Castle.WhiteQueenSide | Castle.BlackKingSide)]
-    // [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.BlackKingSide, 42, Castle.BlackKingSide, Castle.WhiteQueenSide)]
-    // [InlineData(Colour.White, Castle.NotAvailable, 18, Castle.WhiteKingSide, Castle.NotAvailable)]
-    // [InlineData(Colour.Black, Castle.NotAvailable, 34, Castle.BlackQueenSide, Castle.NotAvailable)]
-    // [InlineData(Colour.White, Castle.WhiteQueenSide, 30, Castle.WhiteQueenSide, Castle.NotAvailable)]
-    // [InlineData(Colour.Black, Castle.BlackKingSide, 50, Castle.BlackKingSide, Castle.NotAvailable)]
-    // [InlineData(Colour.White, Castle.NotAvailable, null, Castle.WhiteKingSide, Castle.NotAvailable)]
-    // [InlineData(Colour.Black, Castle.NotAvailable, null, Castle.BlackQueenSide, Castle.NotAvailable)]
-    // public void RemoveCastleRightsOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, Castle rightToRemove, Castle expectedRights)
-    // {
-    //     var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore);
-    //     
-    //     Assert.Equal(player, state.Player);
-    //     
-    //     Assert.Equal(enPassantTarget, state.EnPassantTarget);
-    //     
-    //     Assert.Equal(castleStatus, state.CastleStatus);
-    //     
-    //     state.RemoveCastleRights(rightToRemove);
-    //     
-    //     Assert.Equal(player, state.Player);
-    //     
-    //     Assert.Equal(enPassantTarget, state.EnPassantTarget);
-    //     
-    //     Assert.Equal(expectedRights, state.CastleStatus);
-    // }
-    //
+    [Theory]
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, 12, 34, Castle.WhiteQueenSide, Castle.BlackKingSide)]
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, 56, 78, Castle.WhiteKingSide, Castle.WhiteQueenSide | Castle.BlackKingSide)]
+    [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.BlackKingSide, 42, 12, 34, Castle.BlackKingSide, Castle.WhiteQueenSide)]
+    [InlineData(Colour.White, Castle.NotAvailable, 18, 56, 78, Castle.WhiteKingSide, Castle.NotAvailable)]
+    [InlineData(Colour.Black, Castle.NotAvailable, 34, 12, 34, Castle.BlackQueenSide, Castle.NotAvailable)]
+    [InlineData(Colour.White, Castle.WhiteQueenSide, 30, 56, 78, Castle.WhiteQueenSide, Castle.NotAvailable)]
+    [InlineData(Colour.Black, Castle.BlackKingSide, 50, 0, 0, Castle.BlackKingSide, Castle.NotAvailable)]
+    [InlineData(Colour.White, Castle.NotAvailable, null, 56, 78, Castle.WhiteKingSide, Castle.NotAvailable)]
+    [InlineData(Colour.Black, Castle.NotAvailable, null, 0, 0, Castle.BlackQueenSide, Castle.NotAvailable)]
+    public void RemoveCastleRightsOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, Castle rightToRemove, Castle expectedRights)
+    {
+        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore);
+        
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(enPassantTarget, state.EnPassantTarget);
+        
+        Assert.Equal(castleStatus, state.CastleStatus);
+        
+        state.RemoveCastleRights(rightToRemove);
+        
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(enPassantTarget, state.EnPassantTarget);
+        
+        Assert.Equal(expectedRights, state.CastleStatus);
+        
+        Assert.Equal(whiteScore, state.WhiteScore);
+        
+        Assert.Equal(blackScore, state.BlackScore);
+    }
+    
     // [Theory]
     // [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, 32)]
     // [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.BlackKingSide, 42, null)]
