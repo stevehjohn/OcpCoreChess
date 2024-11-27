@@ -97,5 +97,41 @@ public class StateTests
         Assert.Equal(whiteScore, state.WhiteScore);
         
         Assert.Equal(blackScore, state.BlackScore);
+    }   
+    
+    [Theory]
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.BlackKingSide, 49, 12, 34, 24, 68)]
+    [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.BlackKingSide, 42, 56, 78, 12, 34)]
+    [InlineData(Colour.White, Castle.NotAvailable, 18, 55, 12, 34, 56)]
+    [InlineData(Colour.Black, Castle.NotAvailable, 34, 43, 12, 34, 12)]
+    [InlineData(Colour.White, Castle.WhiteQueenSide, 30, 50, 12, 34, 56)]
+    [InlineData(Colour.Black, Castle.BlackKingSide, 50, 34, 12, 34, 0)]
+    [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 33, 54, 12, 34, 0)]
+    [InlineData(Colour.Black, Castle.All, 29, 63, 12, 34, 76)]
+    [InlineData(Colour.White, Castle.NotAvailable, null, 12, 0, 0, 87)]
+    [InlineData(Colour.Black, Castle.NotAvailable, null, 14, 0, 0, 98)]
+    public void SetScoresOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, int newWhiteScore, int newBlackScore)
+    {
+        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore);
+        
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(enPassantTarget, state.EnPassantTarget);
+        
+        Assert.Equal(castleStatus, state.CastleStatus);
+        
+        state.SetWhiteScore(newWhiteScore);
+
+        state.SetBlackScore(newBlackScore);
+        
+        Assert.Equal(player, state.Player);
+        
+        Assert.Equal(enPassantTarget, state.EnPassantTarget);
+        
+        Assert.Equal(castleStatus, state.CastleStatus);
+        
+        Assert.Equal(newWhiteScore, state.WhiteScore);
+        
+        Assert.Equal(newBlackScore, state.BlackScore);
     }
 }

@@ -33,7 +33,7 @@ Rank 8 | 56 57 58 59 60 61 62 62  Black
 ### Board State
 
 ```
-(int)  wwww_wwww_bbbb_bbbb_eeee_eeep_cccc
+(int)  bbbb_bbbb_wwww_wwww_eeee_eeep_cccc
 ```
 
 - c: Castling rights.

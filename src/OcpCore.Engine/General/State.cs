@@ -52,4 +52,18 @@ public class State
             _state |= (target.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
         }
     }
+
+    public void SetWhiteScore(int score)
+    {
+        _state &= ~(Masks.ByteMask << Offsets.WhiteScoreOffset);
+
+        _state |= (score & Masks.ByteMask) << Offsets.WhiteScoreOffset;
+    }
+    
+    public void SetBlackScore(int score)
+    {
+        _state &= ~(Masks.ByteMask << Offsets.BlackScoreOffset);
+
+        _state |= (score & Masks.ByteMask) << Offsets.BlackScoreOffset;
+    }
 }
