@@ -21,7 +21,7 @@ public class BoardTests
     public void BoardDetectsInvalidFenSituations(string fen, string expectedMessage)
     {
         var exception = Assert.Throws<FenParseException>(() => new Board(fen));
-        
+
         Assert.Equal(expectedMessage, exception.Message);
     }
 
@@ -36,14 +36,14 @@ public class BoardTests
     public void BoardUpdatesCastlingRightsOnMove(string fen, int position, int target, Castle rightsBeforeMove, Castle rightsAfterMove)
     {
         var board = new Board(fen);
-        
+
         Assert.Equal(rightsBeforeMove, board.State.CastleStatus);
-        
+
         board.MakeMove(position, target);
-        
+
         Assert.Equal(rightsAfterMove, board.State.CastleStatus);
     }
-    
+
     [Theory]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 16, null)]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 24, 16)]
@@ -54,11 +54,11 @@ public class BoardTests
     public void BoardUpdatesEnPassantCellOnMove(string fen, int position, int target, int? enPassantCell)
     {
         var board = new Board(fen);
-        
+
         Assert.Null(board.State.EnPassantTarget);
-        
+
         board.MakeMove(position, target);
-        
+
         Assert.Equal(enPassantCell, board.State.EnPassantTarget);
     }
 
@@ -70,9 +70,9 @@ public class BoardTests
     public void BoardPerformsCastle(string fen, int position, int target, string expectedFem)
     {
         var board = new Board(fen);
-        
+
         board.MakeMove(position, target);
-        
+
         Assert.Equal(expectedFem, board.ToString());
     }
 
@@ -82,9 +82,53 @@ public class BoardTests
     public void BoardPerformsEnPassant(string fen, int position, int target, string expectedFem)
     {
         var board = new Board(fen);
-        
+
         board.MakeMove(position, target);
-        
+
         Assert.Equal(expectedFem, board.ToString());
+    }
+
+    [Theory]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/p7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 1, 0)]
+    [InlineData("1nbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQk - 0 1", 9, 16, 5, 0)]
+    [InlineData("r1bqkbnr/pppppppp/8/8/8/n7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 3, 0)]
+    [InlineData("rn1qkbnr/pppppppp/8/8/8/b7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 3, 0)]
+    [InlineData("rnb1kbnr/pppppppp/8/8/8/q7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 9, 0)]
+    [InlineData("rnbqkbnr/pppppppp/P7/8/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1", 49, 40, 0, 1)]
+    [InlineData("rnbqkbnr/pppppppp/R7/8/8/8/PPPPPPPP/1NBQKBNR b Kkq - 0 1", 49, 40, 0, 5)]
+    [InlineData("rnbqkbnr/pppppppp/N7/8/8/8/PPPPPPPP/R1BQKBNR b KQkq - 0 1", 49, 40, 0, 3)]
+    [InlineData("rnbqkbnr/pppppppp/B7/8/8/8/PPPPPPPP/RN1QKBNR b KQkq - 0 1", 49, 40, 0, 3)]
+    [InlineData("rnbqkbnr/pppppppp/Q7/8/8/8/PPPPPPPP/RNB1KBNR b KQkq - 0 1", 49, 40, 0, 9)]
+    public void BoardUpdatesScoresOnCapture(string fen, int position, int target, int expectedWhiteScore, int expectedBlackScore)
+    {
+        var board = new Board(fen);
+
+        Assert.Equal(0, board.State.WhiteScore);
+
+        Assert.Equal(0, board.State.BlackScore);
+
+        board.MakeMove(position, target);
+
+        Assert.Equal(expectedWhiteScore, board.State.WhiteScore);
+
+        Assert.Equal(expectedBlackScore, board.State.BlackScore);
+    }
+
+    [Theory]
+    [InlineData("rnbqkbnr/pppp1ppp/8/4pP2/8/8/PPPPP1PP/RNBQKBNR w KQkq e6 0 1", 37, 44, 1, 0)]
+    [InlineData("rnbqkbnr/pppp1ppp/8/8/4pP2/8/PPPPP1PP/RNBQKBNR b KQkq f3 0 1", 28, 21, 0, 1)]
+    public void BoardUpdatesScoresOnEnPassant(string fen, int position, int target, int expectedWhiteScore, int expectedBlackScore)
+    {
+        var board = new Board(fen);
+
+        Assert.Equal(0, board.State.WhiteScore);
+
+        Assert.Equal(0, board.State.BlackScore);
+
+        board.MakeMove(position, target);
+
+        Assert.Equal(expectedWhiteScore, board.State.WhiteScore);
+
+        Assert.Equal(expectedBlackScore, board.State.BlackScore);
     }
 }
