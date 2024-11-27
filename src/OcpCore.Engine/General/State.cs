@@ -53,17 +53,21 @@ public class State
         }
     }
 
-    public void SetWhiteScore(int score)
+    public void UpdateWhiteScore(int delta)
     {
+        var score = WhiteScore;
+        
         _state &= ~(Masks.ByteMask << Offsets.WhiteScoreOffset);
 
-        _state |= (score & Masks.ByteMask) << Offsets.WhiteScoreOffset;
+        _state |= ((score + delta) & Masks.ByteMask) << Offsets.WhiteScoreOffset;
     }
     
-    public void SetBlackScore(int score)
+    public void UpdateBlackScore(int delta)
     {
+        var score = WhiteScore;
+        
         _state &= ~(Masks.ByteMask << Offsets.BlackScoreOffset);
 
-        _state |= (score & Masks.ByteMask) << Offsets.BlackScoreOffset;
+        _state |= ((score + delta) & Masks.ByteMask) << Offsets.BlackScoreOffset;
     }
 }

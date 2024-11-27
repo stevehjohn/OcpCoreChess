@@ -41,11 +41,11 @@ public class Board
 
             if (Cell.Colour(piece) == Colour.White)
             {
-                State.SetWhiteScore(State.WhiteScore - score);
+                State.UpdateWhiteScore(-score);
             }
             else
             {
-                State.SetBlackScore(State.BlackScore - score);
+                State.UpdateBlackScore(-score);
             }
         }
 
@@ -98,11 +98,11 @@ public class Board
 
             if (Cell.Colour(piece) == Colour.White)
             {
-                State.SetWhiteScore(State.WhiteScore - score);
+                State.UpdateWhiteScore(-score);
             }
             else
             {
-                State.SetBlackScore(State.BlackScore - score);
+                State.UpdateBlackScore(-score);
             }
             
             _cells[target + direction * Constants.Files] = 0;

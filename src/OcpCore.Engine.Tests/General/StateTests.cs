@@ -120,9 +120,9 @@ public class StateTests
         
         Assert.Equal(castleStatus, state.CastleStatus);
         
-        state.SetWhiteScore(newWhiteScore);
+        state.UpdateWhiteScore(newWhiteScore);
 
-        state.SetBlackScore(newBlackScore);
+        state.UpdateBlackScore(newBlackScore);
         
         Assert.Equal(player, state.Player);
         
