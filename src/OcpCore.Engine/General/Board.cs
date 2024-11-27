@@ -32,8 +32,23 @@ public class Board
     public void MakeMove(int position, int target)
     {
         var piece = _cells[position];
+
+        var capture = _cells[target];
         
-        // TODO: Score
+        if (capture != 0)
+        {
+            var score = Pieces.Get(capture).Value;
+
+            if (Cell.Colour(piece) == Colour.White)
+            {
+                State.SetWhiteScore(State.WhiteScore + score);
+            }
+            else
+            {
+                State.SetBlackScore(State.BlackScore + score);
+            }
+        }
+
         _cells[target] = piece;
 
         _cells[position] = 0;
@@ -79,7 +94,17 @@ public class Board
 
             var direction = colour == Colour.White ? Direction.Black : Direction.White;
 
-            // TODO: Score
+            var score = Pieces.Get(_cells[target + direction * Constants.Files]).Value;
+
+            if (Cell.Colour(piece) == Colour.White)
+            {
+                State.SetWhiteScore(State.WhiteScore + score);
+            }
+            else
+            {
+                State.SetBlackScore(State.BlackScore + score);
+            }
+            
             _cells[target + direction * Constants.Files] = 0;
         }
     }
