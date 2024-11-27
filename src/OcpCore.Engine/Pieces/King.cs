@@ -10,6 +10,7 @@ public class King : Piece
         
     public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
+        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
         switch (colour)
         {
             case Colour.White:

@@ -47,6 +47,7 @@ public class Board
         {
             var colour = Cell.Colour(piece); 
 
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
             switch (colour)
             {
                 case Colour.White:
