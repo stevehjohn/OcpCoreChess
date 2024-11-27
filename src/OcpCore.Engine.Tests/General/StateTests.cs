@@ -154,6 +154,8 @@ public class StateTests
     [InlineData(nameof(State.RemoveCastleRights))]
     [InlineData(nameof(State.UpdateWhiteScore))]
     [InlineData(nameof(State.UpdateBlackScore))]
+    [InlineData(nameof(State.SetWhiteKingCell))]
+    [InlineData(nameof(State.SetBlackKingCell))]
     public void StateComponentsDoNotInterfereWithEachOther(string methodToInvoke)
     {
         for (var i = 0; i < 100; i++)
@@ -242,6 +244,20 @@ public class StateTests
                     
                     break;
                 
+                case nameof(State.SetWhiteKingCell):
+                    whiteKingCell = rng.Next(Constants.Cells);
+                    
+                    property.Invoke(state, [ whiteKingCell ]);
+                    
+                    break;
+                
+                case nameof(State.SetBlackKingCell):
+                    blackKingCell = rng.Next(Constants.Cells);
+                    
+                    property.Invoke(state, [ blackKingCell ]);
+                    
+                    break;
+                
                 default:
                     property.Invoke(state, null);
                     
@@ -312,6 +328,24 @@ public class StateTests
                     Assert.Equal(whiteScore + whiteScoreDelta, state.WhiteScore);
 
                     Assert.Equal(blackScore + blackScoreDelta, state.BlackScore);
+
+                    Assert.Equal(whiteKingCell, state.WhiteKingCell);
+
+                    Assert.Equal(blackKingCell, state.BlackKingCell);
+
+                    break;
+                
+                case nameof(State.SetWhiteKingCell):
+                case nameof(State.SetBlackKingCell):
+                    Assert.Equal(player, state.Player);
+
+                    Assert.Equal(castleStatus, state.CastleStatus);
+            
+                    Assert.Equal(enPassantTarget, state.EnPassantTarget);
+
+                    Assert.Equal(whiteScore, state.WhiteScore);
+
+                    Assert.Equal(blackScore, state.BlackScore);
 
                     Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
