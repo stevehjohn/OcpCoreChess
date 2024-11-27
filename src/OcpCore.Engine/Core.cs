@@ -12,8 +12,6 @@ public class Core : IDisposable
 
     public const string Author = "Stevo John";
 
-    private const int DefaultDepth = 6;
-
     private readonly Board _board;
 
     private readonly Colour _engineColour;
