@@ -70,11 +70,11 @@ public class Board
         {
             if (Cell.Colour(piece) == Colour.White)
             {
-                State.SetWhiteKingPosition(target);
+                State.SetWhiteKingCell(target);
             }
             else
             {
-                State.SetBlackKingPosition(target);
+                State.SetBlackKingCell(target);
             }
         }
 
@@ -95,7 +95,7 @@ public class Board
 
     public bool IsKingInCheck(Colour player)
     {
-        var kingCell = player == Colour.White ? State.WhiteKingPosition : State.BlackKingPosition;
+        var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
         
         return false;
     }

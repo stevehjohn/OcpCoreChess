@@ -17,9 +17,9 @@ public class State
 
     public int BlackScore => (int) ((_state >> Offsets.BlackScoreOffset) & Masks.ByteMask);
 
-    public int WhiteKingPosition => (int) ((_state >> Offsets.WhiteKingOffset) & Masks.PositionBits);
+    public int WhiteKingCell => (int) ((_state >> Offsets.WhiteKingOffset) & Masks.PositionBits);
 
-    public int BlackKingPosition => (int) ((_state >> Offsets.BlackKingOffset) & Masks.PositionBits);
+    public int BlackKingCell => (int) ((_state >> Offsets.BlackKingOffset) & Masks.PositionBits);
     
     public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, int whiteKingCell, int blackKingCell)
     {
@@ -27,13 +27,13 @@ public class State
 
         state |= player == Colour.White ? 0 : Masks.PlayerTurn;
 
-        state |= (ulong) (enPassantTarget == null ? Masks.EnPassantTarget : (enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset);
+        state |= enPassantTarget == null ? Masks.EnPassantTarget : ((ulong) enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
         
         state |= (ulong) castleStatus;
 
-        state |= (ulong) ((whiteScore & Masks.ByteMask) << Offsets.WhiteScoreOffset);
+        state |= ((ulong) whiteScore & Masks.ByteMask) << Offsets.WhiteScoreOffset;
 
-        state |= (ulong) ((blackScore & Masks.ByteMask) << Offsets.BlackScoreOffset);
+        state |= ((ulong) blackScore & Masks.ByteMask) << Offsets.BlackScoreOffset;
 
         state |= ((ulong) whiteKingCell & Masks.PositionBits) << Offsets.WhiteKingOffset;
 
@@ -62,7 +62,7 @@ public class State
         {
             _state &= ~Masks.EnPassantTarget;
             
-            _state |= (ulong) ((target.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset);
+            _state |= ((ulong) target.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
         }
     }
 
@@ -72,30 +72,30 @@ public class State
         
         _state &= ~(Masks.ByteMask << Offsets.WhiteScoreOffset);
 
-        _state |= (ulong) (((score + delta) & Masks.ByteMask) << Offsets.WhiteScoreOffset);
+        _state |= ((ulong) (score + delta) & Masks.ByteMask) << Offsets.WhiteScoreOffset;
     }
     
     public void UpdateBlackScore(int delta)
     {
         var score = BlackScore;
         
-        _state &= ~(Masks.PositionBits << Offsets.BlackScoreOffset);
+        _state &= ~(Masks.ByteMask << Offsets.BlackScoreOffset);
 
-        _state |= ((ulong) (score + delta) & Masks.PositionBits) << Offsets.BlackScoreOffset;
+        _state |= ((ulong) (score + delta) & Masks.ByteMask) << Offsets.BlackScoreOffset;
     }
 
-    public void SetWhiteKingPosition(int position)
+    public void SetWhiteKingCell(int cell)
     {
         _state &= ~(Masks.PositionBits << Offsets.WhiteKingOffset);
 
-        _state |= ((ulong) position & Masks.PositionBits) << Offsets.WhiteKingOffset;
+        _state |= ((ulong) cell & Masks.PositionBits) << Offsets.WhiteKingOffset;
     }
 
-    public void SetBlackKingPosition(int position)
+    public void SetBlackKingCell(int cell)
     {
         _state &= ~(Masks.PositionBits << Offsets.BlackKingOffset);
 
-        _state |= ((ulong) position & Masks.PositionBits) << Offsets.BlackKingOffset;
+        _state |= ((ulong) cell & Masks.PositionBits) << Offsets.BlackKingOffset;
     }
 
     public void InvertPlayer()
