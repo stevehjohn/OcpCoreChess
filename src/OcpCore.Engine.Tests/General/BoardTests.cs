@@ -72,4 +72,16 @@ public class BoardTests
         
         Assert.Equal(expectedFem, board.ToString());
     }
+
+    [Theory]
+    [InlineData("rnbqkbnr/pppp1ppp/8/4pP2/8/8/PPPPP1PP/RNBQKBNR w KQkq e6 0 1", 37, 44, "rnbqkbnr/pppp ppp/    P   /        /        /        /PPPPP PP/RNBQKBNR")]
+    [InlineData("rnbqkbnr/pppp1ppp/8/8/4pP2/8/PPPPP1PP/RNBQKBNR b KQkq f3 0 1", 28, 21, "rnbqkbnr/pppp ppp/        /        /        /     p  /PPPPP PP/RNBQKBNR")]
+    public void BoardPerformsEnPassant(string fen, int position, int target, string expectedFem)
+    {
+        var board = new Board(fen);
+        
+        board.MakeMove(position, target);
+        
+        Assert.Equal(expectedFem, board.ToString());
+    }
 }

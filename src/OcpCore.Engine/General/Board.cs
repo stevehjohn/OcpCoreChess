@@ -79,7 +79,7 @@ public class Board
             var direction = colour == Colour.White ? Direction.Black : Direction.White;
 
             // TODO: Score
-            _cells[piece + direction * Constants.Files] = 0;
+            _cells[target + direction * Constants.Files] = 0;
         }
     }
 
