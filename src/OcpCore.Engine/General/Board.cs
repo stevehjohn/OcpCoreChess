@@ -231,10 +231,9 @@ public class Board
     {
         var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
 
-        // TODO: Magic numbers...
-        var kingRank = kingCell >> 3;
-        
-        var kingFile = kingCell & 7;
+        var kingRank = Cell.GetRank(kingCell);
+
+        var kingFile = Cell.GetFile(kingCell);
 
         int cellRank;
 
