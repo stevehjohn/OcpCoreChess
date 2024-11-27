@@ -10,5 +10,5 @@ public static class Masks
     public const uint EnPassantBits = 0b0111_1111;
     public const uint PlayerTurn = 0b0001_0000;
     public const uint ByteMask = 0b1111_1111;
-    public const uint PositionBits = 0b0011_1111;
+    public const ulong PositionBits = 0b0011_1111;
 }

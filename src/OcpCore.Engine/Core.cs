@@ -1,6 +1,7 @@
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
+using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine;
 
@@ -16,15 +17,21 @@ public class Core
 
     private readonly int _defaultDepth;
 
-    public Core(int defaultDepth = DefaultDepth)
+    private readonly Colour _engineColour;
+
+    public Core(Colour engineColour, int defaultDepth = DefaultDepth)
     {
+        _engineColour = engineColour;
+        
         _board = new Board(Constants.InitialBoardFen);
 
         _defaultDepth = defaultDepth;
     }
 
-    public Core(string fen, int defaultDepth = DefaultDepth)
+    public Core(Colour engineColour, string fen, int defaultDepth = DefaultDepth)
     {
+        _engineColour = engineColour;
+        
         _board = new Board(fen);
 
         _defaultDepth = defaultDepth;
@@ -57,6 +64,8 @@ public class Core
         
         // TODO: This is where move ordering could be applied
 
+        var player = board.State.Player;
+        
         for (var i = 0; i < moves.Count; i++)
         {
             var move = moves[i];
@@ -65,7 +74,7 @@ public class Core
 
             copy.MakeMove(move.Position, move.Target);
 
-            if (copy.IsKingInCheck())
+            if (copy.IsKingInCheck(player))
             {
                 continue;
             }

@@ -81,8 +81,10 @@ public class Board
         State.InvertPlayer();
     }
 
-    public bool IsKingInCheck()
+    public bool IsKingInCheck(Colour player)
     {
+        var kingCell = player == Colour.White ? State.WhiteKingPosition : State.BlackKingPosition;
+        
         return false;
     }
 
