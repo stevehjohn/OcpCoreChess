@@ -40,7 +40,7 @@ public static class EntryPoint
             }
         }
 
-        core.GetMove(1);
+        core.GetMove(depth);
         
         foreach (var node in core.PerftCounts.OrderBy(n => n.Key))
         {
