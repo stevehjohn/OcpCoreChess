@@ -1,3 +1,4 @@
+using System.Numerics;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
@@ -30,6 +31,8 @@ public class Core : IDisposable
     private Task _getMoveTask;
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
+
+    public long GetMoveOutcome(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
     public bool IsBusy => _cancellationTokenSource != null;
 
@@ -99,9 +102,7 @@ public class Core : IDisposable
         {
             _depthCounts[i] = 0;
 
-            var outcomes = Enum.GetValuesAsUnderlyingType<MoveOutcome>();
-
-            _outcomes[i] = new long[outcomes.Length];
+            _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
         ProcessPly(_board, depth, depth);
