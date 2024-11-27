@@ -34,11 +34,33 @@ public class Board
 
         _cells[position] = 0;
 
+        PerformCastle(piece, position, target);
+
         CheckCastlingRightsForKing(piece);
 
         CheckCastlingRightsForRook(piece, position);
 
         UpdateEnPassantState(piece, position, target);
+    }
+
+    private void PerformCastle(byte piece, int position, int target)
+    {
+        var delta = position - target;
+
+        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
+        {
+            var rank = Cell.GetRank(position);
+
+            var file = delta < 0 ? Files.LeftRook : Files.RightRook;
+
+            var targetFile = delta < 0 ? Files.Queen : Files.LeftBishop;
+
+            var sourceFile = Cell.GetCell(rank, file);
+
+            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
+
+            _cells[sourceFile] = 0;
+        }
     }
 
     private void CheckCastlingRightsForKing(byte piece)
