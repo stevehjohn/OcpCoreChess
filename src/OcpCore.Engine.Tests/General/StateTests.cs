@@ -285,8 +285,8 @@ public class StateTests
                 
                 case nameof(State.RemoveCastleRights):
                     Assert.Equal(player, state.Player);
-            
-                    Assert.True((castleStatus & state.CastleStatus) == 0);
+                    
+                    Assert.Equal(Castle.NotAvailable, castleStatus & state.CastleStatus);
             
                     Assert.Equal(enPassantTarget, state.EnPassantTarget);
 
