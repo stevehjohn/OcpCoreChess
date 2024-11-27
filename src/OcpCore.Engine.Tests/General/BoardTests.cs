@@ -132,9 +132,4 @@ public class BoardTests
 
         Assert.Equal(expectedBlackScore, board.State.BlackScore);
     }
-    //
-    // [Theory]
-    // public void BoardUpdatesScoresRatherThanReplaces(string fen)
-    // {
-    // }
 }
