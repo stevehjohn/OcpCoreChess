@@ -227,9 +227,14 @@ public class Board
         State.SetEnPassantTarget(null);
     }
 
-    public bool IsKingInCheck(Colour player)
+    public bool IsKingInCheck(Colour player, int probeCell = -1)
     {
         var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
+
+        if (probeCell > -1)
+        {
+            kingCell = probeCell;
+        }
 
         var kingRank = Cell.GetRank(kingCell);
 
