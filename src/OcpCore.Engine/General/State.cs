@@ -11,17 +11,21 @@ public class State
 
     public Castle CastleStatus => (Castle) (_state & Masks.CastleStatus);
 
-    public int? EnPassantTarget => _state >> Offsets.EnPassantOffset == Constants.NoEnPassant ? null : _state >> Offsets.EnPassantOffset;
+    public int? EnPassantTarget => (_state & Masks.EnPassantTarget) == Masks.EnPassantTarget ? null : (_state & Masks.EnPassantTarget) >> Offsets.EnPassantTargetOffset;
 
-    public State(Colour player, Castle castleStatus, int? enPassantTarget)
+    public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore)
     {
         var state = 0;
 
         state |= player == Colour.White ? 0 : Masks.PlayerTurn;
-        
-        state |= (enPassantTarget ?? Constants.NoEnPassant) << Offsets.EnPassantOffset;
+
+        state |= enPassantTarget ?? Masks.EnPassantTarget;
         
         state |= (int) castleStatus;
+
+        state |= (whiteScore & Masks.ByteMask) << Offsets.WhiteScoreOffset;
+
+        state |= (blackScore & Masks.ByteMask) << Offsets.BlackScoreOffset;
 
         _state = state;
     }
@@ -35,13 +39,13 @@ public class State
     {
         if (target == null)
         {
-            _state |= Constants.NoEnPassant << Offsets.EnPassantOffset;
+            _state |= Masks.EnPassantTarget;
         }
         else
         {
-            _state &= ~(Constants.NoEnPassant << Offsets.EnPassantOffset);
+            _state &= ~(Masks.EnPassantTarget);
             
-            _state |= target.Value << Offsets.EnPassantOffset;
+            _state |= target.Value << Offsets.EnPassantTargetOffset;
         }
     }
 }

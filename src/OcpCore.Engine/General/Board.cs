@@ -19,7 +19,7 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
 
-        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0);
+        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0);
     }
 
     public Board(string fen)
@@ -263,7 +263,8 @@ public class Board
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
-        State = new State(player, castleAvailability, enPassantTarget);
+        // TODO: Calculate scores
+        State = new State(player, castleAvailability, enPassantTarget, 0, 0);
     }
 
 #pragma warning disable CS8524 // Cannot happen
