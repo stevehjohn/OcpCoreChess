@@ -13,6 +13,7 @@ public sealed class Core : IDisposable
     public const string Author = "Stevo John";
 
     private readonly Board _board;
+
     private readonly Colour _engineColour;
 
     private long[] _depthCounts;
@@ -42,9 +43,18 @@ public sealed class Core : IDisposable
         _board = new Board(Constants.InitialBoardFen);
     }
 
+<<<<<<< HEAD
+    public Core(string fen)
+=======
     public Core(Colour engineColour, string fen)
+>>>>>>> master
     {
         _board = new Board(fen);
+<<<<<<< HEAD
+
+        _engineColour = _board.State.Player;
+=======
+>>>>>>> master
     }
 
     public void MakeMove(string move)
