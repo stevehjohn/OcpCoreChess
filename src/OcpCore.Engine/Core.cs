@@ -144,7 +144,7 @@ public class Core : IDisposable
             {
                 outcome |= MoveOutcome.Check;
                 
-                if (! OpponentCanMove(copy, player.Invert()))
+                if (! CanMove(copy, player.Invert()))
                 {
                     outcome |= MoveOutcome.CheckMate;
                 }
@@ -185,7 +185,7 @@ public class Core : IDisposable
         }
     }
 
-    private static bool OpponentCanMove(Board board, Colour colour)
+    private static bool CanMove(Board board, Colour colour)
     {
         var moves = new List<Move>();
         
