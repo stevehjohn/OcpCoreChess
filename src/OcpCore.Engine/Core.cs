@@ -62,8 +62,13 @@ public class Core
             var move = moves[i];
 
             var copy = new Board(board);
-            
+
             copy.MakeMove(move.Position, move.Target);
+
+            if (copy.IsKingInCheck())
+            {
+                continue;
+            }
         }
     }
 

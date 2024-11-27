@@ -81,6 +81,11 @@ public class Board
         State.InvertPlayer();
     }
 
+    public bool IsKingInCheck()
+    {
+        return false;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void PerformCastle(byte piece, int position, int target)
     {
