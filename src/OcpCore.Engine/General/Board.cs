@@ -41,11 +41,11 @@ public class Board
 
             if (Cell.Colour(piece) == Colour.White)
             {
-                State.SetWhiteScore(State.WhiteScore + score);
+                State.SetWhiteScore(State.WhiteScore - score);
             }
             else
             {
-                State.SetBlackScore(State.BlackScore + score);
+                State.SetBlackScore(State.BlackScore - score);
             }
         }
 
@@ -98,11 +98,11 @@ public class Board
 
             if (Cell.Colour(piece) == Colour.White)
             {
-                State.SetWhiteScore(State.WhiteScore + score);
+                State.SetWhiteScore(State.WhiteScore - score);
             }
             else
             {
-                State.SetBlackScore(State.BlackScore + score);
+                State.SetBlackScore(State.BlackScore - score);
             }
             
             _cells[target + direction * Constants.Files] = 0;
@@ -288,8 +288,37 @@ public class Board
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
-        // TODO: Calculate scores
-        State = new State(player, castleAvailability, enPassantTarget, 0, 0);
+        var scores = CalculateScores();
+        
+        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black);
+    }
+
+    private (int White, int Black) CalculateScores()
+    {
+        var white = 0;
+
+        var black = 0;
+        
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var content = _cells[cell];
+            
+            if (content == 0)
+            {
+                continue;
+            }
+
+            if (Cell.Colour(content) == Colour.White)
+            {
+                white += Pieces.Get(content).Value;
+            }
+            else
+            {
+                black += Pieces.Get(content).Value;
+            }
+        }
+
+        return (white, black);
     }
 
 #pragma warning disable CS8524 // Cannot happen

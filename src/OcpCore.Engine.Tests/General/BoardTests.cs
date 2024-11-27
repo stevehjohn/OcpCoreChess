@@ -1,5 +1,6 @@
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.General;
+using OcpCore.Engine.General.StaticData;
 using Xunit;
 
 namespace OcpCore.Engine.Tests.General;
@@ -89,23 +90,23 @@ public class BoardTests
     }
 
     [Theory]
-    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/p7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 1, 0)]
-    [InlineData("1nbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQk - 0 1", 9, 16, 5, 0)]
-    [InlineData("r1bqkbnr/pppppppp/8/8/8/n7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 3, 0)]
-    [InlineData("rn1qkbnr/pppppppp/8/8/8/b7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 3, 0)]
-    [InlineData("rnb1kbnr/pppppppp/8/8/8/q7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, 9, 0)]
-    [InlineData("rnbqkbnr/pppppppp/P7/8/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1", 49, 40, 0, 1)]
-    [InlineData("rnbqkbnr/pppppppp/R7/8/8/8/PPPPPPPP/1NBQKBNR b Kkq - 0 1", 49, 40, 0, 5)]
-    [InlineData("rnbqkbnr/pppppppp/N7/8/8/8/PPPPPPPP/R1BQKBNR b KQkq - 0 1", 49, 40, 0, 3)]
-    [InlineData("rnbqkbnr/pppppppp/B7/8/8/8/PPPPPPPP/RN1QKBNR b KQkq - 0 1", 49, 40, 0, 3)]
-    [InlineData("rnbqkbnr/pppppppp/Q7/8/8/8/PPPPPPPP/RNB1KBNR b KQkq - 0 1", 49, 40, 0, 9)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/p7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Pawn, Scores.Initial)]
+    [InlineData("1nbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQk - 0 1", 9, 16, Scores.Initial - Scores.Rook, Scores.Initial)]
+    [InlineData("r1bqkbnr/pppppppp/8/8/8/n7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Knight, Scores.Initial)]
+    [InlineData("rn1qkbnr/pppppppp/8/8/8/b7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Bishop, Scores.Initial)]
+    [InlineData("rnb1kbnr/pppppppp/8/8/8/q7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Queen, Scores.Initial)]
+    [InlineData("rnbqkbnr/pppppppp/P7/8/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Pawn)]
+    [InlineData("rnbqkbnr/pppppppp/R7/8/8/8/PPPPPPPP/1NBQKBNR b Kkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Rook)]
+    [InlineData("rnbqkbnr/pppppppp/N7/8/8/8/PPPPPPPP/R1BQKBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Knight)]
+    [InlineData("rnbqkbnr/pppppppp/B7/8/8/8/PPPPPPPP/RN1QKBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Bishop)]
+    [InlineData("rnbqkbnr/pppppppp/Q7/8/8/8/PPPPPPPP/RNB1KBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Queen)]
     public void BoardUpdatesScoresOnCapture(string fen, int position, int target, int expectedWhiteScore, int expectedBlackScore)
     {
         var board = new Board(fen);
 
-        Assert.Equal(0, board.State.WhiteScore);
+        Assert.Equal(Scores.Initial, board.State.WhiteScore);
 
-        Assert.Equal(0, board.State.BlackScore);
+        Assert.Equal(Scores.Initial, board.State.BlackScore);
 
         board.MakeMove(position, target);
 
@@ -115,15 +116,15 @@ public class BoardTests
     }
 
     [Theory]
-    [InlineData("rnbqkbnr/pppp1ppp/8/4pP2/8/8/PPPPP1PP/RNBQKBNR w KQkq e6 0 1", 37, 44, 1, 0)]
-    [InlineData("rnbqkbnr/pppp1ppp/8/8/4pP2/8/PPPPP1PP/RNBQKBNR b KQkq f3 0 1", 28, 21, 0, 1)]
+    [InlineData("rnbqkbnr/pppp1ppp/8/4pP2/8/8/PPPPP1PP/RNBQKBNR w KQkq e6 0 1", 37, 44, Scores.Initial - Scores.Pawn, Scores.Initial)]
+    [InlineData("rnbqkbnr/pppp1ppp/8/8/4pP2/8/PPPPP1PP/RNBQKBNR b KQkq f3 0 1", 28, 21, Scores.Initial, Scores.Initial - Scores.Pawn)]
     public void BoardUpdatesScoresOnEnPassant(string fen, int position, int target, int expectedWhiteScore, int expectedBlackScore)
     {
         var board = new Board(fen);
 
-        Assert.Equal(0, board.State.WhiteScore);
+        Assert.Equal(Scores.Initial, board.State.WhiteScore);
 
-        Assert.Equal(0, board.State.BlackScore);
+        Assert.Equal(Scores.Initial, board.State.BlackScore);
 
         board.MakeMove(position, target);
 
@@ -131,4 +132,9 @@ public class BoardTests
 
         Assert.Equal(expectedBlackScore, board.State.BlackScore);
     }
+    //
+    // [Theory]
+    // public void BoardUpdatesScoresRatherThanReplaces(string fen)
+    // {
+    // }
 }
