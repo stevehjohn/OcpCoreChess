@@ -44,8 +44,10 @@ public class Board
         State = new State(board.State);
     }
 
-    public void MakeMove(int position, int target)
+    public MoveOutcome MakeMove(int position, int target)
     {
+        var outcome = MoveOutcome.Move;
+        
         var piece = _cells[position];
 
         var capture = _cells[target];
@@ -62,6 +64,8 @@ public class Board
             {
                 State.UpdateBlackScore(-score);
             }
+
+            outcome |= MoveOutcome.Capture;
         }
 
         _cells[target] = piece;
@@ -80,7 +84,7 @@ public class Board
 
         _cells[position] = 0;
 
-        PerformCastle(piece, position, target);
+        outcome |= PerformCastle(piece, position, target);
         
         PerformEnPassant(piece, target);
 
@@ -91,6 +95,136 @@ public class Board
         UpdateEnPassantState(piece, position, target);
 
         State.InvertPlayer();
+
+        return outcome;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private MoveOutcome PerformCastle(byte piece, int position, int target)
+    {
+        var delta = position - target;
+
+        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
+        {
+            var rank = Cell.GetRank(position);
+
+            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
+
+            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
+
+            var sourceFile = Cell.GetCell(rank, file);
+
+            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
+
+            _cells[sourceFile] = 0;
+
+            return MoveOutcome.Castle;
+        }
+
+        return MoveOutcome.Move;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private MoveOutcome PerformEnPassant(byte piece, int target)
+    {
+        if (Cell.Is(piece, Kind.Pawn) && target == State.EnPassantTarget)
+        {
+            var colour = Cell.Colour(piece);
+
+            var direction = colour == Colour.White ? Direction.Black : Direction.White;
+
+            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
+
+            if (Cell.Colour(piece) == Colour.White)
+            {
+                State.UpdateWhiteScore(-score);
+            }
+            else
+            {
+                State.UpdateBlackScore(-score);
+            }
+            
+            _cells[target + direction * Constants.Files] = 0;
+            
+            return MoveOutcome.EnPassant;
+        }
+
+        return MoveOutcome.Move;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void CheckCastlingRightsForKing(byte piece)
+    {
+        if (Cell.Is(piece, Kind.King))
+        {
+            var colour = Cell.Colour(piece); 
+
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
+            switch (colour)
+            {
+                case Colour.White:
+                    State.RemoveCastleRights(Castle.WhiteKingSide);
+                    State.RemoveCastleRights(Castle.WhiteQueenSide);
+                    
+                    break;
+
+                case Colour.Black:
+                    State.RemoveCastleRights(Castle.BlackKingSide);
+                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    
+                    break;
+            }
+        }
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void CheckCastlingRightsForRook(byte piece, int position)
+    {
+        if (Cell.Is(piece, Kind.Rook))
+        {
+            var colour = Cell.Colour(piece); 
+
+            switch (position, colour)
+            {
+                case (Files.LeftRook, Colour.White):
+                    State.RemoveCastleRights(Castle.WhiteQueenSide);
+                    
+                    break;
+
+                case (Files.RightRook, Colour.White):
+                    State.RemoveCastleRights(Castle.WhiteKingSide);
+                    
+                    break;
+                
+                case (Constants.BlackRankCellStart + Files.LeftRook, Colour.Black):
+                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    
+                    break;
+
+                case (Constants.BlackRankCellStart + Files.RightRook, Colour.Black):
+                    State.RemoveCastleRights(Castle.BlackKingSide);
+                    
+                    break;
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void UpdateEnPassantState(byte piece, int position, int target)
+    {
+        if (Cell.Is(piece, Kind.Pawn))
+        {
+            var delta = position - target;
+
+            if (Math.Abs(delta) == Constants.Ranks * 2)
+            {
+                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
+                
+                return;
+            }
+        }
+
+        State.SetEnPassantTarget(null);
     }
 
     public bool IsKingInCheck(Colour player)
@@ -216,127 +350,7 @@ public class Board
         
         return false;
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void PerformCastle(byte piece, int position, int target)
-    {
-        var delta = position - target;
-
-        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
-        {
-            var rank = Cell.GetRank(position);
-
-            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
-
-            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
-
-            var sourceFile = Cell.GetCell(rank, file);
-
-            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
-
-            _cells[sourceFile] = 0;
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void PerformEnPassant(byte piece, int target)
-    {
-        if (Cell.Is(piece, Kind.Pawn) && target == State.EnPassantTarget)
-        {
-            var colour = Cell.Colour(piece);
-
-            var direction = colour == Colour.White ? Direction.Black : Direction.White;
-
-            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
-
-            if (Cell.Colour(piece) == Colour.White)
-            {
-                State.UpdateWhiteScore(-score);
-            }
-            else
-            {
-                State.UpdateBlackScore(-score);
-            }
-            
-            _cells[target + direction * Constants.Files] = 0;
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void CheckCastlingRightsForKing(byte piece)
-    {
-        if (Cell.Is(piece, Kind.King))
-        {
-            var colour = Cell.Colour(piece); 
-
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
-            switch (colour)
-            {
-                case Colour.White:
-                    State.RemoveCastleRights(Castle.WhiteKingSide);
-                    State.RemoveCastleRights(Castle.WhiteQueenSide);
-                    
-                    break;
-
-                case Colour.Black:
-                    State.RemoveCastleRights(Castle.BlackKingSide);
-                    State.RemoveCastleRights(Castle.BlackQueenSide);
-                    
-                    break;
-            }
-        }
-    }
     
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void CheckCastlingRightsForRook(byte piece, int position)
-    {
-        if (Cell.Is(piece, Kind.Rook))
-        {
-            var colour = Cell.Colour(piece); 
-
-            switch (position, colour)
-            {
-                case (Files.LeftRook, Colour.White):
-                    State.RemoveCastleRights(Castle.WhiteQueenSide);
-                    
-                    break;
-
-                case (Files.RightRook, Colour.White):
-                    State.RemoveCastleRights(Castle.WhiteKingSide);
-                    
-                    break;
-                
-                case (Constants.BlackRankCellStart + Files.LeftRook, Colour.Black):
-                    State.RemoveCastleRights(Castle.BlackQueenSide);
-                    
-                    break;
-
-                case (Constants.BlackRankCellStart + Files.RightRook, Colour.Black):
-                    State.RemoveCastleRights(Castle.BlackKingSide);
-                    
-                    break;
-            }
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void UpdateEnPassantState(byte piece, int position, int target)
-    {
-        if (Cell.Is(piece, Kind.Pawn))
-        {
-            var delta = position - target;
-
-            if (Math.Abs(delta) == Constants.Ranks * 2)
-            {
-                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
-                
-                return;
-            }
-        }
-
-        State.SetEnPassantTarget(null);
-    }
-
     private void ParseFen(string fen)
     {
         var parts = fen.Split(' ', StringSplitOptions.RemoveEmptyEntries);

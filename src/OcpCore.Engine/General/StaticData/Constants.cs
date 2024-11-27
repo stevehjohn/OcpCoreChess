@@ -11,6 +11,8 @@ public static class Constants
     public const int MaxFile = 7;
     
     public const int MaxMoveDistance = 7;
+
+    public const int MoveOutcomes = 7;
     
     public const int BlackRankCellStart = 56;
 

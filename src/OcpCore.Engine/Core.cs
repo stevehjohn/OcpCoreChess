@@ -21,6 +21,8 @@ public class Core : IDisposable
 
     private long[] _depthCounts;
     
+    private long[][] _outcomes;
+
     private CancellationTokenSource _cancellationTokenSource;
 
     private CancellationToken _cancellationToken;
@@ -90,7 +92,18 @@ public class Core : IDisposable
     public void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
+
+        _outcomes = new long[depth + 1][];
         
+        for (var i = 1; i <= depth; i++)
+        {
+            _depthCounts[i] = 0;
+
+            var outcomes = Enum.GetValuesAsUnderlyingType<MoveOutcome>();
+
+            _outcomes[i] = new long[outcomes.Length];
+        }
+
         ProcessPly(_board, depth, depth);
 
         callback?.Invoke();
@@ -114,7 +127,7 @@ public class Core : IDisposable
 
             var copy = new Board(board);
 
-            copy.MakeMove(move.Position, move.Target);
+            var outcome = copy.MakeMove(move.Position, move.Target);
 
             if (copy.IsKingInCheck(player))
             {
@@ -125,8 +138,19 @@ public class Core : IDisposable
 
             if (copy.IsKingInCheck(player.Invert()))
             {
+                outcome |= MoveOutcome.Check;
+                
                 if (! OpponentCanMove(copy, player.Invert()))
                 {
+                    outcome |= MoveOutcome.CheckMate;
+                }
+            }
+
+            for (var j = 0; j < Constants.MoveOutcomes; j++)
+            {
+                if (((byte) outcome & (1 << j)) > 0)
+                {
+                    _outcomes[ply][j + 1]++;
                 }
             }
 
