@@ -66,6 +66,18 @@ public class Board
 
         _cells[target] = piece;
 
+        if (Cell.Is(piece, Kind.King))
+        {
+            if (Cell.Colour(piece) == Colour.White)
+            {
+                State.SetWhiteKingPosition(target);
+            }
+            else
+            {
+                State.SetBlackKingPosition(target);
+            }
+        }
+
         _cells[position] = 0;
 
         PerformCastle(piece, position, target);
