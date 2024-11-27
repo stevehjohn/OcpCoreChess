@@ -264,7 +264,7 @@ public class Board
 
                 piece = _cells[cell];
 
-                if (Cell.Colour(piece) == player)
+                if (piece > 0 && Cell.Colour(piece) == player)
                 {
                     break;
                 }
@@ -311,7 +311,7 @@ public class Board
             
             piece = _cells[cell];
 
-            if (Cell.Colour(piece) == player)
+            if (piece > 0 && Cell.Colour(piece) == player)
             {
                 continue;
             }
@@ -330,7 +330,7 @@ public class Board
         {
             piece = _cells[cell];
         
-            if (Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
+            if (piece > 0 && Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
             {
                 return true;
             }
@@ -342,7 +342,7 @@ public class Board
         {
             piece = _cells[cell];
         
-            if (Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
+            if (piece > 0 && Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
             {
                 return true;
             }

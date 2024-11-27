@@ -8,7 +8,7 @@
 
 - Do not castle through check.
 - Hybrid copy/do/undo - only make a copy if recursing, just undo otherwise?
-- Probably safer to use 2 bits for colour.
+- Almost certainly safer to use 2 bits for colour.
 - Promotions.
 - Get movement working before adding pooling to `_cells` in `Board`.
 - Move ordering?
