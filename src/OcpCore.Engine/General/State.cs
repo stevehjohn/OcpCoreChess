@@ -19,7 +19,7 @@ public class State
 
         state |= player == Colour.White ? 0 : Masks.PlayerTurn;
 
-        state |= enPassantTarget ?? Masks.EnPassantTarget;
+        state |= enPassantTarget == null ? Masks.EnPassantTarget : (enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
         
         state |= (int) castleStatus;
 
@@ -43,9 +43,9 @@ public class State
         }
         else
         {
-            _state &= ~(Masks.EnPassantTarget);
+            _state &= ~Masks.EnPassantTarget;
             
-            _state |= target.Value << Offsets.EnPassantTargetOffset;
+            _state |= (target.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
         }
     }
 }
