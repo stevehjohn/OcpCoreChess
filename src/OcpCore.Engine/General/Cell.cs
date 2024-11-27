@@ -29,14 +29,19 @@ public static class Cell
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Is(int piece, Kind kind)
+    public static bool Is(byte piece, Kind kind)
     {
         return (piece & (byte) kind) == (byte) kind;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Colour Colour(int piece)
+    public static Colour Colour(byte piece)
     {
         return (Colour) (piece & Masks.Colour);
+    }
+
+    public static Kind Kind(byte piece)
+    {
+        return (Kind) (piece & Masks.File);
     }
 }

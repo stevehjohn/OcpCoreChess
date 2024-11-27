@@ -58,4 +58,16 @@ public class BoardTests
         
         Assert.Equal(enPassantCell, board.State.EnPassantTarget);
     }
+
+    [Theory]
+    [InlineData("r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 58, "  kr bnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
+    [InlineData("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 62, "r    rk /pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
+    public void BoardPerformsCastle(string fen, int position, int target, string expectedFem)
+    {
+        var board = new Board(fen);
+        
+        board.MakeMove(position, target);
+        
+        Assert.Equal(expectedFem, board.ToString());
+    }
 }

@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Text;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.Pieces;
@@ -53,9 +54,9 @@ public class Board
         {
             var rank = Cell.GetRank(position);
 
-            var file = delta < 0 ? Files.LeftRook : Files.RightRook;
+            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
 
-            var targetFile = delta < 0 ? Files.Queen : Files.LeftBishop;
+            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
 
             var sourceFile = Cell.GetCell(rank, file);
 
@@ -245,5 +246,51 @@ public class Board
         }
 
         State = new State(player, castleAvailability, enPassantTarget);
+    }
+
+    public override string ToString()
+    {
+        var builder = new StringBuilder();
+        
+        for (var rank = Constants.MaxRank; rank >= 0; rank--)
+        {
+            for (var file = 0; file < Constants.Files; file++)
+            {
+                var cellIndex = Cell.GetCell(rank, file);
+
+                var piece = _cells[cellIndex];
+                
+                if (piece == 0)
+                {
+                    builder.Append(' ');
+                    
+                    continue;
+                }
+
+                var character = Cell.Kind(piece) switch
+                {
+                    Kind.Pawn => 'P',
+                    Kind.Rook => 'R',
+                    Kind.Knight => 'N',
+                    Kind.Bishop => 'B',
+                    Kind.Queen => 'Q',
+                    Kind.King => 'K'
+                };
+
+                if (Cell.Colour(piece) == Colour.Black)
+                {
+                    character = char.ToLower(character);
+                }
+
+                builder.Append(character);
+            }
+
+            if (rank > 0)
+            {
+                builder.Append('/');
+            }
+        }
+
+        return builder.ToString();
     }
 }
