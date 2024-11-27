@@ -7,7 +7,7 @@ public class Queen : Piece
 {
     public override Kind Kind => Kind.Queen;
     
-    public override int Value => 90;
+    public override int Value => 9;
     
     public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
