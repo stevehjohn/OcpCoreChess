@@ -173,4 +173,15 @@ public class BoardTests
         
         Assert.Equal(expectedPlayer, board.State.Player);
     }
+
+    [Theory]
+    [InlineData("rn1qkbnr/p1pppppp/bp6/8/P7/4P3/1PPP1PPP/RNBQKBNR w KQkq - 1 3")]
+    public void BoardDetectsCheck(string fen)
+    {
+        var board = new Board(fen);
+
+        board.MakeMove(4, 12);
+        
+        Assert.True(board.IsKingInCheck(Colour.White));
+    }
 }
