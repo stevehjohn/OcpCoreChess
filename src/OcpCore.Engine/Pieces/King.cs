@@ -48,7 +48,7 @@ public class King : Piece
         }
     }
 
-    private void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
+    private static void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
     {
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
         switch (colour)

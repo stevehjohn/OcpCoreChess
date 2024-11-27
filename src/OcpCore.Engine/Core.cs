@@ -6,7 +6,7 @@ using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine;
 
-public class Core : IDisposable
+public sealed class Core : IDisposable
 {
     public const string Name = "Ocp Core Chess";
 
@@ -79,7 +79,7 @@ public class Core : IDisposable
         return _getMoveTask;
     }
     
-    public void GetMoveInternal(int depth, Action callback = null)
+    private void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
 
