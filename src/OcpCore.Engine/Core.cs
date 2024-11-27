@@ -6,16 +6,13 @@ using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine;
 
-public class Core : IDisposable
+public sealed class Core : IDisposable
 {
     public const string Name = "Ocp Core Chess";
 
     public const string Author = "Stevo John";
 
-    private const int DefaultDepth = 6;
-
     private readonly Board _board;
-
     private readonly Colour _engineColour;
 
     private long[] _depthCounts;
@@ -45,11 +42,10 @@ public class Core : IDisposable
         _board = new Board(Constants.InitialBoardFen);
     }
 
-    public Core(string fen)
+    public Core(Colour engineColour, string fen, int defaultDepth = DefaultDepth)
     {
         _board = new Board(fen);
-
-        _engineColour = _board.State.Player;
+        _defaultDepth = defaultDepth;
     }
 
     public void MakeMove(string move)
@@ -85,7 +81,7 @@ public class Core : IDisposable
         return _getMoveTask;
     }
     
-    public void GetMoveInternal(int depth, Action callback = null)
+    private void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
 
@@ -231,6 +227,8 @@ public class Core : IDisposable
 
                 return true;
             }
+            
+            moves.Clear();
         }
 
         return false;
