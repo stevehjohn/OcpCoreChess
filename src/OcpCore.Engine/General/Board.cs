@@ -34,45 +34,32 @@ public class Board
 
         _cells[position] = 0;
 
-        CheckCastlingRightsForKing(piece, position, target);
+        CheckCastlingRightsForKing(piece);
 
         CheckCastlingRightsForRook(piece, position);
 
         UpdateEnPassantState(piece, position, target);
     }
 
-    private void CheckCastlingRightsForKing(byte piece, int position, int target)
+    private void CheckCastlingRightsForKing(byte piece)
     {
         if (Cell.Is(piece, Kind.King))
         {
-            var delta = position - target;
-
             var colour = Cell.Colour(piece); 
 
-            if (Math.Abs(delta) == 2)
+            switch (colour)
             {
-                switch (delta, colour)
-                {
-                    case (2, Colour.White):
-                        State.RemoveCastleRights(Castle.WhiteKingSide);
-                        
-                        break;
-
-                    case (-2, Colour.White):
-                        State.RemoveCastleRights(Castle.WhiteQueenSide);
-                        
-                        break;
+                case Colour.White:
+                    State.RemoveCastleRights(Castle.WhiteKingSide);
+                    State.RemoveCastleRights(Castle.WhiteQueenSide);
                     
-                    case (2, Colour.Black):
-                        State.RemoveCastleRights(Castle.BlackKingSide);
-                        
-                        break;
+                    break;
 
-                    case (-2, Colour.Black):
-                        State.RemoveCastleRights(Castle.BlackQueenSide);
-                        
-                        break;
-                }
+                case Colour.Black:
+                    State.RemoveCastleRights(Castle.BlackKingSide);
+                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    
+                    break;
             }
         }
     }
@@ -86,22 +73,22 @@ public class Board
             switch (position, colour)
             {
                 case (Files.LeftRook, Colour.White):
-                    State.RemoveCastleRights(Castle.WhiteKingSide);
+                    State.RemoveCastleRights(Castle.WhiteQueenSide);
                     
                     break;
 
                 case (Files.RightRook, Colour.White):
-                    State.RemoveCastleRights(Castle.WhiteQueenSide);
+                    State.RemoveCastleRights(Castle.WhiteKingSide);
                     
                     break;
                 
                 case (Constants.BlackRankCellStart + Files.LeftRook, Colour.Black):
-                    State.RemoveCastleRights(Castle.BlackKingSide);
+                    State.RemoveCastleRights(Castle.BlackQueenSide);
                     
                     break;
 
                 case (Constants.BlackRankCellStart + Files.RightRook, Colour.Black):
-                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    State.RemoveCastleRights(Castle.BlackKingSide);
                     
                     break;
             }

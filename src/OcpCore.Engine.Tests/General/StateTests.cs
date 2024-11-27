@@ -65,7 +65,7 @@ public class StateTests
     [InlineData(Colour.White, Castle.WhiteQueenSide, 30, 50)]
     [InlineData(Colour.Black, Castle.BlackKingSide, 50, null)]
     [InlineData(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 33, 54)]
-    [InlineData(Colour.Black, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 29, null)]
+    [InlineData(Colour.Black, Castle.All, 29, null)]
     [InlineData(Colour.White, Castle.NotAvailable, null, 12)]
     [InlineData(Colour.Black, Castle.NotAvailable, null, null)]
     public void SetEnPassantTargetOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int? newEnPassantTarget)

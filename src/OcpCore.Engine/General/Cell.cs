@@ -31,7 +31,7 @@ public static class Cell
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Is(int piece, Kind kind)
     {
-        return (piece & (byte) kind) > 0;
+        return (piece & (byte) kind) == (byte) kind;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -8,7 +8,7 @@
 
 - Do not castle through check.
 - Promotions.
-- Get movement working before adding state and pooling to `_cells` in `Board`.
+- Get movement working before adding pooling to `_cells` in `Board`.
 - Move ordering?
   - Captures preferred. 
   - Lower valur taking higher even better.
