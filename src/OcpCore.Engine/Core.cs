@@ -5,7 +5,7 @@ using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine;
 
-public class Core
+public class Core : IDisposable
 {
     public const string Name = "Ocp Core Chess";
 
@@ -21,7 +21,15 @@ public class Core
 
     private long[] _depthCounts;
     
+    private CancellationTokenSource _cancellationTokenSource;
+
+    private CancellationToken _cancellationToken;
+
+    private Task _getMoveTask;
+
     public long GetDepthCount(int ply) => _depthCounts[ply];
+
+    public bool IsBusy => _cancellationTokenSource != null;
 
     public Core(Colour engineColour, int defaultDepth = DefaultDepth)
     {
@@ -50,16 +58,42 @@ public class Core
         _board.MakeMove(position, target);
     }
 
-    public void GetMove()
+    public void GetMove(int depth = 0)
     {
-        GetMove(_defaultDepth);
-    }
+        if (depth == 0)
+        {
+            depth = _defaultDepth;
+        }
 
-    public void GetMove(int depth)
+        GetMoveInternal(_defaultDepth);
+    }
+    
+    public Task GetMove(int depth, Action callback)
+    {
+        _cancellationTokenSource = new CancellationTokenSource();
+
+        _cancellationToken = _cancellationTokenSource.Token;
+
+        _getMoveTask = Task.Run(() =>
+        {
+            GetMoveInternal(depth, callback);
+
+            _cancellationTokenSource = null;
+
+            _getMoveTask = null;
+            
+        }, _cancellationToken);
+
+        return _getMoveTask;
+    }
+    
+    public void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
         
         ProcessPly(_board, depth, depth);
+
+        callback?.Invoke();
     }
 
     private void ProcessPly(Board board, int maxDepth, int depth)
@@ -118,5 +152,12 @@ public class Core
             
             PieceCache.Get(piece).GetMoves(board, cell, board.State.Player, moves);
         }
+    }
+
+    public void Dispose()
+    {
+        _cancellationTokenSource?.Dispose();
+        
+        _getMoveTask?.Dispose();
     }
 }
