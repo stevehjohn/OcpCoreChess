@@ -62,6 +62,8 @@ public class Board
         CheckCastlingRightsForRook(piece, position);
 
         UpdateEnPassantState(piece, position, target);
+
+        State.InvertPlayer();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

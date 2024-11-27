@@ -15,7 +15,7 @@ public class Core
     private readonly Board _board;
 
     private readonly int _defaultDepth;
-    
+
     public Core(int defaultDepth = DefaultDepth)
     {
         _board = new Board(Constants.InitialBoardFen);
@@ -46,5 +46,19 @@ public class Core
 
     public void GetMove(int depth)
     {
+        ProcessPly(_board);
+    }
+
+    private void ProcessPly(Board board)
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var piece = board[cell];
+
+            if (piece == 0)
+            {
+                continue;
+            }
+        }
     }
 }

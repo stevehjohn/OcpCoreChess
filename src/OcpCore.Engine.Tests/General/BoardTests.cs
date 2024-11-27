@@ -1,6 +1,7 @@
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
+using OcpCore.Engine.Pieces;
 using Xunit;
 
 namespace OcpCore.Engine.Tests.General;
@@ -131,5 +132,17 @@ public class BoardTests
         Assert.Equal(expectedWhiteScore, board.State.WhiteScore);
 
         Assert.Equal(expectedBlackScore, board.State.BlackScore);
+    }
+    
+    [Theory]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 16, Colour.Black)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 8, 16, Colour.White)]
+    public void BoardChangesPlayerAfterMove(string fen, int position, int target, Colour expectedPlayer)
+    {
+        var board = new Board(fen);
+        
+        board.MakeMove(position, target);
+        
+        Assert.Equal(expectedPlayer, board.State.Player);
     }
 }

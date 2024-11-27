@@ -70,4 +70,9 @@ public class State
 
         _state |= ((score + delta) & Masks.ByteMask) << Offsets.BlackScoreOffset;
     }
+
+    public void InvertPlayer()
+    {
+        _state ^= Masks.PlayerTurn;
+    }
 }
