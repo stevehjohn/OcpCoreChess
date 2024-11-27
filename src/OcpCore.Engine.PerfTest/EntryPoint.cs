@@ -22,7 +22,7 @@ public static class EntryPoint
 
     public static void Main(string[] arguments)
     {
-        var depth = 5;
+        var depth = 6;
         
         if (arguments.Length > 0)
         {
@@ -44,9 +44,40 @@ public static class EntryPoint
 
             var stopwatch = Stopwatch.StartNew();
             
-            core.GetMove(depth);
-            
-            stopwatch.Stop();
+            core.GetMove(maxDepth);
+
+            PlyComplete(core, maxDepth, stopwatch);
         }
+    }
+
+    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch)
+    {
+        stopwatch.Stop();
+
+        for (var depth = 1; depth <= maxDepth; depth++)
+        {
+            var count = core.GetDepthCount(depth);
+
+            var expected = ExpectedCombinations[depth - 1];
+
+            var pass = count == expected;
+
+            Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,15:N0}  Expected: {expected,15:N0}");
+
+            if (! pass)
+            {
+                var delta = count - expected;
+
+                Console.Write($"  Delta: {(delta > 0 ? ">" : "<")}{delta,13:N0}");
+            }
+            
+            Console.WriteLine();
+        }
+
+        Console.WriteLine();
+
+        Console.WriteLine($"  {maxDepth} depth{(maxDepth > 1 ? "s" : string.Empty)} explored in {(stopwatch.Elapsed.Hours > 0 ? $"{stopwatch.Elapsed.Hours}h " : string.Empty)}{stopwatch.Elapsed.Minutes}m {stopwatch.Elapsed.Seconds:N0}s {stopwatch.Elapsed.Milliseconds}ms");
+
+        Console.WriteLine();
     }
 }

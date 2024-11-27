@@ -19,6 +19,10 @@ public class Core
 
     private readonly Colour _engineColour;
 
+    private long[] _depthCounts;
+    
+    public long GetDepthCount(int ply) => _depthCounts[ply];
+
     public Core(Colour engineColour, int defaultDepth = DefaultDepth)
     {
         _engineColour = engineColour;
@@ -53,6 +57,8 @@ public class Core
 
     public void GetMove(int depth)
     {
+        _depthCounts = new long[depth + 1];
+        
         ProcessPly(_board, depth, depth);
     }
 
@@ -80,6 +86,8 @@ public class Core
             {
                 continue;
             }
+
+            _depthCounts[ply]++;
 
             if (copy.IsKingInCheck(player.Invert()))
             {
