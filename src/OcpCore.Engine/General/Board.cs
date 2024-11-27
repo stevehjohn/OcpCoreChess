@@ -86,7 +86,7 @@ public class Board
 
         outcome |= PerformCastle(piece, position, target);
         
-        PerformEnPassant(piece, target);
+        outcome |= PerformEnPassant(piece, target);
 
         CheckCastlingRightsForKing(piece);
 
@@ -231,6 +231,7 @@ public class Board
     {
         var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
         
+        // TODO: Magic numbers...
         var kingRank = kingCell >> 3;
         
         var kingFile = kingCell & 7;

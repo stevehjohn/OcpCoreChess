@@ -112,7 +112,10 @@ public class Core : IDisposable
 
     private void ProcessPly(Board board, int maxDepth, int depth)
     {
-        var moves = new List<Move>();
+        if (_cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }   var moves = new List<Move>();
         
         GetAllMoves(board, moves);
         
@@ -147,7 +150,7 @@ public class Core : IDisposable
                 }
             }
 
-            for (var j = 0; j < Constants.MoveOutcomes; j++)
+            for (var j = 0; j <= Constants.MoveOutcomes; j++)
             {
                 if (((byte) outcome & (1 << j)) > 0)
                 {

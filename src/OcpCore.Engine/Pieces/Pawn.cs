@@ -40,18 +40,9 @@ public class Pawn : Piece
         {
             var piece = board[cell];
 
-            if (piece > 0 && Cell.Colour(piece) != colour)
+            if (cell == board.State.EnPassantTarget || (piece > 0 && Cell.Colour(piece) != colour))
             {
                 moveList.Add(new Move(position, cell, true));
-            }
-            else if (cell == board.State.EnPassantTarget)
-            {
-                piece = board[board.State.EnPassantTarget.Value - direction];
-
-                if (piece > 0 && Cell.Colour(piece) != colour)
-                {
-                    moveList.Add(new Move(position, cell, true));
-                }
             }
         }
 
@@ -61,18 +52,9 @@ public class Pawn : Piece
         {
             var piece = board[cell];
 
-            if (piece > 0 && Cell.Colour(piece) != colour)
+            if (cell == board.State.EnPassantTarget || (piece > 0 && Cell.Colour(piece) != colour))
             {
                 moveList.Add(new Move(position, cell, true));
-            }
-            else if (cell == board.State.EnPassantTarget)
-            {
-                piece = board[board.State.EnPassantTarget.Value - direction];
-
-                if (piece > 0 && Cell.Colour(piece) != colour)
-                {
-                    moveList.Add(new Move(position, cell, true));
-                }
             }
         }
     }
