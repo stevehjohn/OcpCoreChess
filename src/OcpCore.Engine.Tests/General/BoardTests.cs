@@ -176,6 +176,7 @@ public class BoardTests
 
     [Theory]
     [InlineData("rn1qkbnr/p1pppppp/bp6/8/P7/4P3/1PPP1PPP/RNBQKBNR w KQkq - 1 3")]
+    [InlineData("rn1qkbnr/2pppppp/bp6/p7/8/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 4")]
     public void BoardDetectsCheck(string fen)
     {
         var board = new Board(fen);
