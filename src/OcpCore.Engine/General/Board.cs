@@ -146,7 +146,7 @@ public class Board
             
             _cells[target + direction * Constants.Files] = 0;
             
-            return MoveOutcome.EnPassant;
+            return MoveOutcome.EnPassant | MoveOutcome.Capture;
         }
 
         return MoveOutcome.Move;
