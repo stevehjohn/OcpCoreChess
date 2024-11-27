@@ -16,8 +16,6 @@ public class Core : IDisposable
 
     private readonly Board _board;
 
-    private readonly int _defaultDepth;
-
     private readonly Colour _engineColour;
 
     private long[] _depthCounts;
@@ -36,22 +34,18 @@ public class Core : IDisposable
 
     public bool IsBusy => _cancellationTokenSource != null;
 
-    public Core(Colour engineColour, int defaultDepth = DefaultDepth)
+    public Core(Colour engineColour)
     {
         _engineColour = engineColour;
         
         _board = new Board(Constants.InitialBoardFen);
-
-        _defaultDepth = defaultDepth;
     }
 
-    public Core(Colour engineColour, string fen, int defaultDepth = DefaultDepth)
+    public Core(Colour engineColour, string fen)
     {
         _engineColour = engineColour;
         
         _board = new Board(fen);
-
-        _defaultDepth = defaultDepth;
     }
 
     public void MakeMove(string move)
@@ -63,14 +57,9 @@ public class Core : IDisposable
         _board.MakeMove(position, target);
     }
 
-    public void GetMove(int depth = 0)
+    public void GetMove(int depth)
     {
-        if (depth == 0)
-        {
-            depth = _defaultDepth;
-        }
-
-        GetMoveInternal(_defaultDepth);
+        GetMoveInternal(depth);
     }
     
     public Task GetMove(int depth, Action callback)
