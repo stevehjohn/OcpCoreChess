@@ -53,10 +53,10 @@ public class Core
 
     public void GetMove(int depth)
     {
-        ProcessPly(_board);
+        ProcessPly(_board, depth, depth);
     }
 
-    private void ProcessPly(Board board)
+    private void ProcessPly(Board board, int maxDepth, int depth)
     {
         var moves = new List<Move>();
         
@@ -65,7 +65,9 @@ public class Core
         // TODO: This is where move ordering could be applied
 
         var player = board.State.Player;
-        
+               
+        var ply = maxDepth - depth + 1;
+
         for (var i = 0; i < moves.Count; i++)
         {
             var move = moves[i];
@@ -77,6 +79,15 @@ public class Core
             if (copy.IsKingInCheck(player))
             {
                 continue;
+            }
+
+            if (copy.IsKingInCheck(player.Invert()))
+            {
+            }
+
+            if (depth > 1)
+            {
+                ProcessPly(copy, maxDepth, depth - 1);
             }
         }
     }
