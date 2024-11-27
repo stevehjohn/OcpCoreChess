@@ -34,11 +34,13 @@ public class State
     {
         if (target == null)
         {
-            _state &= Constants.NoEnPassant << Offsets.EnPassantOffset;
+            _state |= Constants.NoEnPassant << Offsets.EnPassantOffset;
         }
         else
         {
-            _state &= ~(Constants.NoEnPassant << Offsets.EnPassantOffset) | target.Value << Offsets.EnPassantOffset;
+            _state &= ~(Constants.NoEnPassant << Offsets.EnPassantOffset);
+            
+            _state |= target.Value << Offsets.EnPassantOffset;
         }
     }
 }
