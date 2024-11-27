@@ -40,4 +40,22 @@ public class BoardTests
         
         Assert.Equal(rightsAfterMove, board.State.CastleStatus);
     }
+    
+    [Theory]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 16, null)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 24, 16)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 10, 26, 18)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 48, 40, null)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 48, 32, 40)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 50, 34, 42)]
+    public void BoardUpdatesEnPassantCellOnMove(string fen, int position, int target, int? enPassantCell)
+    {
+        var board = new Board(fen);
+        
+        Assert.Null(board.State.EnPassantTarget);
+        
+        board.MakeMove(position, target);
+        
+        Assert.Equal(enPassantCell, board.State.EnPassantTarget);
+    }
 }

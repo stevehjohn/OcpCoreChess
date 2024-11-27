@@ -209,7 +209,7 @@ public class Board
             }
         }
 
-        var enPassantTarget = 0;
+        int? enPassantTarget = null;
         
         if (parts[3] != "-")
         {
