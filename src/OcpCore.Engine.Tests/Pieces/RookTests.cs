@@ -73,7 +73,7 @@ public class RookTests : PieceTestBase<Rook>
 
         if (captureExpected)
         {
-            Assert.Single(moves, m => m.Captures && m.NewPosition == captureCell);
+            Assert.Single(moves, m => m.Captures && m.Target == captureCell);
         }
         else
         {

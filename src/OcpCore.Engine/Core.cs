@@ -60,8 +60,10 @@ public class Core
         for (var i = 0; i < moves.Count; i++)
         {
             var move = moves[i];
+
+            var copy = new Board(board);
             
-            
+            copy.MakeMove(move.Position, move.Target);
         }
     }
 

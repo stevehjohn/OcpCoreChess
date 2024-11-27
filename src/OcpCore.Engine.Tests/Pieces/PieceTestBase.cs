@@ -26,12 +26,12 @@ public class PieceTestBase<T> where T : Piece, new()
 
         foreach (var move in expectedMoves)
         {
-            Assert.Contains(move, moves.Select(m => m.NewPosition));
+            Assert.Contains(move, moves.Select(m => m.Target));
         }
 
         foreach (var move in moves)
         {
-            Assert.Contains(move.NewPosition, expectedMoves);
+            Assert.Contains(move.Target, expectedMoves);
         }
         
         Assert.Equal(expectedMoves.Length, moves.Count);

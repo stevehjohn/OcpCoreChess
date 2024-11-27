@@ -20,7 +20,7 @@ public class King : Piece
                 {
                     if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
                     {
-                        moveList.Add(new Move(Files.LeftBishop, false));
+                        moveList.Add(new Move(position, Files.LeftBishop, false));
                     }
                 }
 
@@ -28,7 +28,7 @@ public class King : Piece
                 {
                     if ((board.State.CastleStatus & Castle.WhiteKingSide) > 0)
                     {
-                        moveList.Add(new Move(Files.RightKnight, false));
+                        moveList.Add(new Move(position, Files.RightKnight, false));
                     }
                 }
 
@@ -41,7 +41,7 @@ public class King : Piece
                 {
                     if (board[Constants.BlackRankCellStart + Files.LeftKnight] == 0 && board[Constants.BlackRankCellStart + Files.LeftBishop] == 0 && board[Constants.BlackRankCellStart + Files.Queen] == 0)
                     {
-                        moveList.Add(new Move(Constants.BlackRankCellStart + Files.LeftBishop, false));
+                        moveList.Add(new Move(position, Constants.BlackRankCellStart + Files.LeftBishop, false));
                     }
                 }
 
@@ -51,7 +51,7 @@ public class King : Piece
                     {
                         if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
                         {
-                            moveList.Add(new Move(Constants.BlackRankCellStart + Files.RightKnight, false));
+                            moveList.Add(new Move(position, Constants.BlackRankCellStart + Files.RightKnight, false));
                         }
                     }
                 }
@@ -83,14 +83,14 @@ public class King : Piece
 
             if (content == 0)
             {
-                moveList.Add(new Move(cell, false));
+                moveList.Add(new Move(position, cell, false));
 
                 continue;
             }
 
             if (Cell.Colour(content) != colour)
             {
-                moveList.Add(new Move(cell, true));
+                moveList.Add(new Move(position, cell, true));
             }
         }
     }

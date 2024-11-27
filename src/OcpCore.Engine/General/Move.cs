@@ -2,13 +2,17 @@ namespace OcpCore.Engine.General;
 
 public struct Move
 {
-    public int NewPosition { get; }
+    public int Position { get; set; }
+    
+    public int Target { get; }
     
     public bool Captures { get; }
 
-    public Move(int newPosition, bool captures)
+    public Move(int position, int target, bool captures)
     {
-        NewPosition = newPosition;
+        Position = position;
+        
+        Target = target;
         
         Captures = captures;
     }
