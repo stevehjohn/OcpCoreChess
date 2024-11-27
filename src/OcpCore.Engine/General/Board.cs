@@ -19,7 +19,7 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
 
-        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0);
+        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0);
     }
 
     public Board(string fen)
@@ -222,6 +222,10 @@ public class Board
             throw new FenParseException($"Incorrect number of ranks in FEN string: {ranks.Length}.");
         }
 
+        var whiteKingCell = 0;
+
+        var blackKingCell = 0;
+
         for (var rank = 0; rank < Constants.Ranks; rank++)
         {
             var files = ranks[Constants.MaxRank - rank];
@@ -250,7 +254,7 @@ public class Board
 
                 var colour = char.IsUpper(cell) ? Colour.White : Colour.Black;
 
-                var kind = char.ToUpper(cell) switch
+                var piece = char.ToUpper(cell) switch
                 {
                     'P' => (byte) Kind.Pawn | (byte) colour,
                     'R' => (byte) Kind.Rook | (byte) colour,
@@ -268,7 +272,19 @@ public class Board
                     throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
                 }
 
-                _cells[cellIndex] = (byte) kind;
+                _cells[cellIndex] = (byte) piece;
+
+                if (Cell.Is((byte) piece, Kind.King))
+                {
+                    if (colour == Colour.White)
+                    {
+                        whiteKingCell = cellIndex;
+                    }
+                    else
+                    {
+                        blackKingCell = cellIndex;
+                    }
+                }
 
                 file++;
             }
@@ -312,7 +328,7 @@ public class Board
 
         var scores = CalculateScores();
         
-        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black);
+        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black, whiteKingCell, blackKingCell);
     }
 
     private (int White, int Black) CalculateScores()

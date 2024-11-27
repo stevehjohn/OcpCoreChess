@@ -17,7 +17,7 @@ public class State
 
     public int BlackScore => (int) ((_state >> Offsets.BlackScoreOffset) & Masks.ByteMask);
     
-    public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore)
+    public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, int whiteKingCell, int blackKingCell)
     {
         var state = 0ul;
 
@@ -30,6 +30,10 @@ public class State
         state |= (ulong) ((whiteScore & Masks.ByteMask) << Offsets.WhiteScoreOffset);
 
         state |= (ulong) ((blackScore & Masks.ByteMask) << Offsets.BlackScoreOffset);
+
+        state |= (ulong) ((whiteKingCell & Masks.PositionBits) << Offsets.WhiteKingOffset);
+
+        state |= (ulong) ((blackKingCell & Masks.PositionBits) << Offsets.BlackKingOffset);
 
         _state = state;
     }

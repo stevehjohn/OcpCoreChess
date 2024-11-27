@@ -20,7 +20,7 @@ public class StateTests
     [InlineData(Colour.Black, Castle.NotAvailable, null, 14, 15)]
     public void PacksAndUnpacksStateCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore)
     {
-        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore);
+        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore, 0, 0);
         
         Assert.Equal(player, state.Player);
         
@@ -45,7 +45,7 @@ public class StateTests
     [InlineData(Colour.Black, Castle.NotAvailable, null, 0, 0, Castle.BlackQueenSide, Castle.NotAvailable)]
     public void RemoveCastleRightsOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, Castle rightToRemove, Castle expectedRights)
     {
-        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore);
+        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore, 0, 0);
         
         Assert.Equal(player, state.Player);
         
@@ -83,7 +83,7 @@ public class StateTests
     [InlineData(Colour.Black, Castle.NotAvailable, null, null, 0, 0)]
     public void SetEnPassantTargetOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int? newEnPassantTarget, int whiteScore, int blackScore)
     {
-        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore);
+        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore, 0, 0);
         
         Assert.Equal(player, state.Player);
         
@@ -121,7 +121,7 @@ public class StateTests
     [InlineData(Colour.Black, Castle.NotAvailable, null, 0, Scores.Pawn)]
     public void SetScoresOperatesCorrectly(Colour player, Castle castleStatus, int? enPassantTarget, int whiteDelta, int blackDelta)
     {
-        var state = new State(player, castleStatus, enPassantTarget, Scores.Initial, Scores.Initial);
+        var state = new State(player, castleStatus, enPassantTarget, Scores.Initial, Scores.Initial, 0, 0);
         
         Assert.Equal(player, state.Player);
         
