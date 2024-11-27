@@ -207,6 +207,8 @@ public class Core : IDisposable
 
                 return true;
             }
+            
+            moves.Clear();
         }
 
         return false;
