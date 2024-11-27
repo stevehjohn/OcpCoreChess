@@ -1,5 +1,6 @@
 ﻿using OcpCore.Engine;
 using OcpCore.Engine.Extensions;
+using OcpCore.Engine.Pieces;
 
 namespace Engine.PerfTreeClient;
 
@@ -20,7 +21,7 @@ public static class EntryPoint
 
         var fen = arguments[1];
         
-        var core = new Core(fen);
+        var core = new Core(Colour.White, fen);
 
         var depth = int.Parse(arguments[0]);
 
