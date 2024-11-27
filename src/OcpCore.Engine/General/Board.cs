@@ -291,7 +291,8 @@ public class Board
                     Kind.Knight => 'N',
                     Kind.Bishop => 'B',
                     Kind.Queen => 'Q',
-                    Kind.King => 'K'
+                    Kind.King => 'K',
+                    _ => throw new GeneralException($"Invalid piece value {piece}.")
                 };
 
                 if (Cell.Colour(piece) == Colour.Black)
