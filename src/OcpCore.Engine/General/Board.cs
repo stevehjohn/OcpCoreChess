@@ -266,7 +266,7 @@ public class Board
         State = new State(player, castleAvailability, enPassantTarget);
     }
 
-#pragma warning disable CS8524 - Cannot happen
+#pragma warning disable CS8524 // Cannot happen
     public override string ToString()
     {
         var builder = new StringBuilder();
