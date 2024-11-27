@@ -14,7 +14,7 @@ public class Pawn : Piece
 
         var file = Cell.GetFile(position);
 
-        var direction = colour == Colour.Black ? - 1 : 1;
+        var direction = colour == Colour.Black ? Direction.Black : Direction.White;
 
         var cell = Cell.GetCell(rank + direction * 2, file);
         

@@ -32,11 +32,14 @@ public class Board
     {
         var piece = _cells[position];
         
+        // TODO: Score
         _cells[target] = piece;
 
         _cells[position] = 0;
 
         PerformCastle(piece, position, target);
+        
+        PerformEnPassant(piece, target);
 
         CheckCastlingRightsForKing(piece);
 
@@ -63,6 +66,20 @@ public class Board
             _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
 
             _cells[sourceFile] = 0;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void PerformEnPassant(byte piece, int target)
+    {
+        if (Cell.Is(piece, Kind.Pawn) && target == State.EnPassantTarget)
+        {
+            var colour = Cell.Colour(piece);
+
+            var direction = colour == Colour.White ? Direction.Black : Direction.White;
+
+            // TODO: Score
+            _cells[piece + direction * Constants.Files] = 0;
         }
     }
 
