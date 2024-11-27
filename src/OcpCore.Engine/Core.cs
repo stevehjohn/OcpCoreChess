@@ -125,6 +125,9 @@ public class Core : IDisposable
 
             if (copy.IsKingInCheck(player.Invert()))
             {
+                if (! OpponentCanMove(copy, player.Invert()))
+                {
+                }
             }
 
             if (depth > 1)
@@ -154,6 +157,44 @@ public class Core : IDisposable
         }
     }
 
+    private static bool OpponentCanMove(Board board, Colour colour)
+    {
+        var moves = new List<Move>();
+        
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var piece = board[cell];
+            
+            if (piece == 0)
+            {
+                continue;
+            }
+
+            if (Cell.Colour(piece) != colour)
+            {
+                continue;
+            }
+
+            PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
+
+            foreach (var move in moves)
+            {
+                var copy = new Board(board);
+
+                copy.MakeMove(cell, move.Target);
+
+                if (copy.IsKingInCheck(colour))
+                {
+                    continue;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public void Dispose()
     {
         _cancellationTokenSource?.Dispose();
