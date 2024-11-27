@@ -62,8 +62,8 @@ public class BoardTests
     [Theory]
     [InlineData("r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 58, "  kr bnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
     [InlineData("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 62, "r    rk /pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
-    // [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3KBNR b KQkq - 0 1", 4, 2, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
-    // [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3K2R b KQkq - 0 1", 4, 6, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3KBNR b KQkq - 0 1", 4, 2, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/  KR BNR")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3K2R b KQkq - 0 1", 4, 6, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/R    RK ")]
     public void BoardPerformsCastle(string fen, int position, int target, string expectedFem)
     {
         var board = new Board(fen);
