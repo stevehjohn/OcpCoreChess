@@ -148,6 +148,7 @@ public class BoardTests
 
     [Theory]
     [InlineData("rnbqk1nr/1pp2ppp/8/3p4/2Pb2P1/3K1N2/1q2PPBP/7R b kq - 3 16", "rnbqk nr/ pp  ppp/        /   p    /  Pb  P /   K N  / q  PPBP/       R", 16, 46, Castle.BlackKingSide | Castle.BlackQueenSide, Colour.Black)]
+    [InlineData("3k4/p1p2p1p/p2p2p1/3P4/2K5/7r/2bb4/8 b - - 1 26", "   k    /p p  p p/p  p  p /   P    /  K     /       r/  bb    /        ", 1, 18, Castle.NotAvailable, Colour.Black)]
     public void BoardCopiesCorrectly(string fen, string expectedBoard, int expectedWhiteScore, int expectedBlackScore, Castle expectedCastleStatus, Colour expectedPlayer)
     {
         var board = new Board(fen);
