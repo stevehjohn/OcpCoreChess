@@ -230,7 +230,7 @@ public class Board
     public bool IsKingInCheck(Colour player)
     {
         var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
-        
+
         // TODO: Magic numbers...
         var kingRank = kingCell >> 3;
         
@@ -324,25 +324,25 @@ public class Board
         }
         
         var rankDirection = player == Colour.White ? Direction.White : Direction.Black;
-
+        
         cell = Cell.GetCell(kingRank + rankDirection, kingFile - 1);
-
+        
         if (cell >= 0)
         {
             piece = _cells[cell];
-
+        
             if (Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
             {
                 return true;
             }
         }
-
+        
         cell = Cell.GetCell(kingRank + rankDirection, kingFile + 1);
-
+        
         if (cell >= 0)
         {
             piece = _cells[cell];
-
+        
             if (Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
             {
                 return true;

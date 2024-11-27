@@ -21,7 +21,7 @@ public static class Cell
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetCell(int rank, int file)
     {
-        if (rank is < 0 or > Constants.MaxRank || file < 0 || file > Constants.MaxFile)
+        if (rank is < 0 or > Constants.MaxRank || file is < 0 or > Constants.MaxFile)
         {
             return -1;
         }

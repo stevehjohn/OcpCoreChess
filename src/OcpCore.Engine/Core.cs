@@ -124,7 +124,7 @@ public class Core : IDisposable
         var player = board.State.Player;
                
         var ply = maxDepth - depth + 1;
-
+        
         for (var i = 0; i < moves.Count; i++)
         {
             var move = moves[i];
