@@ -16,13 +16,15 @@ public class Core : IDisposable
 
     private readonly Board _board;
 
-    private readonly int _defaultDepth;
-
     private readonly Colour _engineColour;
 
     private long[] _depthCounts;
     
     private long[][] _outcomes;
+    
+    private readonly Dictionary<string, long> _perftCounts = new();
+
+    public IReadOnlyDictionary<string, long> PerftCounts => _perftCounts;
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -36,22 +38,18 @@ public class Core : IDisposable
 
     public bool IsBusy => _cancellationTokenSource != null;
 
-    public Core(Colour engineColour, int defaultDepth = DefaultDepth)
+    public Core(Colour engineColour)
     {
         _engineColour = engineColour;
         
         _board = new Board(Constants.InitialBoardFen);
-
-        _defaultDepth = defaultDepth;
     }
 
-    public Core(Colour engineColour, string fen, int defaultDepth = DefaultDepth)
+    public Core(string fen)
     {
-        _engineColour = engineColour;
-        
         _board = new Board(fen);
 
-        _defaultDepth = defaultDepth;
+        _engineColour = _board.State.Player;
     }
 
     public void MakeMove(string move)
@@ -63,14 +61,9 @@ public class Core : IDisposable
         _board.MakeMove(position, target);
     }
 
-    public void GetMove(int depth = 0)
+    public void GetMove(int depth)
     {
-        if (depth == 0)
-        {
-            depth = _defaultDepth;
-        }
-
-        GetMoveInternal(_defaultDepth);
+        GetMoveInternal(depth);
     }
     
     public Task GetMove(int depth, Action callback)
@@ -97,7 +90,9 @@ public class Core : IDisposable
         _depthCounts = new long[depth + 1];
 
         _outcomes = new long[depth + 1][];
-        
+                
+        _perftCounts.Clear();
+
         for (var i = 1; i <= depth; i++)
         {
             _depthCounts[i] = 0;
@@ -110,7 +105,7 @@ public class Core : IDisposable
         callback?.Invoke();
     }
 
-    private void ProcessPly(Board board, int maxDepth, int depth)
+    private void ProcessPly(Board board, int maxDepth, int depth, string perftNode = null)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
@@ -140,6 +135,17 @@ public class Core : IDisposable
 
             _depthCounts[ply]++;
 
+            if (perftNode == null)
+            {
+                perftNode = $"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}";
+
+                _perftCounts.Add(perftNode, 1);
+            }
+            else
+            {
+                _perftCounts[perftNode]++;
+            }
+
             if (copy.IsKingInCheck(player.Invert()))
             {
                 outcome |= MoveOutcome.Check;
@@ -160,7 +166,14 @@ public class Core : IDisposable
 
             if (depth > 1)
             {
-                ProcessPly(copy, maxDepth, depth - 1);
+                ProcessPly(copy, maxDepth, depth - 1, perftNode);
+
+                _perftCounts[perftNode]--;
+            }
+
+            if (depth == maxDepth)
+            {
+                perftNode = null;
             }
         }
     }
