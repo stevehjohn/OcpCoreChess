@@ -5,31 +5,31 @@ namespace OcpCore.Engine.General;
 
 public class State
 {
-    private int _state;
+    private ulong _state;
 
     public Colour Player => (_state & Masks.PlayerTurn) > 0 ? Colour.Black : Colour.White;
 
     public Castle CastleStatus => (Castle) (_state & Masks.CastleStatus);
 
-    public int? EnPassantTarget => (_state & Masks.EnPassantTarget) == Masks.EnPassantTarget ? null : (_state & Masks.EnPassantTarget) >> Offsets.EnPassantTargetOffset;
+    public int? EnPassantTarget => (_state & Masks.EnPassantTarget) == Masks.EnPassantTarget ? null : (int?) ((_state & Masks.EnPassantTarget) >> Offsets.EnPassantTargetOffset);
 
-    public int WhiteScore => (_state >> Offsets.WhiteScoreOffset) & Masks.ByteMask;
+    public int WhiteScore => (int) ((_state >> Offsets.WhiteScoreOffset) & Masks.ByteMask);
 
-    public int BlackScore => (_state >> Offsets.BlackScoreOffset) & Masks.ByteMask;
+    public int BlackScore => (int) ((_state >> Offsets.BlackScoreOffset) & Masks.ByteMask);
     
     public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore)
     {
-        var state = 0;
+        var state = 0ul;
 
         state |= player == Colour.White ? 0 : Masks.PlayerTurn;
 
-        state |= enPassantTarget == null ? Masks.EnPassantTarget : (enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
+        state |= (ulong) (enPassantTarget == null ? Masks.EnPassantTarget : (enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset);
         
-        state |= (int) castleStatus;
+        state |= (ulong) castleStatus;
 
-        state |= (whiteScore & Masks.ByteMask) << Offsets.WhiteScoreOffset;
+        state |= (ulong) ((whiteScore & Masks.ByteMask) << Offsets.WhiteScoreOffset);
 
-        state |= (blackScore & Masks.ByteMask) << Offsets.BlackScoreOffset;
+        state |= (ulong) ((blackScore & Masks.ByteMask) << Offsets.BlackScoreOffset);
 
         _state = state;
     }
@@ -41,7 +41,7 @@ public class State
 
     public void RemoveCastleRights(Castle castle)
     {
-        _state &= ~(int) castle;
+        _state &= ~(ulong) castle;
     }
 
     public void SetEnPassantTarget(int? target)
@@ -54,7 +54,7 @@ public class State
         {
             _state &= ~Masks.EnPassantTarget;
             
-            _state |= (target.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset;
+            _state |= (ulong) ((target.Value & Masks.EnPassantBits) << Offsets.EnPassantTargetOffset);
         }
     }
 
@@ -64,7 +64,7 @@ public class State
         
         _state &= ~(Masks.ByteMask << Offsets.WhiteScoreOffset);
 
-        _state |= ((score + delta) & Masks.ByteMask) << Offsets.WhiteScoreOffset;
+        _state |= (ulong) (((score + delta) & Masks.ByteMask) << Offsets.WhiteScoreOffset);
     }
     
     public void UpdateBlackScore(int delta)
@@ -73,7 +73,7 @@ public class State
         
         _state &= ~(Masks.ByteMask << Offsets.BlackScoreOffset);
 
-        _state |= ((score + delta) & Masks.ByteMask) << Offsets.BlackScoreOffset;
+        _state |= (ulong) (((score + delta) & Masks.ByteMask) << Offsets.BlackScoreOffset);
     }
 
     public void InvertPlayer()
