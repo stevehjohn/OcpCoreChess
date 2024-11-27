@@ -11,6 +11,45 @@ public class King : Piece
         
     public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
     {
+        CheckForCastlingOpportunities(board, position, colour, moveList);
+        
+        var rank = Cell.GetRank(position);
+
+        var file = Cell.GetFile(position);
+        
+        for (var i = 0; i < Constants.DirectionalMoves.Length; i++)
+        {
+            var direction = Constants.DirectionalMoves[i];
+
+            var newRank = rank + direction.RankDelta;
+
+            var newFile = file + direction.FileDelta;
+
+            var cell = Cell.GetCell(newRank, newFile);
+
+            if (cell < 0)
+            {
+                continue;
+            }
+
+            var content = board[cell];
+
+            if (content == 0)
+            {
+                moveList.Add(new Move(position, cell, false));
+
+                continue;
+            }
+
+            if (Cell.Colour(content) != colour)
+            {
+                moveList.Add(new Move(position, cell, true));
+            }
+        }
+    }
+
+    private void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
+    {
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
         switch (colour)
         {
@@ -57,40 +96,6 @@ public class King : Piece
                 }
 
                 break;
-            }
-        }
-
-        var rank = Cell.GetRank(position);
-
-        var file = Cell.GetFile(position);
-        
-        for (var i = 0; i < Constants.DirectionalMoves.Length; i++)
-        {
-            var direction = Constants.DirectionalMoves[i];
-
-            var newRank = rank + direction.RankDelta;
-
-            var newFile = file + direction.FileDelta;
-
-            var cell = Cell.GetCell(newRank, newFile);
-
-            if (cell < 0)
-            {
-                continue;
-            }
-
-            var content = board[cell];
-
-            if (content == 0)
-            {
-                moveList.Add(new Move(position, cell, false));
-
-                continue;
-            }
-
-            if (Cell.Colour(content) != colour)
-            {
-                moveList.Add(new Move(position, cell, true));
             }
         }
     }
