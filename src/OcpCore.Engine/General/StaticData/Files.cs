@@ -1,4 +1,4 @@
-namespace OcpCore.Engine.General;
+namespace OcpCore.Engine.General.StaticData;
 
 public static class Files
 {
