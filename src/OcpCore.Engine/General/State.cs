@@ -34,6 +34,11 @@ public class State
         _state = state;
     }
 
+    public State(State state)
+    {
+        _state = state._state;
+    }
+
     public void RemoveCastleRights(Castle castle)
     {
         _state &= ~(int) castle;

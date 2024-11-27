@@ -51,6 +51,22 @@ public class Core
 
     private void ProcessPly(Board board)
     {
+        var moves = new List<Move>();
+        
+        GetAllMoves(board, moves);
+        
+        // TODO: This is where move ordering could be applied
+
+        for (var i = 0; i < moves.Count; i++)
+        {
+            var move = moves[i];
+            
+            
+        }
+    }
+
+    private static void GetAllMoves(Board board, List<Move> moves)
+    {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
             var piece = board[cell];
@@ -59,6 +75,13 @@ public class Core
             {
                 continue;
             }
+
+            if (Cell.Colour(piece) != board.State.Player)
+            {
+                continue;
+            }
+            
+            PieceCache.Get(piece).GetMoves(board, cell, board.State.Player, moves);
         }
     }
 }

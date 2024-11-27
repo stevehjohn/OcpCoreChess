@@ -145,4 +145,31 @@ public class BoardTests
         
         Assert.Equal(expectedPlayer, board.State.Player);
     }
+
+    [Theory]
+    [InlineData("rnbqk1nr/1pp2ppp/8/3p4/2Pb2P1/3K1N2/1q2PPBP/7R b kq - 3 16", "rnbqk nr/ pp  ppp/        /   p    /  Pb  P /   K N  / q  PPBP/       R", 16, 46, Castle.BlackKingSide | Castle.BlackQueenSide, Colour.Black)]
+    public void BoardCopiesCorrectly(string fen, string expectedBoard, int expectedWhiteScore, int expectedBlackScore, Castle expectedCastleStatus, Colour expectedPlayer)
+    {
+        var board = new Board(fen);
+        
+        Assert.Equal(expectedWhiteScore, board.State.WhiteScore);
+        
+        Assert.Equal(expectedBlackScore, board.State.BlackScore);
+        
+        Assert.Equal(expectedCastleStatus, board.State.CastleStatus);
+        
+        Assert.Equal(expectedPlayer, board.State.Player);
+        
+        var copy = new Board(board);
+        
+        Assert.Equal(expectedBoard, copy.ToString());
+        
+        Assert.Equal(expectedWhiteScore, copy.State.WhiteScore);
+        
+        Assert.Equal(expectedBlackScore, copy.State.BlackScore);
+        
+        Assert.Equal(expectedCastleStatus, copy.State.CastleStatus);
+        
+        Assert.Equal(expectedPlayer, board.State.Player);
+    }
 }

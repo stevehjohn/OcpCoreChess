@@ -3,13 +3,13 @@ using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;
 
-public static class Pieces
+public static class PieceCache
 {
-    private static readonly Piece[] PieceCache;
+    private static readonly Piece[] Pieces;
     
-    static Pieces()
+    static PieceCache()
     {
-        PieceCache =
+        Pieces =
         [
             null,
             new Pawn(),
@@ -21,5 +21,5 @@ public static class Pieces
         ];
     }
 
-    public static Piece Get(byte kind) => PieceCache[kind & Masks.Kind];
+    public static Piece Get(byte kind) => Pieces[kind & Masks.Kind];
 }

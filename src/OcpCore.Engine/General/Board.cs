@@ -29,6 +29,21 @@ public class Board
         ParseFen(fen);
     }
 
+    public unsafe Board(Board board)
+    {
+        _cells = new byte[Constants.Cells];
+        
+        fixed (byte* destination = _cells)
+        {
+            fixed (byte* source = board._cells)
+            {
+                Buffer.MemoryCopy(source, destination, Constants.Cells, Constants.Cells);
+            }
+        }
+
+        State = new State(board.State);
+    }
+
     public void MakeMove(int position, int target)
     {
         var piece = _cells[position];
@@ -37,7 +52,7 @@ public class Board
         
         if (capture != 0)
         {
-            var score = Pieces.Get(capture).Value;
+            var score = PieceCache.Get(capture).Value;
 
             if (Cell.Colour(piece) == Colour.White)
             {
@@ -96,7 +111,7 @@ public class Board
 
             var direction = colour == Colour.White ? Direction.Black : Direction.White;
 
-            var score = Pieces.Get(_cells[target + direction * Constants.Files]).Value;
+            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
 
             if (Cell.Colour(piece) == Colour.White)
             {
@@ -312,11 +327,11 @@ public class Board
 
             if (Cell.Colour(content) == Colour.White)
             {
-                white += Pieces.Get(content).Value;
+                white += PieceCache.Get(content).Value;
             }
             else
             {
-                black += Pieces.Get(content).Value;
+                black += PieceCache.Get(content).Value;
             }
         }
 
