@@ -184,11 +184,6 @@ public class Board
 
             while (index < files.Length)
             {
-                if (index >= files.Length)
-                {
-                    throw new FenParseException($"Not enough files in rank {rank + 1}: {files}.");
-                }
-
                 var cell = files[index];
 
                 index++;
@@ -228,6 +223,11 @@ public class Board
                 _cells[cellIndex] = (byte) kind;
 
                 file++;
+            }
+            
+            if (file != Constants.Files)
+            {
+                throw new FenParseException($"Not enough files in rank {rank + 1}: {files}.");
             }
         }
 

@@ -11,13 +11,16 @@ public class BoardTests
     [InlineData("ppppppppp/8/8/8/8/8/8/8 b - - 0 1", "Too many files in rank 8: ppppppppp.")]
     [InlineData("8/8/p7p/8/8/8/8/8 w - - 0 1", "Too many files in rank 6: p7p.")]
     [InlineData("8/8/pp7/8/8/8/8/8 w - - 0 1", "Too many files in rank 6: pp7.")]
+    [InlineData("8/8/pp5/8/8/8/8/8 w - - 0 1", "Not enough files in rank 6: pp5.")]
     [InlineData("pppppppp/8/8/8/8/8/8 w - - 0 1", "Incorrect number of ranks in FEN string: 7.")]
     [InlineData("pppppppp/8/8/8/8/8/8/8/8 w - - 0 1", "Incorrect number of ranks in FEN string: 9.")]
     [InlineData("pppppppp/8/8/8/8/8/8/ppgppppp w - - 0 1", "Invalid piece token in rank 1: g.")]
     [InlineData("pppppppp/8/8/8/8/8/8/pppppppp - - 0 1", "Invalid number of parts to FEN string: 5.")]
+    [InlineData("pppppppp/8/8/8/8/8/8/pppppppp x - - 0 1", "Invalid turn indicator: x.")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w XQkq - 0 1", "Invalid castling status indicator: X")]
     public void BoardDetectsInvalidFenSituations(string fen, string expectedMessage)
     {
-        var exception =Assert.Throws<FenParseException>(() => new Board(fen));
+        var exception = Assert.Throws<FenParseException>(() => new Board(fen));
         
         Assert.Equal(expectedMessage, exception.Message);
     }
