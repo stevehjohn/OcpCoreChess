@@ -64,7 +64,7 @@ public class State
     
     public void UpdateBlackScore(int delta)
     {
-        var score = WhiteScore;
+        var score = BlackScore;
         
         _state &= ~(Masks.ByteMask << Offsets.BlackScoreOffset);
 
