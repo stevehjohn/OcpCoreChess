@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.Pieces;
@@ -43,6 +44,7 @@ public class Board
         UpdateEnPassantState(piece, position, target);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void PerformCastle(byte piece, int position, int target)
     {
         var delta = position - target;
@@ -63,6 +65,7 @@ public class Board
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CheckCastlingRightsForKing(byte piece)
     {
         if (Cell.Is(piece, Kind.King))
@@ -87,6 +90,7 @@ public class Board
         }
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CheckCastlingRightsForRook(byte piece, int position)
     {
         if (Cell.Is(piece, Kind.Rook))
@@ -118,6 +122,7 @@ public class Board
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void UpdateEnPassantState(byte piece, int position, int target)
     {
         if (Cell.Is(piece, Kind.Pawn))
