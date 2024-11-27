@@ -329,12 +329,12 @@ public class Board
             if (Math.Abs(delta) == Constants.Ranks * 2)
             {
                 State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
-            }
-            else
-            {
-                State.SetEnPassantTarget(null);
+                
+                return;
             }
         }
+
+        State.SetEnPassantTarget(null);
     }
 
     private void ParseFen(string fen)

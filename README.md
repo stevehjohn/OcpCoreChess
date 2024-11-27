@@ -7,6 +7,7 @@
 ### TODOs
 
 - Do not castle through check.
+- Probably safer to use 2 bits for colour.
 - Promotions.
 - Get movement working before adding pooling to `_cells` in `Board`.
 - Move ordering?
