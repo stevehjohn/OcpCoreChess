@@ -96,12 +96,12 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        ProcessPly(_board, depth, depth, _root);
+        ProcessPly(_board, depth, depth);
 
         callback?.Invoke();
     }
 
-    private void ProcessPly(Board board, int maxDepth, int depth, Node node)
+    private void ProcessPly(Board board, int maxDepth, int depth)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
@@ -135,7 +135,7 @@ public sealed class Core : IDisposable
 
             var score = board.State.WhiteScore - board.State.BlackScore;
             
-            var child = node.AddChild(new Move(move.Position, move.Target, move.Outcome), score);
+            _root.AddChild(new Move(move.Position, move.Target, move.Outcome), score);
             
             if (copy.IsKingInCheck(player.Invert()))
             {
@@ -157,7 +157,7 @@ public sealed class Core : IDisposable
 
             if (depth > 1)
             {
-                ProcessPly(copy, maxDepth, depth - 1, child);
+                ProcessPly(copy, maxDepth, depth - 1);
             }
         }
     }
