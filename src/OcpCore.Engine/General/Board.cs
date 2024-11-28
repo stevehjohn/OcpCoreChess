@@ -52,7 +52,7 @@ public class Board
 
         if (piece == 0 || Cell.Colour(piece) != State.Player)
         {
-            throw new InvalidMoveException(piece == 0 ? $"No piece at positon {position.ToStandardNotation()}." : $"Not the turn for {Cell.Colour(piece)}.");
+            throw new InvalidMoveException(piece == 0 ? $"No piece at position {position.ToStandardNotation()}." : $"Not the turn for {Cell.Colour(piece)}.");
         }
 
         var capture = _cells[target];

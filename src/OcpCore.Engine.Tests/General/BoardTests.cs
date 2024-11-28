@@ -271,6 +271,16 @@ public class BoardTests
     }
 
     [Fact]
+    public void BoardPreventsEmptyCellMove()
+    {
+        var board = new Board(Constants.InitialBoardFen);
+
+        var exception = Assert.Throws<InvalidMoveException>(() => board.MakeMove(16, 24));
+        
+        Assert.Equal("No piece at position a3.", exception.Message);
+    }
+
+    [Fact]
     public void ToStringGeneratesReadableOutput()
     {
         var board = new Board(Constants.InitialBoardFen);
