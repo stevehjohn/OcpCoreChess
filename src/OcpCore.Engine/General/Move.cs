@@ -6,14 +6,14 @@ public struct Move
     
     public int Target { get; }
     
-    public bool Captures { get; }
+    public MoveOutcome Outcome { get; }
 
-    public Move(int position, int target, bool captures)
+    public Move(int position, int target, MoveOutcome outcome)
     {
         Position = position;
         
         Target = target;
         
-        Captures = captures;
+        Outcome = outcome;
     }
 }

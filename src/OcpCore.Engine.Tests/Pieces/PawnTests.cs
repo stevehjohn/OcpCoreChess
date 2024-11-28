@@ -111,4 +111,28 @@ public class PawnTests : PieceTestBase<Pawn>
         
         AssertExpectedMoves(expectedMoves, moves);
     }
+    
+    [Theory]
+    [InlineData("8/8/8/8/8/p7/1P6/8 w - - 0 1", 9, true, 16)]
+    [InlineData("8/8/8/8/8/2p5/1P6/8 w - - 0 1", 9, true, 18)]
+    [InlineData("8/8/8/8/8/1p6/1P6/8 w - - 0 1", 9, false, 0)]
+    public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
+    {
+        var board = new Board(fen);
+
+        AssertPieceIsWhereExpected(board, position, Colour.White);
+
+        var moves = new List<Move>();
+        
+        Piece.GetMoves(board, position, Colour.White, moves);
+        
+        if (captureExpected)
+        {
+            Assert.Single(moves, m => m.Outcome == MoveOutcome.Capture && m.Target == captureCell);
+        }
+        else
+        {
+            Assert.DoesNotContain(moves, m => m.Outcome == MoveOutcome.Capture);
+        }
+    }
 }

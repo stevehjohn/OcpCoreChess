@@ -20,6 +20,8 @@ public sealed class Core : IDisposable
     
     private long[][] _outcomes;
 
+    private Node _root;
+
     private CancellationTokenSource _cancellationTokenSource;
 
     private CancellationToken _cancellationToken;
@@ -84,6 +86,8 @@ public sealed class Core : IDisposable
         _depthCounts = new long[depth + 1];
 
         _outcomes = new long[depth + 1][];
+
+        _root = new Node();
         
         for (var i = 1; i <= depth; i++)
         {
@@ -128,6 +132,10 @@ public sealed class Core : IDisposable
             }
 
             _depthCounts[ply]++;
+
+            var score = board.State.WhiteScore - board.State.BlackScore;
+            
+            _root.AddChild(new Move(move.Position, move.Target, move.Outcome), score);
             
             if (copy.IsKingInCheck(player.Invert()))
             {

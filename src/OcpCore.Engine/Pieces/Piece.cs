@@ -38,7 +38,7 @@ public abstract class Piece
 
                 if (content == 0)
                 {
-                    moveList.Add(new Move(position, cell, false));
+                    moveList.Add(new Move(position, cell, MoveOutcome.Move));
                     
                     continue;
                 }
@@ -48,7 +48,7 @@ public abstract class Piece
                     break;
                 }
 
-                moveList.Add(new Move(position, cell, true));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture));
                 
                 break;    
             }
