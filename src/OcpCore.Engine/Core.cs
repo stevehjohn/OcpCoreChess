@@ -20,8 +20,6 @@ public sealed class Core : IDisposable
     
     private long[][] _outcomes;
 
-    private int[] _plyBestScores;
-
     private CancellationTokenSource _cancellationTokenSource;
 
     private CancellationToken _cancellationToken;
@@ -31,8 +29,6 @@ public sealed class Core : IDisposable
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetMoveOutcome(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
-    
-    public int GetPlyBestScore(int ply) => _plyBestScores[ply];
 
     public bool IsBusy => _cancellationTokenSource != null;
 
@@ -88,8 +84,6 @@ public sealed class Core : IDisposable
         _depthCounts = new long[depth + 1];
 
         _outcomes = new long[depth + 1][];
-
-        _plyBestScores = new int[depth + 1];
         
         for (var i = 1; i <= depth; i++)
         {
@@ -134,24 +128,6 @@ public sealed class Core : IDisposable
             }
 
             _depthCounts[ply]++;
-
-            var score = board.State.WhiteScore - board.State.BlackScore;
-
-            var isMaximizing = (_engineColour == Colour.White && player == Colour.White) || (_engineColour == Colour.Black && player == Colour.Black);
-
-            _plyBestScores[ply] = isMaximizing
-                ? Math.Max(_plyBestScores[ply], score)
-                : Math.Min(_plyBestScores[ply], score);
-
-            if (copy.IsKingInCheck(player.Invert()))
-            {
-                outcome |= MoveOutcome.Check;
-                
-                if (! CanMove(copy, player.Invert()))
-                {
-                    outcome |= MoveOutcome.CheckMate;
-                }
-            }
 
             for (var j = 0; j <= Constants.MoveOutcomes; j++)
             {
