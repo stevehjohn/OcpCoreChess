@@ -6,6 +6,6 @@ public static class IntExtensions
 {
     public static string ToStandardNotation(this int cell)
     {
-        return $"{(char) ('a' + (cell & Masks.File))}{(cell >> Offsets.RankOffset) + 1}";
+        return $"{(char) ('a' + (cell & Masks.File))}{(cell >> Offsets.Rank) + 1}";
     }
 }

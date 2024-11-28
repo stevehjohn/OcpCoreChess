@@ -19,7 +19,7 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
 
-        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0);
+        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0, 0, 1);
     }
 
     public Board(string fen)
@@ -47,11 +47,11 @@ public class Board
     public MoveOutcome MakeMove(int position, int target)
     {
         var outcome = MoveOutcome.Move;
-        
+
         var piece = _cells[position];
 
         var capture = _cells[target];
-        
+
         if (capture != 0)
         {
             var score = PieceCache.Get(capture).Value;
@@ -85,7 +85,7 @@ public class Board
         _cells[position] = 0;
 
         outcome |= PerformCastle(piece, position, target);
-        
+
         outcome |= PerformEnPassant(piece, target);
 
         CheckCastlingRightsForKing(piece);
@@ -95,6 +95,20 @@ public class Board
         UpdateEnPassantState(piece, position, target);
 
         outcome |= CheckForPromotion(piece, target);
+
+        if (State.Player == Colour.Black)
+        {
+            State.IncrementFullmoves();
+        }
+
+        if (Cell.Is(piece, Kind.Pawn) || (outcome & MoveOutcome.Capture) > 0)
+        {
+            State.ResetHalfmoves();
+        }
+        else
+        {
+            State.IncrementHalfmoves();
+        }
 
         State.InvertPlayer();
 
@@ -333,6 +347,10 @@ public class Board
         {
             builder.Append($" {State.EnPassantTarget.Value.ToStandardNotation()}");
         }
+
+        builder.Append($" {State.Halfmoves}");
+
+        builder.Append($" {State.Fullmoves}");
 
         return builder.ToString();
     }
@@ -578,7 +596,7 @@ public class Board
                     'Q' => Castle.WhiteQueenSide,
                     'k' => Castle.BlackKingSide,
                     'q' => Castle.BlackQueenSide,
-                    _ => throw new FenParseException($"Invalid castling status indicator: {character}")
+                    _ => throw new FenParseException($"Invalid castling status indicator: {character}.")
                 };
             }
         }
@@ -590,9 +608,19 @@ public class Board
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
+        if (! int.TryParse(parts[4], out var halfmoves))
+        {
+            throw new FenParseException($"Invalid value for halfmove counter: {parts[4]}.");
+        }
+
+        if (! int.TryParse(parts[5], out var fullmoves))
+        {
+            throw new FenParseException($"Invalid value for halfmove counter: {parts[5]}.");
+        }
+
         var scores = CalculateScores();
         
-        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black, whiteKingCell, blackKingCell);
+        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
     private (int White, int Black) CalculateScores()

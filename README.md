@@ -36,7 +36,7 @@ Rank 8 | 56 57 58 59 60 61 62 62  Black
 ### Board State
 
 ```
-(int)  kkkk_kkKK_KKKK_bbbb_bbbb_wwww_wwww_eeee_eeep_cccc
+(int)  mmmm_mmmm_mmmm_hhhh_hhhh_kkkk_kkKK_KKKK_bbbb_bbbb_wwww_wwww_eeee_eeep_cccc
 ```
 
 - c: Castling rights.
@@ -46,3 +46,5 @@ Rank 8 | 56 57 58 59 60 61 62 62  Black
 - w: White score.
 - K: White King cell.
 - k: Black king cell.
+- h: Halfmove clock.
+- m: Full~~~~move count.

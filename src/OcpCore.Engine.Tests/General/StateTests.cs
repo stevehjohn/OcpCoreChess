@@ -16,6 +16,9 @@ public class StateTests
     [Repeat(10, nameof(State.UpdateBlackScore))]
     [Repeat(10, nameof(State.SetWhiteKingCell))]
     [Repeat(10, nameof(State.SetBlackKingCell))]
+    [Repeat(10, nameof(State.IncrementHalfmoves))]
+    [Repeat(10, nameof(State.ResetHalfmoves))]
+    [Repeat(10, nameof(State.IncrementFullmoves))]
     public void StateComponentsDoNotInterfereWithEachOther(string methodToInvoke)
     {
         var rng = Random.Shared;
@@ -42,7 +45,11 @@ public class StateTests
 
         var blackKingCell = rng.Next(Constants.Cells);
 
-        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell);
+        var halfmoves = rng.Next(200);
+
+        var fullmoves = rng.Next(200);
+
+        var state = new State(player, castleStatus, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell, halfmoves, fullmoves);
 
         Assert.Equal(player, state.Player);
 
@@ -57,6 +64,10 @@ public class StateTests
         Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
         Assert.Equal(blackKingCell, state.BlackKingCell);
+
+        Assert.Equal(halfmoves, state.Halfmoves);
+
+        Assert.Equal(fullmoves, state.Fullmoves);
 
         var property = state.GetType().GetMethod(methodToInvoke)!;
 
@@ -138,6 +149,10 @@ public class StateTests
                 Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
                 Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
 
                 break;
 
@@ -155,6 +170,10 @@ public class StateTests
                 Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
                 Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
 
                 break;
 
@@ -172,6 +191,10 @@ public class StateTests
                 Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
                 Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
 
                 break;
 
@@ -190,6 +213,10 @@ public class StateTests
                 Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
                 Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
 
                 break;
 
@@ -208,6 +235,73 @@ public class StateTests
                 Assert.Equal(whiteKingCell, state.WhiteKingCell);
 
                 Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
+
+                break;
+            
+            case nameof(State.IncrementHalfmoves):
+                Assert.Equal(player, state.Player);
+
+                Assert.Equal(castleStatus, state.CastleStatus);
+
+                Assert.Equal(enPassantTarget, state.EnPassantTarget);
+
+                Assert.Equal(whiteScore, state.WhiteScore);
+
+                Assert.Equal(blackScore, state.BlackScore);
+
+                Assert.Equal(whiteKingCell, state.WhiteKingCell);
+
+                Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves + 1, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
+
+                break;    
+            
+            case nameof(State.IncrementFullmoves):
+                Assert.Equal(player, state.Player);
+
+                Assert.Equal(castleStatus, state.CastleStatus);
+
+                Assert.Equal(enPassantTarget, state.EnPassantTarget);
+
+                Assert.Equal(whiteScore, state.WhiteScore);
+
+                Assert.Equal(blackScore, state.BlackScore);
+
+                Assert.Equal(whiteKingCell, state.WhiteKingCell);
+
+                Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(halfmoves, state.Halfmoves);
+                
+                Assert.Equal(fullmoves + 1, state.Fullmoves);
+
+                break;
+            
+            case nameof(State.ResetHalfmoves):
+                Assert.Equal(player, state.Player);
+
+                Assert.Equal(castleStatus, state.CastleStatus);
+
+                Assert.Equal(enPassantTarget, state.EnPassantTarget);
+
+                Assert.Equal(whiteScore, state.WhiteScore);
+
+                Assert.Equal(blackScore, state.BlackScore);
+
+                Assert.Equal(whiteKingCell, state.WhiteKingCell);
+
+                Assert.Equal(blackKingCell, state.BlackKingCell);
+                
+                Assert.Equal(0, state.Halfmoves);
+                
+                Assert.Equal(fullmoves, state.Fullmoves);
 
                 break;
         }

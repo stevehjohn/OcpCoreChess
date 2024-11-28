@@ -11,4 +11,5 @@ public static class Masks
     public const ulong EnPassantBits = 0b0111_1111;
     public const ulong PlayerTurn = 0b0001_0000;
     public const ulong PositionBits = 0b0011_1111;
+    public const ulong Fullmove = 0b1111_1111_1111;
 }

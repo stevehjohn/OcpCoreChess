@@ -9,7 +9,7 @@ public static class Cell
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetRank(int cell)
     {
-        return cell >> Offsets.RankOffset;
+        return cell >> Offsets.Rank;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -26,7 +26,7 @@ public static class Cell
             return -1;
         }
 
-        return (rank << Offsets.RankOffset) | file;
+        return (rank << Offsets.Rank) | file;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -19,7 +19,7 @@ public class BoardTests
     [InlineData("pppppppp/8/8/8/8/8/8/ppgppppp w - - 0 1", "Invalid piece token in rank 1: g.")]
     [InlineData("pppppppp/8/8/8/8/8/8/pppppppp - - 0 1", "Invalid number of parts to FEN string: 5.")]
     [InlineData("pppppppp/8/8/8/8/8/8/pppppppp x - - 0 1", "Invalid turn indicator: x.")]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w XQkq - 0 1", "Invalid castling status indicator: X")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w XQkq - 0 1", "Invalid castling status indicator: X.")]
     public void BoardDetectsInvalidFenSituations(string fen, string expectedMessage)
     {
         var exception = Assert.Throws<FenParseException>(() => new Board(fen));
@@ -216,7 +216,7 @@ public class BoardTests
 
     [Theory]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
-    [InlineData("rnb2b1k/p1p1p1pp/5Rp1/PppqN2n/4rP1Q/B6B/PP1PP1PP/RN2K3 w Qq b6 0 1", "rnb2b1k/p1p1p1pp/5Rp1/PppqN2n/4rP1Q/B6B/PP1PP1PP/RN2K3 w Qq b6 0 1")]
+    [InlineData("rnb2b1k/p1p1p1pp/5Rp1/PppqN2n/4rP1Q/B6B/PP1PP1PP/RN2K3 w Qq b6 5 12", "rnb2b1k/p1p1p1pp/5Rp1/PppqN2n/4rP1Q/B6B/PP1PP1PP/RN2K3 w Qq b6 5 12")]
     public void BoardGeneratesCorrectFen(string input, string expected)
     {
         var board = new Board(input);
