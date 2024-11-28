@@ -56,7 +56,7 @@ public class Board
         {
             var score = PieceCache.Get(capture).Value;
 
-            if (Cell.Colour(piece) == Colour.White)
+            if (Cell.Colour(capture) == Colour.White)
             {
                 State.UpdateWhiteScore(-score);
             }
@@ -242,17 +242,17 @@ public class Board
         {
             return MoveOutcome.Move;
         }
-
+        
         // TODO: Knight sometimes?
         _cells[target] |= (byte) ((_cells[target] & ~Masks.Kind) | (byte) Kind.Queen);
 
         if (Cell.Colour(piece) == Colour.White)
         {
-            State.UpdateWhiteScore(PieceCache.Get(piece).Value);
+            State.UpdateWhiteScore(Scores.Queen - Scores.Pawn);
         }
         else
         {
-            State.UpdateBlackScore(PieceCache.Get(piece).Value);
+            State.UpdateBlackScore(Scores.Queen - Scores.Pawn);
         }
 
         return MoveOutcome.Promotion;

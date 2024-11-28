@@ -91,16 +91,16 @@ public class BoardTests
     }
 
     [Theory]
-    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/p7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Pawn, Scores.Initial)]
-    [InlineData("1nbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQk - 0 1", 9, 16, Scores.Initial - Scores.Rook, Scores.Initial)]
-    [InlineData("r1bqkbnr/pppppppp/8/8/8/n7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Knight, Scores.Initial)]
-    [InlineData("rn1qkbnr/pppppppp/8/8/8/b7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Bishop, Scores.Initial)]
-    [InlineData("rnb1kbnr/pppppppp/8/8/8/q7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial - Scores.Queen, Scores.Initial)]
-    [InlineData("rnbqkbnr/pppppppp/P7/8/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Pawn)]
-    [InlineData("rnbqkbnr/pppppppp/R7/8/8/8/PPPPPPPP/1NBQKBNR b Kkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Rook)]
-    [InlineData("rnbqkbnr/pppppppp/N7/8/8/8/PPPPPPPP/R1BQKBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Knight)]
-    [InlineData("rnbqkbnr/pppppppp/B7/8/8/8/PPPPPPPP/RN1QKBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Bishop)]
-    [InlineData("rnbqkbnr/pppppppp/Q7/8/8/8/PPPPPPPP/RNB1KBNR b KQkq - 0 1", 49, 40, Scores.Initial, Scores.Initial - Scores.Queen)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/p7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial, Scores.Initial - Scores.Pawn)]
+    [InlineData("1nbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQk - 0 1", 9, 16, Scores.Initial, Scores.Initial - Scores.Rook)]
+    [InlineData("r1bqkbnr/pppppppp/8/8/8/n7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial, Scores.Initial - Scores.Knight)]
+    [InlineData("rn1qkbnr/pppppppp/8/8/8/b7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial, Scores.Initial - Scores.Bishop)]
+    [InlineData("rnb1kbnr/pppppppp/8/8/8/q7/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 9, 16, Scores.Initial, Scores.Initial - Scores.Queen)]
+    [InlineData("rnbqkbnr/pppppppp/P7/8/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1", 49, 40, Scores.Initial - Scores.Pawn, Scores.Initial)]
+    [InlineData("rnbqkbnr/pppppppp/R7/8/8/8/PPPPPPPP/1NBQKBNR b Kkq - 0 1", 49, 40, Scores.Initial - Scores.Rook, Scores.Initial)]
+    [InlineData("rnbqkbnr/pppppppp/N7/8/8/8/PPPPPPPP/R1BQKBNR b KQkq - 0 1", 49, 40, Scores.Initial - Scores.Knight, Scores.Initial)]
+    [InlineData("rnbqkbnr/pppppppp/B7/8/8/8/PPPPPPPP/RN1QKBNR b KQkq - 0 1", 49, 40, Scores.Initial - Scores.Bishop, Scores.Initial)]
+    [InlineData("rnbqkbnr/pppppppp/Q7/8/8/8/PPPPPPPP/RNB1KBNR b KQkq - 0 1", 49, 40, Scores.Initial - Scores.Queen, Scores.Initial)]
     public void BoardUpdatesScoresOnCapture(string fen, int position, int target, int expectedWhiteScore, int expectedBlackScore)
     {
         var board = new Board(fen);
@@ -184,5 +184,33 @@ public class BoardTests
         board.MakeMove(4, 12);
         
         Assert.True(board.IsKingInCheck(Colour.White));
+    }
+
+    [Theory]
+    [InlineData("8/4P3/8/8/8/8/8/8 w - - 0 1", 52, 60, 1, 0, 9, 0)]
+    [InlineData("5p2/4P3/8/8/8/8/8/8 w - - 0 1", 52, 61, 1, 1, 9, 0)]
+    [InlineData("8/8/8/8/8/8/4p3/8 b - - 0 1", 12, 4, 0, 1, 0, 9)]
+    [InlineData("8/8/8/8/8/8/4p3/5P2 b - - 0 1", 12, 5, 1, 1, 0, 9)]
+    public void BoardPromotesPawns(string fen, int position, int target, int whiteScore, int blackScore, int newWhiteScore, int newBlackScore)
+    {
+        var board = new Board(fen);
+
+        var piece = board[position];
+        
+        Assert.True(Cell.Is(piece, Kind.Pawn));
+        
+        Assert.Equal(whiteScore, board.State.WhiteScore);
+        
+        Assert.Equal(blackScore, board.State.BlackScore);
+
+        board.MakeMove(position, target);
+        
+        piece = board[target];
+        
+        Assert.True(Cell.Is(piece, Kind.Queen));
+        
+        Assert.Equal(newWhiteScore, board.State.WhiteScore);
+        
+        Assert.Equal(newBlackScore, board.State.BlackScore);
     }
 }
