@@ -38,6 +38,8 @@ public class CoreTests
     [Theory]
     [InlineData(Constants.InitialBoardFen, "a2a4", true, Kind.Pawn)]
     [InlineData(Constants.InitialBoardFen, "a2b4", false, Kind.Pawn)]
+    [InlineData(Constants.InitialBoardFen, "b1a3", true, Kind.Knight)]
+    [InlineData(Constants.InitialBoardFen, "b1b3", false, Kind.Knight)]
     public void ChecksMoveValidity(string fen, string move, bool isValid, Kind kind)
     {
         var core = new Core(Colour.White, fen);
