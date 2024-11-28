@@ -70,7 +70,7 @@ public class King : Piece
             {
                 if (! board.IsKingInCheck(colour, position - 1))
                 {
-                    moveList.Add(new Move(position, Files.LeftBishop, false));
+                    moveList.Add(new Move(position, rankStart + Files.LeftBishop, false));
                 }
             }
         }
@@ -81,7 +81,7 @@ public class King : Piece
             {
                 if (! board.IsKingInCheck(colour, position + 1))
                 {
-                    moveList.Add(new Move(position, Files.RightKnight, false));
+                    moveList.Add(new Move(position, rankStart + Files.RightKnight, false));
                 }
             }
         }
