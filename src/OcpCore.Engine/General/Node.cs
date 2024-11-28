@@ -14,15 +14,19 @@ public class Node
     {
     }
     
-    public Node(Move move, int score)
+    private Node(Move move, int score)
     {
         Move = move;
         
         Score = score;
     }
 
-    public void AddChild(Move move, int score)
+    public Node AddChild(Move move, int score)
     {
-        _children.Add(new Node(move, score));
+        var node = new Node(move, score);
+        
+        _children.Add(node);
+
+        return node;
     }
 }
