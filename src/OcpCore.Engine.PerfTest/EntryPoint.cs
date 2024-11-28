@@ -247,10 +247,12 @@ public static class EntryPoint
             {
                 Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
             }
-        }
         
-        Console.WriteLine();
+            Console.WriteLine($"      Best Score: {core.GetPlyBestScore(depth):N0}");
+        }
 
+        Console.WriteLine();
+        
         Console.WriteLine($"  {maxDepth} depth{(maxDepth > 1 ? "s" : string.Empty)} explored in {(stopwatch.Elapsed.Days > 0 ? $"{stopwatch.Elapsed.Days:N0}d " : string.Empty)}{(stopwatch.Elapsed.Hours > 0 ? $"{stopwatch.Elapsed.Hours}h " : string.Empty)}{stopwatch.Elapsed.Minutes}m {stopwatch.Elapsed.Seconds:N0}s {stopwatch.Elapsed.Milliseconds}ms");
 
         Console.WriteLine();
