@@ -6,6 +6,7 @@
 
 ### TODOs
 
+- Core can check whether a move is valid.
 - Do not castle through check.
 - Promote to Queen or Knight.
 - Hybrid copy/do/undo - only make a copy if recursing, just undo otherwise?
