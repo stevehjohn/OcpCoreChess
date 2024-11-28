@@ -213,4 +213,16 @@ public class BoardTests
         
         Assert.Equal(newBlackScore, board.State.BlackScore);
     }
+
+    [Theory]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
+    [InlineData("rnb2b1k/p1p1p1pp/5Rp1/PppqN2n/4rP1Q/B6B/PP1PP1PP/RN2K3 w Qq b6 0 1", "rnb2b1k/p1p1p1pp/5Rp1/PppqN2n/4rP1Q/B6B/PP1PP1PP/RN2K3 w Qq b6 0 1")]
+    public void BoardGeneratesCorrectFen(string input, string expected)
+    {
+        var board = new Board(input);
+
+        var fen = board.Fen();
+        
+        Assert.Equal(expected, fen);
+    }
 }

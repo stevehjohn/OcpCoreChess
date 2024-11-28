@@ -126,6 +126,218 @@ public class Board
         return MoveOutcome.Move;
     }
 
+    public bool IsKingInCheck(Colour player, int probeCell = -1)
+    {
+        var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
+
+        if (probeCell > -1)
+        {
+            kingCell = probeCell;
+        }
+
+        var kingRank = Cell.GetRank(kingCell);
+
+        var kingFile = Cell.GetFile(kingCell);
+
+        int cellRank;
+
+        int cellFile;
+
+        int cell;
+
+        byte piece;
+        
+        foreach (var direction in Constants.DirectionalMovesAnnotated)
+        {
+            cellRank = kingRank;
+
+            cellFile = kingFile;
+            
+            for (var i = 0; i < Constants.MaxMoveDistance; i++)
+            {
+                cellRank += direction.RankDelta;
+
+                cellFile += direction.FileDelta;
+
+                cell = Cell.GetCell(cellRank, cellFile);
+
+                if (cell < 0)
+                {
+                    break;
+                }
+
+                piece = _cells[cell];
+
+                if (piece > 0 && Cell.Colour(piece) == player)
+                {
+                    break;
+                }
+
+                var kind = Cell.Kind(piece);
+
+                var isAttacking = kind switch
+                {
+                    Kind.Queen => true,
+                    Kind.Rook => direction.IsOrthogonal,
+                    Kind.Bishop => ! direction.IsOrthogonal,
+                    Kind.King => i == 0,
+                    _ => false
+                };
+
+                if (isAttacking)
+                {
+                    return true;
+                }
+
+                if (piece != 0)
+                {
+                    break;
+                }
+            }
+        }
+        
+        foreach (var direction in Constants.KnightMoves)
+        {
+            cellRank = kingRank;
+
+            cellFile = kingFile;
+
+            cellRank += direction.RankDelta;
+
+            cellFile += direction.FileDelta;
+
+            cell = Cell.GetCell(cellRank, cellFile);
+        
+            if (cell < 0)
+            {
+                continue;
+            }
+            
+            piece = _cells[cell];
+
+            if (piece > 0 && Cell.Colour(piece) == player)
+            {
+                continue;
+            }
+        
+            if (Cell.Is(piece, Kind.Knight))
+            {
+                return true;
+            }
+        }
+        
+        var rankDirection = player == Colour.White ? Direction.White : Direction.Black;
+        
+        cell = Cell.GetCell(kingRank + rankDirection, kingFile - 1);
+        
+        if (cell >= 0)
+        {
+            piece = _cells[cell];
+        
+            if (piece > 0 && Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
+            {
+                return true;
+            }
+        }
+        
+        cell = Cell.GetCell(kingRank + rankDirection, kingFile + 1);
+        
+        if (cell >= 0)
+        {
+            piece = _cells[cell];
+        
+            if (piece > 0 && Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+#pragma warning disable CS8524 // Cannot happen
+    public string Fen()
+    {
+        var builder = new StringBuilder();
+        
+        for (var rank = Constants.Ranks - 1; rank >= 0; rank--)
+        {
+            var blanks = 0;
+            
+            for (var file = 0; file < Constants.Files; file++)
+            {
+                var piece = _cells[Cell.GetCell(rank, file)];
+
+                if (piece == 0)
+                {
+                    blanks++;
+                    
+                    continue;
+                }
+
+                if (blanks > 0)
+                {
+                    builder.Append(blanks);
+                }
+
+                blanks = 0;
+
+                var character = Cell.Kind(piece) switch
+                {
+                    Kind.Pawn => 'P',
+                    Kind.Rook => 'R',
+                    Kind.Knight => 'N',
+                    Kind.Bishop => 'B',
+                    Kind.Queen => 'Q',
+                    Kind.King => 'K'
+                };
+
+                if (Cell.Colour(piece) == Colour.Black)
+                {
+                    character = char.ToLower(character);
+                }
+
+                builder.Append(character);
+            }
+
+            if (blanks != 0)
+            {
+                builder.Append(blanks);
+            }
+
+            if (rank > 0)
+            {
+                builder.Append('/');
+            }
+        }
+
+        builder.Append($" {(State.Player == Colour.White ? 'w' : 'b')} ");
+
+        if (State.CastleStatus == Castle.NotAvailable)
+        {
+            builder.Append('-');
+        }
+        else
+        {
+            builder.Append((State.CastleStatus & Castle.WhiteKingSide) > 0 ? "K" : string.Empty);
+            builder.Append((State.CastleStatus & Castle.WhiteQueenSide) > 0 ? "Q" : string.Empty);
+            builder.Append((State.CastleStatus & Castle.BlackKingSide) > 0 ? "k" : string.Empty);
+            builder.Append((State.CastleStatus & Castle.BlackQueenSide) > 0 ? "q" : string.Empty);
+        }
+
+        if (State.EnPassantTarget == null)
+        {
+            builder.Append(" -");
+        }
+        else
+        {
+            builder.Append($" {State.EnPassantTarget.Value.ToStandardNotation()}");
+        }
+
+        return builder.ToString();
+    }
+#pragma warning restore CS8524
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private MoveOutcome PerformEnPassant(byte piece, int target)
     {
@@ -256,135 +468,6 @@ public class Board
         }
 
         return MoveOutcome.Promotion;
-    }
-
-    public bool IsKingInCheck(Colour player, int probeCell = -1)
-    {
-        var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
-
-        if (probeCell > -1)
-        {
-            kingCell = probeCell;
-        }
-
-        var kingRank = Cell.GetRank(kingCell);
-
-        var kingFile = Cell.GetFile(kingCell);
-
-        int cellRank;
-
-        int cellFile;
-
-        int cell;
-
-        byte piece;
-        
-        foreach (var direction in Constants.DirectionalMovesAnnotated)
-        {
-            cellRank = kingRank;
-
-            cellFile = kingFile;
-            
-            for (var i = 0; i < Constants.MaxMoveDistance; i++)
-            {
-                cellRank += direction.RankDelta;
-
-                cellFile += direction.FileDelta;
-
-                cell = Cell.GetCell(cellRank, cellFile);
-
-                if (cell < 0)
-                {
-                    break;
-                }
-
-                piece = _cells[cell];
-
-                if (piece > 0 && Cell.Colour(piece) == player)
-                {
-                    break;
-                }
-
-                var kind = Cell.Kind(piece);
-
-                var isAttacking = kind switch
-                {
-                    Kind.Queen => true,
-                    Kind.Rook => direction.IsOrthogonal,
-                    Kind.Bishop => ! direction.IsOrthogonal,
-                    Kind.King => i == 0,
-                    _ => false
-                };
-
-                if (isAttacking)
-                {
-                    return true;
-                }
-
-                if (piece != 0)
-                {
-                    break;
-                }
-            }
-        }
-        
-        foreach (var direction in Constants.KnightMoves)
-        {
-            cellRank = kingRank;
-
-            cellFile = kingFile;
-
-            cellRank += direction.RankDelta;
-
-            cellFile += direction.FileDelta;
-
-            cell = Cell.GetCell(cellRank, cellFile);
-        
-            if (cell < 0)
-            {
-                continue;
-            }
-            
-            piece = _cells[cell];
-
-            if (piece > 0 && Cell.Colour(piece) == player)
-            {
-                continue;
-            }
-        
-            if (Cell.Is(piece, Kind.Knight))
-            {
-                return true;
-            }
-        }
-        
-        var rankDirection = player == Colour.White ? Direction.White : Direction.Black;
-        
-        cell = Cell.GetCell(kingRank + rankDirection, kingFile - 1);
-        
-        if (cell >= 0)
-        {
-            piece = _cells[cell];
-        
-            if (piece > 0 && Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
-            {
-                return true;
-            }
-        }
-        
-        cell = Cell.GetCell(kingRank + rankDirection, kingFile + 1);
-        
-        if (cell >= 0)
-        {
-            piece = _cells[cell];
-        
-            if (piece > 0 && Cell.Colour(piece) == player.Invert() && Cell.Is(piece, Kind.Pawn))
-            {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
     private void ParseFen(string fen)
