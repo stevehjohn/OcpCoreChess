@@ -128,7 +128,17 @@ public sealed class Core : IDisposable
             }
 
             _depthCounts[ply]++;
-
+            
+            if (copy.IsKingInCheck(player.Invert()))
+            {
+                outcome |= MoveOutcome.Check;
+                
+                if (! CanMove(copy, player.Invert()))
+                {
+                    outcome |= MoveOutcome.CheckMate;
+                }
+            }
+            
             for (var j = 0; j <= Constants.MoveOutcomes; j++)
             {
                 if (((byte) outcome & (1 << j)) > 0)
