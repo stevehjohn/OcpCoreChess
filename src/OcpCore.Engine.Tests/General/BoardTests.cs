@@ -1,4 +1,6 @@
+using System.Runtime.InteropServices;
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -32,9 +34,9 @@ public class BoardTests
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 1", 0, 16, Castle.All, Castle.All ^ Castle.WhiteQueenSide)]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPP1/RNBQKBNR w KQkq - 0 1", 7, 23, Castle.All, Castle.All ^ Castle.WhiteKingSide)]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1", 4, 12, Castle.All, Castle.BlackQueenSide | Castle.BlackKingSide)]
-    [InlineData("rnbqkbnr/1ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 56, 40, Castle.All, Castle.All ^ Castle.BlackQueenSide)]
-    [InlineData("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 63, 55, Castle.All, Castle.All ^ Castle.BlackKingSide)]
-    [InlineData("rnbqkbnr/pppp1ppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 60, 52, Castle.All, Castle.WhiteQueenSide | Castle.WhiteKingSide)]
+    [InlineData("rnbqkbnr/1ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 56, 40, Castle.All, Castle.All ^ Castle.BlackQueenSide)]
+    [InlineData("rnbqkbnr/ppppppp1/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 63, 55, Castle.All, Castle.All ^ Castle.BlackKingSide)]
+    [InlineData("rnbqkbnr/pppp1ppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 52, Castle.All, Castle.WhiteQueenSide | Castle.WhiteKingSide)]
     public void BoardUpdatesCastlingRightsOnMove(string fen, int position, int target, Castle rightsBeforeMove, Castle rightsAfterMove)
     {
         var board = new Board(fen);
@@ -50,9 +52,9 @@ public class BoardTests
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 16, null)]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 24, 16)]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 10, 26, 18)]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 48, 40, null)]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 48, 32, 40)]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 50, 34, 42)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 48, 40, null)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 48, 32, 40)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 50, 34, 42)]
     public void BoardUpdatesEnPassantCellOnMove(string fen, int position, int target, int? enPassantCell)
     {
         var board = new Board(fen);
@@ -67,8 +69,8 @@ public class BoardTests
     [Theory]
     [InlineData("r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 58, "  kr bnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
     [InlineData("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, 62, "r    rk /pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR")]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3KBNR b KQkq - 0 1", 4, 2, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/  KR BNR")]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3K2R b KQkq - 0 1", 4, 6, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/R    RK ")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3KBNR w KQkq - 0 1", 4, 2, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/  KR BNR")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1", 4, 6, "rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/R    RK ")]
     public void BoardPerformsCastle(string fen, int position, int target, string expectedFem)
     {
         var board = new Board(fen);
@@ -133,16 +135,16 @@ public class BoardTests
 
         Assert.Equal(expectedBlackScore, board.State.BlackScore);
     }
-    
+
     [Theory]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 16, Colour.Black)]
-    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 8, 16, Colour.White)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 48, 40, Colour.White)]
     public void BoardChangesPlayerAfterMove(string fen, int position, int target, Colour expectedPlayer)
     {
         var board = new Board(fen);
-        
+
         board.MakeMove(position, target);
-        
+
         Assert.Equal(expectedPlayer, board.State.Player);
     }
 
@@ -152,25 +154,25 @@ public class BoardTests
     public void BoardCopiesCorrectly(string fen, string expectedBoard, int expectedWhiteScore, int expectedBlackScore, Castle expectedCastleStatus, Colour expectedPlayer)
     {
         var board = new Board(fen);
-        
+
         Assert.Equal(expectedWhiteScore, board.State.WhiteScore);
-        
+
         Assert.Equal(expectedBlackScore, board.State.BlackScore);
-        
+
         Assert.Equal(expectedCastleStatus, board.State.CastleStatus);
-        
+
         Assert.Equal(expectedPlayer, board.State.Player);
-        
+
         var copy = new Board(board);
-        
+
         Assert.Equal(expectedBoard, copy.ToString());
-        
+
         Assert.Equal(expectedWhiteScore, copy.State.WhiteScore);
-        
+
         Assert.Equal(expectedBlackScore, copy.State.BlackScore);
-        
+
         Assert.Equal(expectedCastleStatus, copy.State.CastleStatus);
-        
+
         Assert.Equal(expectedPlayer, board.State.Player);
     }
 
@@ -182,7 +184,7 @@ public class BoardTests
         var board = new Board(fen);
 
         board.MakeMove(4, 12);
-        
+
         Assert.True(board.IsKingInCheck(Colour.White));
     }
 
@@ -196,21 +198,21 @@ public class BoardTests
         var board = new Board(fen);
 
         var piece = board[position];
-        
+
         Assert.True(Cell.Is(piece, Kind.Pawn));
-        
+
         Assert.Equal(whiteScore, board.State.WhiteScore);
-        
+
         Assert.Equal(blackScore, board.State.BlackScore);
 
         board.MakeMove(position, target);
-        
+
         piece = board[target];
-        
+
         Assert.True(Cell.Is(piece, Kind.Queen));
-        
+
         Assert.Equal(newWhiteScore, board.State.WhiteScore);
-        
+
         Assert.Equal(newBlackScore, board.State.BlackScore);
     }
 
@@ -222,7 +224,29 @@ public class BoardTests
         var board = new Board(input);
 
         var fen = board.Fen();
-        
+
         Assert.Equal(expected, fen);
+    }
+
+    [Theory]
+    [InlineData("b1c3", 1, 1)]
+    [InlineData("b1c3,g8f6", 2, 2)]
+    [InlineData("b1c3,g8f6,g1f3", 3, 2)]
+    [InlineData("b1c3,g8f6,g1f3,a7a6", 0, 3)]
+    [InlineData("a6b4", 0, 6, "r2qkb1r/ppp1pppp/n2p1n2/5b2/1Q1P4/7N/PPPKPPPP/RNB2B1R b kq - 5 5")]
+    public void BoardCountsMovesCorrectly(string moveString, int expectedHalfMoves, int expectedFullmoves, string fen = null)
+    {
+        var board = new Board(fen ?? Constants.InitialBoardFen);
+
+        var moves = moveString.Split(',');
+
+        foreach (var move in moves)
+        {
+            board.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
+        }
+
+        Assert.Equal(expectedHalfMoves, board.State.Halfmoves);
+
+        Assert.Equal(expectedFullmoves, board.State.Fullmoves);
     }
 }
