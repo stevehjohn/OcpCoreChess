@@ -132,7 +132,7 @@ public class PawnTests : PieceTestBase<Pawn>
         }
         else
         {
-            Assert.DoesNotContain(moves, m => m.Outcome == MoveOutcome.Capture);
+            Assert.Empty(moves);
         }
     }
 }

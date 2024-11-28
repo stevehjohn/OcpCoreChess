@@ -14,7 +14,7 @@ public class CoreTests
     [InlineData(5, 4_865_609, 82_719, 258, 0, 0, 27_351, 347)]
     public void ReturnsExpectedCountAtPly(int ply, int count, int capture, int enPassant, int castle, int promotion, int check, int mate)
     {
-        var core = new Core(Colour.White);
+        using var core = new Core(Colour.White);
     
         core.GetMove(ply);
         
