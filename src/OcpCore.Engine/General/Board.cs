@@ -94,6 +94,8 @@ public class Board
 
         UpdateEnPassantState(piece, position, target);
 
+        outcome |= CheckForPromotion(piece, target);
+
         State.InvertPlayer();
 
         return outcome;
@@ -225,6 +227,35 @@ public class Board
         }
 
         State.SetEnPassantTarget(null);
+    }
+
+    private MoveOutcome CheckForPromotion(byte piece, int target)
+    {
+        if (! Cell.Is(piece, Kind.Pawn))
+        {
+            return MoveOutcome.Move;
+        }
+
+        var rank = Cell.GetRank(target);
+
+        if (rank is not (Ranks.BlackHomeRank or Ranks.WhiteHomeRank))
+        {
+            return MoveOutcome.Move;
+        }
+
+        // TODO: Knight sometimes?
+        _cells[target] |= (byte) ((_cells[target] & ~Masks.Kind) | (byte) Kind.Queen);
+
+        if (Cell.Colour(piece) == Colour.White)
+        {
+            State.UpdateWhiteScore(PieceCache.Get(piece).Value);
+        }
+        else
+        {
+            State.UpdateBlackScore(PieceCache.Get(piece).Value);
+        }
+
+        return MoveOutcome.Promotion;
     }
 
     public bool IsKingInCheck(Colour player, int probeCell = -1)
