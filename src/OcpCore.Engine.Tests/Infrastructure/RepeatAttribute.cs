@@ -11,11 +11,6 @@ public class RepeatAttribute : DataAttribute
 
     public RepeatAttribute(int count, params object[] data)
     {
-        if (count < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(count), "Repeat count must be greater than 0.");
-        }
-
         _count = count;
 
         _data = data;
