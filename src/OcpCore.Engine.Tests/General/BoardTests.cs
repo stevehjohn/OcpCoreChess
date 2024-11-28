@@ -248,4 +248,33 @@ public class BoardTests
 
         Assert.Equal(expectedFullmoves, board.State.Fullmoves);
     }
+
+    [Theory]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "a7a6", true)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "a2a3", false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", "a7a6", false)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", "a2a3", true)]
+    public void BoardPreventsMoveByWrongPlayer(string fen, string move, bool exceptionExpected)
+    {
+        var board = new Board(fen);
+
+        if (exceptionExpected)
+        {
+            var exception = Assert.Throws<InvalidMoveException>(() => board.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation()));
+
+            Assert.Contains("Not the turn", exception.Message);
+        }
+        else
+        {
+            board.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
+        }
+    }
+
+    [Fact]
+    public void ToStringGeneratesReadableOutput()
+    {
+        var board = new Board(Constants.InitialBoardFen);
+        
+        Assert.Equal("rnbqkbnr\npppppppp\n        \n        \n        \n        \nPPPPPPPP\nRNBQKBNR", board.ToString());
+    }
 }

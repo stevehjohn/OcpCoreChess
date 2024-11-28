@@ -11,7 +11,7 @@ public class StateTests
     [Theory]
     [Repeat(10, nameof(State.InvertPlayer))]
     [Repeat(10, nameof(State.SetEnPassantTarget))]
-    [Repeat(10, nameof(State.RemoveCastleRights))]
+    [Repeat(100, nameof(State.RemoveCastleRights))]
     [Repeat(10, nameof(State.UpdateWhiteScore))]
     [Repeat(10, nameof(State.UpdateBlackScore))]
     [Repeat(10, nameof(State.SetWhiteKingCell))]
