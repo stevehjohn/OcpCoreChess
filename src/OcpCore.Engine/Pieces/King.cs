@@ -55,11 +55,16 @@ public class King : Piece
             return;
         }
 
-        var rank = colour == Colour.White ? Ranks.WhiteHomeRank : Ranks.BlackHomeRank;
-
-        var offset = rank * Constants.Files;
+        var castleSide = colour == Colour.White ? Castle.White : Castle.Black;
         
-        if (board[offset + Files.LeftKnight] == 0 && board[offset + Files.LeftBishop] == 0 && board[offset + Files.Queen] == 0)
+        if ((board.State.CastleStatus & castleSide) == 0)
+        {
+            return;
+        }
+        
+        var rankStart = colour == Colour.White ? 0 : Constants.BlackRankCellStart;
+        
+        if (board[rankStart + Files.LeftKnight] == 0 && board[rankStart + Files.LeftBishop] == 0 && board[rankStart + Files.Queen] == 0)
         {
             if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide)) > 0)
             {
@@ -69,8 +74,8 @@ public class King : Piece
                 }
             }
         }
-
-        if (board[offset + Files.RightBishop] == 0 && board[offset + Files.RightKnight] == 0)
+        
+        if (board[rankStart + Files.RightBishop] == 0 && board[rankStart + Files.RightKnight] == 0)
         {
             if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide)) > 0)
             {
