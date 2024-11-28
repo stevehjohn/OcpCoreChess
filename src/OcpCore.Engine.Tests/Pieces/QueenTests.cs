@@ -77,11 +77,11 @@ public class QueenTests : PieceTestBase<Queen>
 
         if (captureExpected)
         {
-            Assert.Single(moves, m => m.Captures && m.Target == captureCell);
+            Assert.Single(moves, m => m.Outcome == MoveOutcome.Capture && m.Target == captureCell);
         }
         else
         {
-            Assert.DoesNotContain(moves, m => m.Captures);
+            Assert.DoesNotContain(moves, m => m.Outcome == MoveOutcome.Capture);
         }
     }
 }

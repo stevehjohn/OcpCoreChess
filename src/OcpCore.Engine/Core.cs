@@ -105,7 +105,9 @@ public sealed class Core : IDisposable
         if (_cancellationToken.IsCancellationRequested)
         {
             return;
-        }   var moves = new List<Move>();
+        }   
+        
+        var moves = new List<Move>();
         
         GetAllMoves(board, moves);
         
@@ -150,7 +152,7 @@ public sealed class Core : IDisposable
                     outcome |= MoveOutcome.CheckMate;
                 }
             }
-
+            
             for (var j = 0; j <= Constants.MoveOutcomes; j++)
             {
                 if (((byte) outcome & (1 << j)) > 0)

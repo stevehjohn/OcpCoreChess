@@ -4,9 +4,11 @@ namespace OcpCore.Engine.General;
 public enum Castle
 {
     NotAvailable   = 0,
-    WhiteQueenSide = 1,
-    WhiteKingSide  = 2,
-    BlackQueenSide = 4,
-    BlackKingSide  = 8,
+    WhiteKingSide  = 1,
+    WhiteQueenSide = 2,
+    White          = 3,
+    BlackKingSide  = 4,
+    BlackQueenSide = 8,
+    Black          = 12,
     All            = 15
 }

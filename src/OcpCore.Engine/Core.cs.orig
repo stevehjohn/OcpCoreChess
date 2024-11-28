@@ -13,7 +13,6 @@ public sealed class Core : IDisposable
     public const string Author = "Stevo John";
 
     private readonly Board _board;
-
     private readonly Colour _engineColour;
 
     private long[] _depthCounts;
@@ -43,18 +42,9 @@ public sealed class Core : IDisposable
         _board = new Board(Constants.InitialBoardFen);
     }
 
-<<<<<<< HEAD
-    public Core(string fen)
-=======
     public Core(Colour engineColour, string fen)
->>>>>>> master
     {
         _board = new Board(fen);
-<<<<<<< HEAD
-
-        _engineColour = _board.State.Player;
-=======
->>>>>>> master
     }
 
     public void MakeMove(string move)
@@ -115,7 +105,9 @@ public sealed class Core : IDisposable
         if (_cancellationToken.IsCancellationRequested)
         {
             return;
-        }   var moves = new List<Move>();
+        }   
+        
+        var moves = new List<Move>();
         
         GetAllMoves(board, moves);
         
@@ -140,6 +132,7 @@ public sealed class Core : IDisposable
 
             _depthCounts[ply]++;
 
+<<<<<<< HEAD
             if (perftNode == null)
             {
                 perftNode = $"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}";
@@ -151,6 +144,10 @@ public sealed class Core : IDisposable
                 _perftCounts[perftNode]++;
             }
 
+=======
+            var score = board.State.WhiteScore - board.State.BlackScore;
+            
+>>>>>>> master
             if (copy.IsKingInCheck(player.Invert()))
             {
                 outcome |= MoveOutcome.Check;
@@ -160,7 +157,7 @@ public sealed class Core : IDisposable
                     outcome |= MoveOutcome.CheckMate;
                 }
             }
-
+            
             for (var j = 0; j <= Constants.MoveOutcomes; j++)
             {
                 if (((byte) outcome & (1 << j)) > 0)

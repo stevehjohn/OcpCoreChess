@@ -19,7 +19,7 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
 
-        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0);
+        State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0, 0, 1);
     }
 
     public Board(string fen)
@@ -47,16 +47,21 @@ public class Board
     public MoveOutcome MakeMove(int position, int target)
     {
         var outcome = MoveOutcome.Move;
-        
+
         var piece = _cells[position];
 
+        if (piece == 0 || Cell.Colour(piece) != State.Player)
+        {
+            throw new InvalidMoveException(piece == 0 ? $"No piece at position {position.ToStandardNotation()}." : $"Not the turn for {Cell.Colour(piece)}.");
+        }
+
         var capture = _cells[target];
-        
+
         if (capture != 0)
         {
             var score = PieceCache.Get(capture).Value;
 
-            if (Cell.Colour(piece) == Colour.White)
+            if (Cell.Colour(capture) == Colour.White)
             {
                 State.UpdateWhiteScore(-score);
             }
@@ -85,7 +90,7 @@ public class Board
         _cells[position] = 0;
 
         outcome |= PerformCastle(piece, position, target);
-        
+
         outcome |= PerformEnPassant(piece, target);
 
         CheckCastlingRightsForKing(piece);
@@ -93,6 +98,22 @@ public class Board
         CheckCastlingRightsForRook(piece, position);
 
         UpdateEnPassantState(piece, position, target);
+
+        outcome |= CheckForPromotion(piece, target);
+
+        if (State.Player == Colour.Black)
+        {
+            State.IncrementFullmoves();
+        }
+
+        if (Cell.Is(piece, Kind.Pawn) || (outcome & MoveOutcome.Capture) > 0)
+        {
+            State.ResetHalfmoves();
+        }
+        else
+        {
+            State.IncrementHalfmoves();
+        }
 
         State.InvertPlayer();
 
@@ -124,112 +145,14 @@ public class Board
         return MoveOutcome.Move;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private MoveOutcome PerformEnPassant(byte piece, int target)
-    {
-        if (Cell.Is(piece, Kind.Pawn) && target == State.EnPassantTarget)
-        {
-            var colour = Cell.Colour(piece);
-
-            var direction = colour == Colour.White ? Direction.Black : Direction.White;
-
-            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
-
-            if (Cell.Colour(piece) == Colour.White)
-            {
-                State.UpdateWhiteScore(-score);
-            }
-            else
-            {
-                State.UpdateBlackScore(-score);
-            }
-            
-            _cells[target + direction * Constants.Files] = 0;
-            
-            return MoveOutcome.EnPassant | MoveOutcome.Capture;
-        }
-
-        return MoveOutcome.Move;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void CheckCastlingRightsForKing(byte piece)
-    {
-        if (Cell.Is(piece, Kind.King))
-        {
-            var colour = Cell.Colour(piece); 
-
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
-            switch (colour)
-            {
-                case Colour.White:
-                    State.RemoveCastleRights(Castle.WhiteKingSide);
-                    State.RemoveCastleRights(Castle.WhiteQueenSide);
-                    
-                    break;
-
-                case Colour.Black:
-                    State.RemoveCastleRights(Castle.BlackKingSide);
-                    State.RemoveCastleRights(Castle.BlackQueenSide);
-                    
-                    break;
-            }
-        }
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void CheckCastlingRightsForRook(byte piece, int position)
-    {
-        if (Cell.Is(piece, Kind.Rook))
-        {
-            var colour = Cell.Colour(piece); 
-
-            switch (position, colour)
-            {
-                case (Files.LeftRook, Colour.White):
-                    State.RemoveCastleRights(Castle.WhiteQueenSide);
-                    
-                    break;
-
-                case (Files.RightRook, Colour.White):
-                    State.RemoveCastleRights(Castle.WhiteKingSide);
-                    
-                    break;
-                
-                case (Constants.BlackRankCellStart + Files.LeftRook, Colour.Black):
-                    State.RemoveCastleRights(Castle.BlackQueenSide);
-                    
-                    break;
-
-                case (Constants.BlackRankCellStart + Files.RightRook, Colour.Black):
-                    State.RemoveCastleRights(Castle.BlackKingSide);
-                    
-                    break;
-            }
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void UpdateEnPassantState(byte piece, int position, int target)
-    {
-        if (Cell.Is(piece, Kind.Pawn))
-        {
-            var delta = position - target;
-
-            if (Math.Abs(delta) == Constants.Ranks * 2)
-            {
-                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
-                
-                return;
-            }
-        }
-
-        State.SetEnPassantTarget(null);
-    }
-
-    public bool IsKingInCheck(Colour player)
+    public bool IsKingInCheck(Colour player, int probeCell = -1)
     {
         var kingCell = player == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
+
+        if (probeCell > -1)
+        {
+            kingCell = probeCell;
+        }
 
         var kingRank = Cell.GetRank(kingCell);
 
@@ -350,6 +273,223 @@ public class Board
         
         return false;
     }
+
+#pragma warning disable CS8524 // Cannot happen
+    public string Fen()
+    {
+        var builder = new StringBuilder();
+        
+        for (var rank = Constants.Ranks - 1; rank >= 0; rank--)
+        {
+            var blanks = 0;
+            
+            for (var file = 0; file < Constants.Files; file++)
+            {
+                var piece = _cells[Cell.GetCell(rank, file)];
+
+                if (piece == 0)
+                {
+                    blanks++;
+                    
+                    continue;
+                }
+
+                if (blanks > 0)
+                {
+                    builder.Append(blanks);
+                }
+
+                blanks = 0;
+
+                var character = Cell.Kind(piece) switch
+                {
+                    Kind.Pawn => 'P',
+                    Kind.Rook => 'R',
+                    Kind.Knight => 'N',
+                    Kind.Bishop => 'B',
+                    Kind.Queen => 'Q',
+                    Kind.King => 'K'
+                };
+
+                if (Cell.Colour(piece) == Colour.Black)
+                {
+                    character = char.ToLower(character);
+                }
+
+                builder.Append(character);
+            }
+
+            if (blanks != 0)
+            {
+                builder.Append(blanks);
+            }
+
+            if (rank > 0)
+            {
+                builder.Append('/');
+            }
+        }
+
+        builder.Append($" {(State.Player == Colour.White ? 'w' : 'b')} ");
+
+        if (State.CastleStatus == Castle.NotAvailable)
+        {
+            builder.Append('-');
+        }
+        else
+        {
+            builder.Append((State.CastleStatus & Castle.WhiteKingSide) > 0 ? "K" : string.Empty);
+            builder.Append((State.CastleStatus & Castle.WhiteQueenSide) > 0 ? "Q" : string.Empty);
+            builder.Append((State.CastleStatus & Castle.BlackKingSide) > 0 ? "k" : string.Empty);
+            builder.Append((State.CastleStatus & Castle.BlackQueenSide) > 0 ? "q" : string.Empty);
+        }
+
+        if (State.EnPassantTarget == null)
+        {
+            builder.Append(" -");
+        }
+        else
+        {
+            builder.Append($" {State.EnPassantTarget.Value.ToStandardNotation()}");
+        }
+
+        builder.Append($" {State.Halfmoves}");
+
+        builder.Append($" {State.Fullmoves}");
+
+        return builder.ToString();
+    }
+#pragma warning restore CS8524
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private MoveOutcome PerformEnPassant(byte piece, int target)
+    {
+        if (Cell.Is(piece, Kind.Pawn) && target == State.EnPassantTarget)
+        {
+            var colour = Cell.Colour(piece);
+
+            var direction = colour == Colour.White ? Direction.Black : Direction.White;
+
+            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
+
+            if (Cell.Colour(piece) == Colour.White)
+            {
+                State.UpdateWhiteScore(-score);
+            }
+            else
+            {
+                State.UpdateBlackScore(-score);
+            }
+            
+            _cells[target + direction * Constants.Files] = 0;
+            
+            return MoveOutcome.EnPassant | MoveOutcome.Capture;
+        }
+
+        return MoveOutcome.Move;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void CheckCastlingRightsForKing(byte piece)
+    {
+        if (Cell.Is(piece, Kind.King))
+        {
+            var colour = Cell.Colour(piece); 
+
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
+            switch (colour)
+            {
+                case Colour.White:
+                    State.RemoveCastleRights(Castle.White);
+                    
+                    break;
+
+                case Colour.Black:
+                    State.RemoveCastleRights(Castle.Black);
+                    
+                    break;
+            }
+        }
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void CheckCastlingRightsForRook(byte piece, int position)
+    {
+        if (Cell.Is(piece, Kind.Rook))
+        {
+            var colour = Cell.Colour(piece); 
+
+            switch (position, colour)
+            {
+                case (Files.LeftRook, Colour.White):
+                    State.RemoveCastleRights(Castle.WhiteQueenSide);
+                    
+                    break;
+
+                case (Files.RightRook, Colour.White):
+                    State.RemoveCastleRights(Castle.WhiteKingSide);
+                    
+                    break;
+                
+                case (Constants.BlackRankCellStart + Files.LeftRook, Colour.Black):
+                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    
+                    break;
+
+                case (Constants.BlackRankCellStart + Files.RightRook, Colour.Black):
+                    State.RemoveCastleRights(Castle.BlackKingSide);
+                    
+                    break;
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void UpdateEnPassantState(byte piece, int position, int target)
+    {
+        if (Cell.Is(piece, Kind.Pawn))
+        {
+            var delta = position - target;
+
+            if (Math.Abs(delta) == Constants.Ranks * 2)
+            {
+                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
+                
+                return;
+            }
+        }
+
+        State.SetEnPassantTarget(null);
+    }
+
+    private MoveOutcome CheckForPromotion(byte piece, int target)
+    {
+        if (! Cell.Is(piece, Kind.Pawn))
+        {
+            return MoveOutcome.Move;
+        }
+
+        var rank = Cell.GetRank(target);
+
+        if (rank is not (Ranks.BlackHomeRank or Ranks.WhiteHomeRank))
+        {
+            return MoveOutcome.Move;
+        }
+        
+        // TODO: Knight sometimes?
+        _cells[target] |= (byte) ((_cells[target] & ~Masks.Kind) | (byte) Kind.Queen);
+
+        if (Cell.Colour(piece) == Colour.White)
+        {
+            State.UpdateWhiteScore(Scores.Queen - Scores.Pawn);
+        }
+        else
+        {
+            State.UpdateBlackScore(Scores.Queen - Scores.Pawn);
+        }
+
+        return MoveOutcome.Promotion;
+    }
     
     private void ParseFen(string fen)
     {
@@ -459,7 +599,7 @@ public class Board
                     'Q' => Castle.WhiteQueenSide,
                     'k' => Castle.BlackKingSide,
                     'q' => Castle.BlackQueenSide,
-                    _ => throw new FenParseException($"Invalid castling status indicator: {character}")
+                    _ => throw new FenParseException($"Invalid castling status indicator: {character}.")
                 };
             }
         }
@@ -471,9 +611,19 @@ public class Board
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
+        if (! int.TryParse(parts[4], out var halfmoves))
+        {
+            throw new FenParseException($"Invalid value for halfmove counter: {parts[4]}.");
+        }
+
+        if (! int.TryParse(parts[5], out var fullmoves))
+        {
+            throw new FenParseException($"Invalid value for halfmove counter: {parts[5]}.");
+        }
+
         var scores = CalculateScores();
         
-        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black, whiteKingCell, blackKingCell);
+        State = new State(player, castleAvailability, enPassantTarget, scores.White, scores.Black, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
     private (int White, int Black) CalculateScores()
@@ -544,7 +694,7 @@ public class Board
 
             if (rank > 0)
             {
-                builder.Append('/');
+                builder.AppendLine();
             }
         }
 

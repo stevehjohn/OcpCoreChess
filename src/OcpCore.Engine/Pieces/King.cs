@@ -36,66 +36,53 @@ public class King : Piece
 
             if (content == 0)
             {
-                moveList.Add(new Move(position, cell, false));
+                moveList.Add(new Move(position, cell, MoveOutcome.Move));
 
                 continue;
             }
 
             if (Cell.Colour(content) != colour)
             {
-                moveList.Add(new Move(position, cell, true));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture));
             }
         }
     }
 
     private static void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
     {
-        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault - default can't happen
-        switch (colour)
+        if (board.IsKingInCheck(colour))
         {
-            case Colour.White:
+            return;
+        }
+
+        var castleSide = colour == Colour.White ? Castle.White : Castle.Black;
+        
+        if ((board.State.CastleStatus & castleSide) == 0)
+        {
+            return;
+        }
+        
+        var rankStart = colour == Colour.White ? 0 : Constants.BlackRankCellStart;
+        
+        if (board[rankStart + Files.LeftKnight] == 0 && board[rankStart + Files.LeftBishop] == 0 && board[rankStart + Files.Queen] == 0)
+        {
+            if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide)) > 0)
             {
-                if (board[Files.LeftKnight] == 0 && board[Files.LeftBishop] == 0 && board[Files.Queen] == 0)
+                if (! board.IsKingInCheck(colour, position - 1))
                 {
-                    if ((board.State.CastleStatus & Castle.WhiteQueenSide) > 0)
-                    {
-                        moveList.Add(new Move(position, Files.LeftBishop, false));
-                    }
+                    moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move));
                 }
-
-                if (board[Files.RightBishop] == 0 && board[Files.RightKnight] == 0)
-                {
-                    if ((board.State.CastleStatus & Castle.WhiteKingSide) > 0)
-                    {
-                        moveList.Add(new Move(position, Files.RightKnight, false));
-                    }
-                }
-
-                break;
             }
-            
-            case Colour.Black:
+        }
+        
+        if (board[rankStart + Files.RightBishop] == 0 && board[rankStart + Files.RightKnight] == 0)
+        {
+            if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide)) > 0)
             {
-                if ((board.State.CastleStatus & Castle.BlackQueenSide) > 0)
+                if (! board.IsKingInCheck(colour, position + 1))
                 {
-                    if (board[Constants.BlackRankCellStart + Files.LeftKnight] == 0 && board[Constants.BlackRankCellStart + Files.LeftBishop] == 0 && board[Constants.BlackRankCellStart + Files.Queen] == 0)
-                    {
-                        moveList.Add(new Move(position, Constants.BlackRankCellStart + Files.LeftBishop, false));
-                    }
+                    moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move));
                 }
-
-                if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
-                {
-                    if (board[Constants.BlackRankCellStart + Files.RightBishop] == 0 && board[Constants.BlackRankCellStart + Files.RightKnight] == 0)
-                    {
-                        if ((board.State.CastleStatus & Castle.BlackKingSide) > 0)
-                        {
-                            moveList.Add(new Move(position, Constants.BlackRankCellStart + Files.RightKnight, false));
-                        }
-                    }
-                }
-
-                break;
             }
         }
     }
