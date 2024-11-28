@@ -269,7 +269,12 @@ public class Board
 
                 piece = _cells[cell];
 
-                if (piece > 0 && Cell.Colour(piece) == player)
+                if (piece == 0)
+                {
+                    continue;
+                }
+
+                if (Cell.Colour(piece) == player)
                 {
                     break;
                 }
@@ -288,11 +293,6 @@ public class Board
                 if (isAttacking)
                 {
                     return true;
-                }
-
-                if (piece != 0)
-                {
-                    break;
                 }
             }
         }
@@ -316,7 +316,12 @@ public class Board
             
             piece = _cells[cell];
 
-            if (piece > 0 && Cell.Colour(piece) == player)
+            if (piece == 0)
+            {
+                continue;
+            }
+
+            if (Cell.Colour(piece) == player)
             {
                 continue;
             }
