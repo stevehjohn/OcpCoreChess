@@ -102,7 +102,9 @@ public sealed class Core : IDisposable
         if (_cancellationToken.IsCancellationRequested)
         {
             return;
-        }   var moves = new List<Move>();
+        }   
+        
+        var moves = new List<Move>();
         
         GetAllMoves(board, moves);
         
