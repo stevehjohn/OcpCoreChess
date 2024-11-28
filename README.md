@@ -7,6 +7,7 @@
 ### TODOs
 
 - Do not castle through check.
+- Promote to Queen or Knight.
 - Hybrid copy/do/undo - only make a copy if recursing, just undo otherwise?
 - Almost certainly safer to use 2 bits for colour.
 - Promotions.
