@@ -247,8 +247,6 @@ public static class EntryPoint
             {
                 Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
             }
-        
-            Console.WriteLine($"      Best Score: {core.GetPlyBestScore(depth):N0}");
         }
 
         Console.WriteLine();
