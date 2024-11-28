@@ -618,7 +618,7 @@ public class Board
 
         if (! int.TryParse(parts[5], out var fullmoves))
         {
-            throw new FenParseException($"Invalid value for halfmove counter: {parts[5]}.");
+            throw new FenParseException($"Invalid value for fullmove counter: {parts[5]}.");
         }
 
         var scores = CalculateScores();
