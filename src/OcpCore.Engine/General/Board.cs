@@ -395,14 +395,12 @@ public class Board
             switch (colour)
             {
                 case Colour.White:
-                    State.RemoveCastleRights(Castle.WhiteKingSide);
-                    State.RemoveCastleRights(Castle.WhiteQueenSide);
+                    State.RemoveCastleRights(Castle.White);
                     
                     break;
 
                 case Colour.Black:
-                    State.RemoveCastleRights(Castle.BlackKingSide);
-                    State.RemoveCastleRights(Castle.BlackQueenSide);
+                    State.RemoveCastleRights(Castle.Black);
                     
                     break;
             }
