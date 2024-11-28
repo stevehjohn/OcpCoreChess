@@ -1,4 +1,5 @@
 using System.Numerics;
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
@@ -51,7 +52,30 @@ public sealed class Core : IDisposable
         var position = move[..2].FromStandardNotation();
 
         var target = move[2..].FromStandardNotation();
+
+        var moves = new List<Move>();
         
+        var piece = PieceCache.Get(_board[position]);
+
+        piece.GetMoves(_board, position, _board.State.Player, moves);
+        
+        var found = false;
+
+        for (var i = 0; i < moves.Count; i++)
+        {
+            if (moves[i].Target == target)
+            {
+                found = true;
+                
+                break;
+            }
+        }
+
+        if (! found)
+        {
+            throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
+        }
+
         _board.MakeMove(position, target);
     }
 
