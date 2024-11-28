@@ -50,6 +50,11 @@ public class King : Piece
 
     private static void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
     {
+        if (board.IsKingInCheck(colour))
+        {
+            return;
+        }
+
         var rank = colour == Colour.White ? Ranks.WhiteHomeRank : Ranks.BlackHomeRank;
 
         var offset = rank * Constants.Files;
