@@ -160,6 +160,15 @@ public sealed class Core : IDisposable
                 continue;
             }
 
+            var score = board.State.WhiteScore - board.State.BlackScore;
+
+            var isMaximising = board.State.Player == _engineColour;
+            
+            if (! isMaximising)
+            {
+                score = -score;
+            }
+
             _depthCounts[ply]++;
 
             if (copy.IsKingInCheck(player.Invert()))
