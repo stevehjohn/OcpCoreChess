@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using OcpCore.Engine;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.Pieces;
 using OcpCore.LichessClient.Client.Models;
@@ -275,7 +276,7 @@ public sealed class LichessClient : IDisposable
             
             OutputLine();
             
-            OutputBoard(_core.ToString());
+            _core.OutputBoard();
         }
         else
         {
@@ -290,7 +291,7 @@ public sealed class LichessClient : IDisposable
                         
             OutputLine();
             
-            OutputBoard(_core.ToString(), ! engineIsWhite);
+            _core.OutputBoard(! engineIsWhite);
 
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
@@ -329,14 +330,10 @@ public sealed class LichessClient : IDisposable
 
             OutputLine();
             
-            OutputBoard(_core.ToString(), ! engineIsWhite);
+            _core.OutputBoard(! engineIsWhite);
         }
 
         return 0;
-    }
-
-    private void OutputBoard(string board, bool flip = false)
-    {
     }
 
     private async Task<TResponse> Post<TRequest, TResponse>(string path, TRequest content) where TRequest : class

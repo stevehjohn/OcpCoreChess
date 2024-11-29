@@ -1,3 +1,3 @@
 cd src
-dotnet run --project Engine.LiChessClient -c Release $*
+dotnet run --project OcpCore.LichessClient -c Release $*
 cd -
