@@ -133,15 +133,11 @@ public sealed class Core : IDisposable
         {
             callback(move);
         }
-
-        _bestBoard?.ToString().Split('|').ToList().ForEach(l => Console.WriteLine($"  {l}"));
         
         Console.WriteLine();
 
         return move;
     }
-
-    private Board _bestBoard;
     
     private Move ProcessPly(Board board, int maxDepth, int depth, string description = null)
     {
@@ -222,8 +218,6 @@ public sealed class Core : IDisposable
                     }
 
                     bestMove = new Move(move.Position, move.Target, outcome, score);
-
-                    _bestBoard = copy;
                 }
             }
             else
@@ -231,8 +225,6 @@ public sealed class Core : IDisposable
                 if (score < bestMove.Score)
                 {
                     bestMove = new Move(move.Position, move.Target, outcome, score);
-
-                    _bestBoard = copy;
                 }
             }
 

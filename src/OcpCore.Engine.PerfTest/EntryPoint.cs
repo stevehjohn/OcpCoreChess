@@ -118,7 +118,7 @@ public static class EntryPoint
         {
             using var core = new Core(Colour.White, fen);
             
-            Console.WriteLine($" Created engine {Core.Name} {Core.Copyright}.");
+            Console.WriteLine($"  Created engine {Core.Name} {Core.Copyright}.");
             
             Console.WriteLine();
 
