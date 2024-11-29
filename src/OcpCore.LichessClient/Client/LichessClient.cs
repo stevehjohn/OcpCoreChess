@@ -9,7 +9,6 @@ using OcpCore.Engine.Pieces;
 using OcpCore.LichessClient.Client.Models;
 using OcpCore.LichessClient.Infrastructure;
 using static OcpCore.LichessClient.Infrastructure.Console;
-using Console = OcpCore.LichessClient.Infrastructure.Console;
 
 namespace OcpCore.LichessClient.Client;
 
@@ -245,6 +244,8 @@ public sealed class LichessClient : IDisposable
             
             var engineMove = _core.GetMove(Depth);
 
+            OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
+            
             if ((engineMove.Outcome & MoveOutcome.Null) > 0)
             {
                 OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
@@ -254,13 +255,13 @@ public sealed class LichessClient : IDisposable
 
             if ((engineMove.Outcome & MoveOutcome.CheckMate) > 0)
             {
+                await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
+
                 OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
                 return 1;
             }
 
-            OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
-            
             var result = await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
 
             if (! result.Ok)
@@ -276,10 +277,10 @@ public sealed class LichessClient : IDisposable
         }
         else
         {
-            // if (moves.Length <= _core.MoveCount)
-            // {
-            //     return 0;
-            // }
+            if (moves.Length <= _core.MoveCount)
+            {
+                return 0;
+            }
 
             _core.MakeMove(lastMove);
 
@@ -293,6 +294,8 @@ public sealed class LichessClient : IDisposable
             
             var engineMove = _core.GetMove(Depth);
 
+            OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
+
             if ((engineMove.Outcome & MoveOutcome.Null) > 0)
             {
                 OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
@@ -302,12 +305,12 @@ public sealed class LichessClient : IDisposable
 
             if ((engineMove.Outcome & MoveOutcome.CheckMate) > 0)
             {
+                await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
+
                 OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
                 return 1;
             }
-
-            OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
             
             var result = await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
             

@@ -70,6 +70,17 @@ public class CoreTests
         Assert.Equal(expected, $"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}");
     }
 
+    [Theory]
+    [InlineData("5R2/4Q2p/2p3pk/8/8/7P/6PK/8 b - - 0 39")]
+    public void SelectsMoveWhenAvailable(string fen)
+    {
+        var core = new Core(Colour.White, fen);
+
+        var move = core.GetMove(5);
+        
+        Assert.NotEqual(MoveOutcome.Null, move.Outcome);
+    }
+
     [Fact]
     private void GetMoveFiresCallbackIfActionProvided()
     {

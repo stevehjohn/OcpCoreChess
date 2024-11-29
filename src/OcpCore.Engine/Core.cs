@@ -137,7 +137,7 @@ public sealed class Core : IDisposable
 
         return move;
     }
-    
+
     private Move ProcessPly(Board board, int maxDepth, int depth, int alpha, int beta)
     {
         if (_cancellationToken.IsCancellationRequested)
@@ -207,7 +207,7 @@ public sealed class Core : IDisposable
             
             if (isMaximising)
             {
-                if (score > bestMove.Score)
+                if (score >= bestMove.Score)
                 {
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
@@ -221,7 +221,7 @@ public sealed class Core : IDisposable
             }
             else
             {
-                if (score < bestMove.Score)
+                if (score <= bestMove.Score)
                 {
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
