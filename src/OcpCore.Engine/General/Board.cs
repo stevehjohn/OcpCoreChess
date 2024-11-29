@@ -698,7 +698,7 @@ public class Board
 
             if (rank > 0)
             {
-                builder.AppendLine();
+                builder.Append('|');
             }
         }
 
