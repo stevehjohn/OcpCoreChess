@@ -30,7 +30,7 @@ public sealed class LichessClient : IDisposable
     {
         _client = new HttpClient();
 
-        var apiKey = File.ReadAllLines("LiChess.key")[0];
+        var apiKey = File.ReadAllLines("Lichess.key")[0];
 
         _client = new HttpClient
         {
