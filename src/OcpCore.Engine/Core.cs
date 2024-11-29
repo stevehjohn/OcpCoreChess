@@ -218,7 +218,7 @@ public sealed class Core : IDisposable
                 {
                     if (score != 0 && depth == 1)
                     {
-                        //Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
+                        Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
                     }
 
                     bestMove = new Move(move.Position, move.Target, outcome, score);
