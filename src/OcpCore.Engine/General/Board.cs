@@ -219,7 +219,7 @@ public class Board
         
         for (var d = 0; d < Constants.KnightMoves.Length; d++)
         {
-            var direction = Constants.DirectionalMovesAnnotated[d];
+            var direction = Constants.KnightMoves[d];
 
             cellRank = kingRank;
 
