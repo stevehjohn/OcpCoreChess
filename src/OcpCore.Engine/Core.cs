@@ -158,7 +158,7 @@ public sealed class Core : IDisposable
 
         var isMaximising = board.State.Player == _engineColour;
 
-        var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? int.MinValue : int.MaxValue);
+        var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? -900 : 900); // int.MinValue : int.MaxValue);
 
         for (var i = 0; i < moves.Count; i++)
         {
@@ -195,7 +195,7 @@ public sealed class Core : IDisposable
 
             int score;
 
-            description = $"{description ?? string.Empty} -> {move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}";
+            description = $"{description ?? string.Empty} -> {move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()} ({EvaluateMove(player, board),4})";
 
             if (depth > 1)
             {
@@ -224,11 +224,20 @@ public sealed class Core : IDisposable
             {
                 if (score < bestMove.Score)
                 {
+                    if (score != 0 && depth == 1)
+                    {
+                        Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
+                    }
+
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
             }
 
-            description = description[..^8];
+            description = description[..^15];
+        }
+
+        if (bestMove.Score == 300)
+        {
         }
 
         return bestMove;
