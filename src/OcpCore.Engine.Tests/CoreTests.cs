@@ -59,6 +59,7 @@ public class CoreTests
 
     [Theory]
     [InlineData("8/8/8/8/8/2n1p3/3P4/8 w - - 0 1", 1, "d2c3")]
+    [InlineData("r1bqkbnr/pppppppp/n7/8/8/4P3/PPPP1PPP/RNBQKBNR w KQkq - 1 2", 1, "f1a6")]
     // [InlineData("r2b2n1/8/8/p2Q3p/8/8/r7/3n4 w - - 0 1", 1, "d5a2")]
     public void SelectsObviousBestMove(string fen, int depth, string expected)
     {

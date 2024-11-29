@@ -234,7 +234,7 @@ public sealed class Core : IDisposable
         return bestMove;
     }
 
-    private int EvaluateMove(Colour player, Board board)
+    private static int EvaluateMove(Colour player, Board board)
     {
         var score = (board.State.WhiteScore - board.State.BlackScore) * 100;
 
