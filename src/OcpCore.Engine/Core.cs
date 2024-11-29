@@ -79,9 +79,9 @@ public sealed class Core : IDisposable
         _board.MakeMove(position, target);
     }
 
-    public void GetMove(int depth)
+    public Move GetMove(int depth)
     {
-        GetMoveInternal(depth);
+        return GetMoveInternal(depth);
     }
     
     public Task GetMove(int depth, Action<Move> callback)
@@ -216,7 +216,7 @@ public sealed class Core : IDisposable
             {
                 if (score > bestMove.Score)
                 {
-                    if (score != 0)
+                    if (score != 0 && depth == 1)
                     {
                         Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
                     }

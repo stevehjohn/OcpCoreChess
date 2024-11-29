@@ -287,6 +287,6 @@ public class BoardTests
     {
         var board = new Board(Constants.InitialBoardFen);
         
-        Assert.Equal("rnbqkbnr\npppppppp\n        \n        \n        \n        \nPPPPPPPP\nRNBQKBNR", board.ToString());
+        Assert.Equal("rnbqkbnr|pppppppp|        |        |        |        |PPPPPPPP|RNBQKBNR", board.ToString());
     }
 }

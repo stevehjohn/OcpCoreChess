@@ -1,4 +1,5 @@
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -54,6 +55,17 @@ public class CoreTests
             
             Assert.Equal($"{move} is not a valid move for a {kind}.", exception.Message);
         }
+    }
+
+    [Theory]
+    [InlineData("8/8/8/8/8/4p3/3P4/8 w - - 0 1", "d2e3")]
+    public void SelectsObviousBestMove(string fen, string expected)
+    {
+        var core = new Core(Colour.White, fen);
+
+        var move = core.GetMove(3);
+        
+        Assert.Equal(expected, $"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}");
     }
 
     [Fact]
