@@ -184,8 +184,6 @@ public sealed class LichessClient : IDisposable
                 continue;
             }
             
-            OutputLine(line);
-            
             GameState state;
             
             if (first)
