@@ -76,9 +76,35 @@ public static class EntryPoint
                 OutputLine($"&NL;    &Gray;{exception.Message}");
             }
         }
+        
+        OutputLine("&NL;  &Cyan;Results:&White;");
+                
+        OutputLine();
+                
+        for (var game = 0; game < results.Count; game++)
+        {
+            var result = results[game];
+                    
+            Output($"    &Cyan;Game {game + 1}&White;: ");
+
+            switch (result)
+            {
+                case > 0:
+                    Output("&Green;");
+                    break;
+                case < 0:
+                    Output("&Magenta;");
+                    break;
+                default:
+                    Output("&Gray;");
+                    break;
+            }
+
+            OutputLine($"{results[game]}");
+        }
 
         ForegroundColor = colour;
-        
+
         OutputLine();
     }
 }

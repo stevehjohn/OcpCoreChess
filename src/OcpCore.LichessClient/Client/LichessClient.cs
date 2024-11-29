@@ -201,6 +201,12 @@ public sealed class LichessClient : IDisposable
                 _core = new Core(engineIsWhite ? Colour.White : Colour.Black);
 
                 state = game.State;
+
+                await Post<ChatRequest, BasicResponse>($"bot/game/{id}/chat", new ChatRequest
+                {
+                    Room = "player",
+                    Text = "go"
+                });
             }
             else
             {
@@ -246,8 +252,6 @@ public sealed class LichessClient : IDisposable
             return 0;
         }
 
-        OutputLine(engineIsWhite && moves.Length % 2 == 0 ? "Engine move." : "API move.");
-        
         if (moves.Length == 0)
         {
             OutputLine("&NL;  &Cyan;Thinking&White;...");
