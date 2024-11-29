@@ -162,8 +162,6 @@ public sealed class Core : IDisposable
 
             _depthCounts[ply]++;
 
-            var score = board.State.WhiteScore - board.State.BlackScore;
-            
             if (copy.IsKingInCheck(player.Invert()))
             {
                 outcome |= MoveOutcome.Check;
