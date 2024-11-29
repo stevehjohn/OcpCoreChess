@@ -276,10 +276,10 @@ public sealed class LichessClient : IDisposable
         }
         else
         {
-            if (moves.Length <= _core.MoveCount)
-            {
-                return 0;
-            }
+            // if (moves.Length <= _core.MoveCount)
+            // {
+            //     return 0;
+            // }
 
             _core.MakeMove(lastMove);
 
