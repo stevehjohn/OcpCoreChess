@@ -21,6 +21,8 @@ public class BoardTests
     [InlineData("pppppppp/8/8/8/8/8/8/pppppppp - - 0 1", "Invalid number of parts to FEN string: 5.")]
     [InlineData("pppppppp/8/8/8/8/8/8/pppppppp x - - 0 1", "Invalid turn indicator: x.")]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w XQkq - 0 1", "Invalid castling status indicator: X.")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - Y 1", "Invalid value for halfmove counter: Y.")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 Z", "Invalid value for fullmove counter: Z.")]
     public void BoardDetectsInvalidFenSituations(string fen, string expectedMessage)
     {
         var exception = Assert.Throws<FenParseException>(() => new Board(fen));

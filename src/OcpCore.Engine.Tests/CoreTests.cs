@@ -1,4 +1,6 @@
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.General;
+using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
 using Xunit;
 
@@ -31,5 +33,40 @@ public class CoreTests
         Assert.Equal(check, core.GetMoveOutcome(ply, MoveOutcome.Check));
         
         Assert.Equal(mate, core.GetMoveOutcome(ply, MoveOutcome.CheckMate));
+    }
+
+    [Theory]
+    [InlineData(Constants.InitialBoardFen, "a2a4", true, Kind.Pawn)]
+    [InlineData(Constants.InitialBoardFen, "a2b4", false, Kind.Pawn)]
+    [InlineData(Constants.InitialBoardFen, "b1a3", true, Kind.Knight)]
+    [InlineData(Constants.InitialBoardFen, "b1b3", false, Kind.Knight)]
+    public void ChecksMoveValidity(string fen, string move, bool isValid, Kind kind)
+    {
+        var core = new Core(Colour.White, fen);
+
+        if (isValid)
+        {
+            core.MakeMove(move);
+        }
+        else
+        {
+            var exception = Assert.Throws<InvalidMoveException>(() => core.MakeMove(move));
+            
+            Assert.Equal($"{move} is not a valid move for a {kind}.", exception.Message);
+        }
+    }
+
+    [Fact]
+    private void GetMoveFiresCallbackIfActionProvided()
+    {
+        var core = new Core(Colour.White, Constants.InitialBoardFen);
+
+        var called = false;
+
+        core.GetMove(2, () => called = true);
+        
+        Thread.Sleep(100);
+        
+        Assert.True(called);
     }
 }
