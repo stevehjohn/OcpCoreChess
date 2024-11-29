@@ -15,6 +15,8 @@ public sealed class Core : IDisposable
 
     private readonly Board _board;
 
+    private readonly Colour _player;
+
     private long[] _depthCounts;
     
     private long[][] _outcomes;
@@ -31,20 +33,18 @@ public sealed class Core : IDisposable
 
     public bool IsBusy => _cancellationTokenSource != null;
 
-    public Colour Player { get; }
-
     public int MoveCount { get; private set; }
 
     public Core(Colour engineColour)
     {
-        Player = engineColour;
+        _player = engineColour;
         
         _board = new Board(Constants.InitialBoardFen);
     }
 
     public Core(Colour engineColour, string fen)
     {
-        Player = engineColour;
+        _player = engineColour;
         
         _board = new Board(fen);
     }
@@ -58,11 +58,11 @@ public sealed class Core : IDisposable
         var moves = new List<Move>();
         
         var piece = PieceCache.Get(_board[position]);
-
+        
         piece.GetMoves(_board, position, _board.State.Player, moves);
         
         var found = false;
-
+        
         for (var i = 0; i < moves.Count; i++)
         {
             if (moves[i].Target == target)
@@ -72,7 +72,7 @@ public sealed class Core : IDisposable
                 break;
             }
         }
-
+        
         if (! found)
         {
             throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
@@ -155,7 +155,7 @@ public sealed class Core : IDisposable
                
         var ply = maxDepth - depth + 1;
 
-        var isMaximising = board.State.Player == Player;
+        var isMaximising = board.State.Player == _player;
 
         var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? int.MinValue : int.MaxValue);
 

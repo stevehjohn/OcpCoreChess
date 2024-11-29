@@ -9,6 +9,7 @@ using OcpCore.Engine.Pieces;
 using OcpCore.LichessClient.Client.Models;
 using OcpCore.LichessClient.Infrastructure;
 using static OcpCore.LichessClient.Infrastructure.Console;
+using Console = OcpCore.LichessClient.Infrastructure.Console;
 
 namespace OcpCore.LichessClient.Client;
 
@@ -236,31 +237,26 @@ public sealed class LichessClient : IDisposable
             lastMove = moves[^1];
         }
 
-        if (_core.Player == Colour.White && engineIsWhite)
+        OutputLine(engineIsWhite && moves.Length % 2 == 0 ? "Engine move." : "API move.");
+        
+        if (engineIsWhite && moves.Length % 2 == 0)
         {
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
             var engineMove = _core.GetMove(Depth);
-            
-            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
-            switch (engineMove.Outcome)
-            {
-                case MoveOutcome.Null:
-                    OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
-            
-                    return -1;
-                
-                case MoveOutcome.CheckMate:
-                    await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
-                    
-                    OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
-                    return 1;
-                
-                // case MoveOutcome.Stalemate:
-                //     OutputLine("&NL;  &Gray;Stalemate...");
-                //
-                //     return 0;
+            if ((engineMove.Outcome & MoveOutcome.Null) > 0)
+            {
+                OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
+            
+                return -1;
+            }
+
+            if ((engineMove.Outcome & MoveOutcome.CheckMate) > 0)
+            {
+                OutputLine("&NL;  &Green;Checkmate :)&White;...");
+
+                return 1;
             }
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
@@ -297,24 +293,18 @@ public sealed class LichessClient : IDisposable
             
             var engineMove = _core.GetMove(Depth);
 
-            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
-            switch (engineMove.Outcome)
+            if ((engineMove.Outcome & MoveOutcome.Null) > 0)
             {
-                case MoveOutcome.Null:
-                    OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
+                OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
-                    return -1;
-                case MoveOutcome.CheckMate:
-                    await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
-                    
-                    OutputLine("&NL;  &Green;Checkmate :)&White;...");
+                return -1;
+            }
 
-                    return 1;
-                
-                // case MoveOutcome.Stalemate:
-                //     OutputLine("&NL;  &Gray;Stalemate...");
-                //
-                //     return 0;
+            if ((engineMove.Outcome & MoveOutcome.CheckMate) > 0)
+            {
+                OutputLine("&NL;  &Green;Checkmate :)&White;...");
+
+                return 1;
             }
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
@@ -323,7 +313,7 @@ public sealed class LichessClient : IDisposable
             
             if (! result.Ok)
             {
-                throw new ClientException("Error communicating with LiChess API.");
+                throw new ClientException("Error communicating with Lichess API.");
             }
 
             _core.MakeMove(engineMove.ToString()[..4]);
