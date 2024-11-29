@@ -1,4 +1,4 @@
-namespace Engine.LiChessClient.Infrastructure;
+namespace OcpCore.LichessClient.Infrastructure;
 
 public class ClientException : Exception
 {

@@ -1,4 +1,4 @@
-﻿using static Engine.LiChessClient.Infrastructure.Console;
+﻿using static OcpCore.LichessClient.Infrastructure.Console;
 
 namespace OcpCore.LichessClient;
 

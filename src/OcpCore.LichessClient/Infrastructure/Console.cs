@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Engine.LiChessClient.Infrastructure;
+namespace OcpCore.LichessClient.Infrastructure;
 
 [ExcludeFromCodeCoverage]
 public static class Console

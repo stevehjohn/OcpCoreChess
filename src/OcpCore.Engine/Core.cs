@@ -133,10 +133,7 @@ public sealed class Core : IDisposable
 
         var move = ProcessPly(_board, depth, depth, int.MinValue, int.MaxValue);
 
-        if (callback != null)
-        {
-            callback(move);
-        }
+        callback?.Invoke(move);
 
         return move;
     }

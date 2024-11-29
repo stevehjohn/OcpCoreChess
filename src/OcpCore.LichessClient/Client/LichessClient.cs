@@ -2,12 +2,12 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Engine.LiChessClient.Infrastructure;
 using OcpCore.Engine;
 using OcpCore.Engine.General;
 using OcpCore.Engine.Pieces;
 using OcpCore.LichessClient.Client.Models;
-using static Engine.LiChessClient.Infrastructure.Console;
+using OcpCore.LichessClient.Infrastructure;
+using static OcpCore.LichessClient.Infrastructure.Console;
 
 namespace OcpCore.LichessClient.Client;
 
