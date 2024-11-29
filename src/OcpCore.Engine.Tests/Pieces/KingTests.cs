@@ -117,10 +117,7 @@ public class KingTests : PieceTestBase<King>
 
         foreach (var move in moves)
         {
-            if (move.Position == excludedMove[..2].FromStandardNotation() && move.Target == excludedMove[2..].FromStandardNotation())
-            {
-                Assert.Fail("Invalid castling move created.");
-            }
+            Assert.False(move.Position == excludedMove[..2].FromStandardNotation() && move.Target == excludedMove[2..].FromStandardNotation());
         }
     }
 }
