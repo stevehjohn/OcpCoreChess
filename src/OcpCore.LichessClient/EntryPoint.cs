@@ -74,6 +74,8 @@ public static class EntryPoint
                 OutputLine($"    &Magenta;Error playing game &White;{i + 1}&Magenta; against&White; {OpponentBot}");
                 
                 OutputLine($"&NL;    &Gray;{exception.Message}");
+                
+                results.Add(0);
             }
         }
         
