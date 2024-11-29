@@ -133,13 +133,11 @@ public sealed class Core : IDisposable
         {
             callback(move);
         }
-        
-        Console.WriteLine();
 
         return move;
     }
     
-    private Move ProcessPly(Board board, int maxDepth, int depth, string description = null)
+    private Move ProcessPly(Board board, int maxDepth, int depth)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
@@ -158,7 +156,7 @@ public sealed class Core : IDisposable
 
         var isMaximising = board.State.Player == _engineColour;
 
-        var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? -900 : 900); // int.MinValue : int.MaxValue);
+        var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? int.MinValue : int.MaxValue);
 
         for (var i = 0; i < moves.Count; i++)
         {
@@ -195,11 +193,9 @@ public sealed class Core : IDisposable
 
             int score;
 
-            description = $"{description ?? string.Empty} -> {move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()} ({EvaluateMove(player, board),4})";
-
             if (depth > 1)
             {
-                var nextMove = ProcessPly(copy, maxDepth, depth - 1, description);
+                var nextMove = ProcessPly(copy, maxDepth, depth - 1);
 
                 score = nextMove.Score;
             }
@@ -212,11 +208,6 @@ public sealed class Core : IDisposable
             {
                 if (score > bestMove.Score)
                 {
-                    if (score != 0 && depth == 1)
-                    {
-                        Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
-                    }
-
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
             }
@@ -224,11 +215,6 @@ public sealed class Core : IDisposable
             {
                 if (score < bestMove.Score)
                 {
-                    if (score != 0 && depth == 1)
-                    {
-                        Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
-                    }
-
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
             }
