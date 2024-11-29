@@ -34,14 +34,14 @@ public class Knight : Piece
 
             if (content == 0)
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Move));
+                moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
                     
                 continue;
             }
 
             if (Cell.Colour(content) != colour)
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
             }
         }
     }

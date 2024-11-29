@@ -8,12 +8,16 @@ public struct Move
     
     public MoveOutcome Outcome { get; }
 
-    public Move(int position, int target, MoveOutcome outcome)
+    public int Score { get; }
+
+    public Move(int position, int target, MoveOutcome outcome, int score)
     {
         Position = position;
         
         Target = target;
         
         Outcome = outcome;
+
+        Score = score;
     }
 }

@@ -36,14 +36,14 @@ public class King : Piece
 
             if (content == 0)
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Move));
+                moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
 
                 continue;
             }
 
             if (Cell.Colour(content) != colour)
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
             }
         }
     }
@@ -72,7 +72,7 @@ public class King : Piece
                 {
                     if (! board.IsKingInCheck(colour, position - 1))
                     {
-                        moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move));
+                        moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move, 0));
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class King : Piece
                 {
                     if (! board.IsKingInCheck(colour, position + 1))
                     {
-                        moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move));
+                        moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move, 0));
                     }
                 }
             }
