@@ -50,7 +50,7 @@ public class King : Piece
 
     private static void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
     {
-        if (board.IsKingInCheck(colour))
+        if (board.IsKingInCheck(colour) || Cell.GetFile(position) != Files.King)
         {
             return;
         }
