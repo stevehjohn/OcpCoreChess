@@ -12,6 +12,11 @@ public struct Move : IComparable<Move>
 
     public int Score { get; }
 
+    public Move()
+    {
+        Outcome = MoveOutcome.Null;
+    }
+    
     public Move(int position, int target, MoveOutcome outcome, int score)
     {
         Position = position;

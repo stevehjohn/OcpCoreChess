@@ -63,7 +63,7 @@ public class CoreTests
 
         var called = false;
 
-        core.GetMove(2, () => called = true);
+        core.GetMove(2, _ => called = true);
         
         Thread.Sleep(100);
         

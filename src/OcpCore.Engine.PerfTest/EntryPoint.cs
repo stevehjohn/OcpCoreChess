@@ -115,7 +115,7 @@ public static class EntryPoint
 
             // ReSharper disable once AccessToModifiedClosure
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(maxDepth, () => PlyComplete(core, maxDepth, stopwatch))
+            core.GetMove(maxDepth, move => PlyComplete(core, maxDepth, stopwatch, move))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
@@ -159,7 +159,7 @@ public static class EntryPoint
         }
     }
 
-    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch)
+    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch, Move move)
     {
         stopwatch.Stop();
 

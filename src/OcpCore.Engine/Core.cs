@@ -84,7 +84,7 @@ public sealed class Core : IDisposable
         GetMoveInternal(depth);
     }
     
-    public Task GetMove(int depth, Action callback)
+    public Task GetMove(int depth, Action<Move> callback)
     {
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -92,12 +92,14 @@ public sealed class Core : IDisposable
 
         _getMoveTask = Task.Run(() =>
         {
-            GetMoveInternal(depth, callback);
+            var move = GetMoveInternal(depth, callback);
 
             _cancellationTokenSource = null;
 
             _getMoveTask = null;
-            
+
+            return move;
+
         }, _cancellationToken);
 
         return _getMoveTask;
@@ -112,7 +114,7 @@ public sealed class Core : IDisposable
         return moves;
     }
     
-    private void GetMoveInternal(int depth, Action callback = null)
+    private Move GetMoveInternal(int depth, Action<Move> callback = null)
     {
         _depthCounts = new long[depth + 1];
 
@@ -125,16 +127,21 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        ProcessPly(_board, depth, depth);
+        var move = ProcessPly(_board, depth, depth);
 
-        callback?.Invoke();
+        if (callback != null)
+        {
+            callback(move);
+        }
+
+        return move;
     }
 
-    private void ProcessPly(Board board, int maxDepth, int depth)
+    private Move ProcessPly(Board board, int maxDepth, int depth)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
-            return;
+            return new Move();
         }   
         
         var moves = new List<Move>();
@@ -146,6 +153,10 @@ public sealed class Core : IDisposable
         var player = board.State.Player;
                
         var ply = maxDepth - depth + 1;
+
+        var isMaximising = board.State.Player == _engineColour;
+
+        var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? int.MinValue : int.MaxValue);
         
         for (var i = 0; i < moves.Count; i++)
         {
@@ -158,15 +169,6 @@ public sealed class Core : IDisposable
             if (copy.IsKingInCheck(player))
             {
                 continue;
-            }
-
-            var score = board.State.WhiteScore - board.State.BlackScore;
-
-            var isMaximising = board.State.Player == _engineColour;
-            
-            if (! isMaximising)
-            {
-                score = -score;
             }
 
             _depthCounts[ply]++;
@@ -191,9 +193,32 @@ public sealed class Core : IDisposable
 
             if (depth > 1)
             {
-                ProcessPly(copy, maxDepth, depth - 1);
+                var nextMove = ProcessPly(copy, maxDepth, depth - 1);
+
+                var score = copy.State.WhiteScore - copy.State.BlackScore;
+
+                if (isMaximising)
+                {
+                    score = player == Colour.White ? score : -score;
+
+                    if (nextMove.Score >= bestMove.Score)
+                    {
+                        bestMove = new Move(move.Position, move.Target, outcome, score);
+                    }
+                }
+                else
+                {
+                    score = player == Colour.White ? -score : score;
+
+                    if (nextMove.Score <= bestMove.Score)
+                    {
+                        bestMove = new Move(move.Position, move.Target, outcome, score);
+                    }
+                }
             }
         }
+
+        return bestMove;
     }
 
     private static void GetAllMoves(Board board, List<Move> moves)
