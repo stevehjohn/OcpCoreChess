@@ -143,7 +143,7 @@ public sealed class Core : IDisposable
 
     private Board _bestBoard;
     
-    private Move ProcessPly(Board board, int maxDepth, int depth)
+    private Move ProcessPly(Board board, int maxDepth, int depth, string description = null)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
@@ -163,7 +163,7 @@ public sealed class Core : IDisposable
         var isMaximising = board.State.Player == _engineColour;
 
         var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? int.MinValue : int.MaxValue);
-        
+
         for (var i = 0; i < moves.Count; i++)
         {
             var move = moves[i];
@@ -182,13 +182,13 @@ public sealed class Core : IDisposable
             if (copy.IsKingInCheck(player.Invert()))
             {
                 outcome |= MoveOutcome.Check;
-                
+
                 if (! CanMove(copy, player.Invert()))
                 {
                     outcome |= MoveOutcome.CheckMate;
                 }
             }
-            
+
             for (var j = 0; j <= Constants.MoveOutcomes; j++)
             {
                 if (((byte) outcome & (1 << j)) > 0)
@@ -198,22 +198,29 @@ public sealed class Core : IDisposable
             }
 
             int score;
-            
+
+            description = $"{description ?? string.Empty} -> {move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}";
+
             if (depth > 1)
             {
-                var nextMove = ProcessPly(copy, maxDepth, depth - 1);
+                var nextMove = ProcessPly(copy, maxDepth, depth - 1, description);
 
                 score = nextMove.Score;
             }
             else
             {
-                score = EvaluateMove(player, copy, outcome);
+                score = EvaluateMove(player, copy);
             }
             
             if (isMaximising)
             {
                 if (score > bestMove.Score)
                 {
+                    if (score != 0)
+                    {
+                        Console.WriteLine($"  Depth: {ply}  Move:{description}  Score: {score}");
+                    }
+
                     bestMove = new Move(move.Position, move.Target, outcome, score);
 
                     _bestBoard = copy;
@@ -228,15 +235,17 @@ public sealed class Core : IDisposable
                     _bestBoard = copy;
                 }
             }
+
+            description = description[..^8];
         }
 
         return bestMove;
     }
 
-    private static int EvaluateMove(Colour player, Board board, MoveOutcome outcome)
+    private int EvaluateMove(Colour player, Board board)
     {
         var score = (board.State.WhiteScore - board.State.BlackScore) * 100;
-        
+
         // TODO: Other heuristics: mobility, check, checkmate etc...
 
         return player == Colour.White ? score : -score;
