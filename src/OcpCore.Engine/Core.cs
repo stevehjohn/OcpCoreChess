@@ -218,8 +218,6 @@ public sealed class Core : IDisposable
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
             }
-
-            description = description[..^15];
         }
 
         if (bestMove.Score == 300)
