@@ -56,7 +56,7 @@ public sealed class LichessClient : IDisposable
 
         var response = await Post<ChallengeRequest, ChallengeResponse>($"challenge/{username}", new ChallengeRequest
         {
-            Colour = "black",
+            Colour = "random",
             Clock = new Clock
             {
                 Increment = 10,
