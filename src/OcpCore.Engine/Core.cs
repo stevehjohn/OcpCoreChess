@@ -141,7 +141,7 @@ public sealed class Core : IDisposable
         
         GetAllMoves(board, moves);
         
-        // TODO: This is where move ordering could be applied
+        moves.Sort();
 
         var player = board.State.Player;
                

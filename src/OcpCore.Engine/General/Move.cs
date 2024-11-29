@@ -1,6 +1,8 @@
+using OcpCore.Engine.Extensions;
+
 namespace OcpCore.Engine.General;
 
-public struct Move
+public struct Move : IComparable<Move>
 {
     public int Position { get; }
     
@@ -19,5 +21,15 @@ public struct Move
         Outcome = outcome;
 
         Score = score;
+    }
+
+    public int CompareTo(Move other)
+    {
+        return other.Score - Score;
+    }
+
+    public override string ToString()
+    {
+        return $"{Position.ToStandardNotation()}{Target.ToStandardNotation()} {Outcome} {Score}";
     }
 }
