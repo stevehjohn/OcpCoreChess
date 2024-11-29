@@ -260,7 +260,7 @@ public sealed class LichessClient : IDisposable
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
             
-            if ((engineMove.Outcome & MoveOutcome.Null) > 0)
+            if (engineMove.Outcome == MoveOutcome.Null)
             {
                 OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
@@ -310,7 +310,7 @@ public sealed class LichessClient : IDisposable
             
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
             
-            if ((engineMove.Outcome & MoveOutcome.Null) > 0)
+            if (engineMove.Outcome == MoveOutcome.Null)
             {
                 OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             

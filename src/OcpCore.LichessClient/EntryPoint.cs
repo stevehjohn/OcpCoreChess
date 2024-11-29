@@ -9,7 +9,7 @@ public static class EntryPoint
 
     private const bool Rated = true;
     
-    private const int Games = 1;
+    private const int Games = 5;
     
     public static async Task Main()
     {
