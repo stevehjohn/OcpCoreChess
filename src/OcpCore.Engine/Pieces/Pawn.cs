@@ -42,7 +42,7 @@ public class Pawn : Piece
 
             if (cell == board.State.EnPassantTarget || (content > 0 && Cell.Colour(content) != colour))
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture, Value * 10 + Value));
             }
         }
 
@@ -54,7 +54,7 @@ public class Pawn : Piece
 
             if (cell == board.State.EnPassantTarget || (content > 0 && Cell.Colour(content) != colour))
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture, Value * 10 + Value));
             }
         }
     }
