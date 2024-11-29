@@ -11,7 +11,7 @@ public sealed class Core : IDisposable
 {
     public const string Name = "Ocp Core Chess";
 
-    public const string Author = "Stevo John";
+    public const string Copyright = "© Stevo John";
 
     private readonly Board _board;
 
@@ -203,7 +203,7 @@ public sealed class Core : IDisposable
 
                     if (nextMove.Score >= bestMove.Score)
                     {
-                        bestMove = new Move(move.Position, move.Target, outcome, score);
+                        bestMove = new Move(move.Position, move.Target, outcome, nextMove.Score);
                     }
                 }
                 else
@@ -212,7 +212,7 @@ public sealed class Core : IDisposable
 
                     if (nextMove.Score <= bestMove.Score)
                     {
-                        bestMove = new Move(move.Position, move.Target, outcome, score);
+                        bestMove = new Move(move.Position, move.Target, outcome, nextMove.Score);
                     }
                 }
             }
