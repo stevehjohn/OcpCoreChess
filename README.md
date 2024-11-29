@@ -4,6 +4,7 @@
 
 ## TODOs
 
+- Count only mode for `Piece.GetMoves` to be used for heuristics.
 - Promote to Knight?
 - Move ordering?
   - Captures preferred.
