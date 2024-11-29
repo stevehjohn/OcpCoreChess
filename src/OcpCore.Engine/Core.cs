@@ -15,8 +15,6 @@ public sealed class Core : IDisposable
 
     private readonly Board _board;
 
-    private readonly Colour _engineColour;
-
     private long[] _depthCounts;
     
     private long[][] _outcomes;
@@ -33,16 +31,20 @@ public sealed class Core : IDisposable
 
     public bool IsBusy => _cancellationTokenSource != null;
 
+    public Colour Player { get; }
+
+    public int MoveCount { get; private set; }
+
     public Core(Colour engineColour)
     {
-        _engineColour = engineColour;
+        Player = engineColour;
         
         _board = new Board(Constants.InitialBoardFen);
     }
 
     public Core(Colour engineColour, string fen)
     {
-        _engineColour = engineColour;
+        Player = engineColour;
         
         _board = new Board(fen);
     }
@@ -77,6 +79,8 @@ public sealed class Core : IDisposable
         }
 
         _board.MakeMove(position, target);
+
+        MoveCount++;
     }
 
     public Move GetMove(int depth)
@@ -127,7 +131,7 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        var move = ProcessPly(_board, depth, depth);
+        var move = ProcessPly(_board, depth, depth, int.MinValue, int.MaxValue);
 
         if (callback != null)
         {
@@ -137,7 +141,7 @@ public sealed class Core : IDisposable
         return move;
     }
     
-    private Move ProcessPly(Board board, int maxDepth, int depth)
+    private Move ProcessPly(Board board, int maxDepth, int depth, int alpha, int beta)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
@@ -154,7 +158,7 @@ public sealed class Core : IDisposable
                
         var ply = maxDepth - depth + 1;
 
-        var isMaximising = board.State.Player == _engineColour;
+        var isMaximising = board.State.Player == Player;
 
         var bestMove = new Move(0, 0, MoveOutcome.Null, isMaximising ? int.MinValue : int.MaxValue);
 
@@ -195,7 +199,7 @@ public sealed class Core : IDisposable
 
             if (depth > 1)
             {
-                var nextMove = ProcessPly(copy, maxDepth, depth - 1);
+                var nextMove = ProcessPly(copy, maxDepth, depth - 1, alpha, beta);
 
                 score = nextMove.Score;
             }
@@ -210,6 +214,13 @@ public sealed class Core : IDisposable
                 {
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
+
+                if (score > beta)
+                {
+                    return bestMove;
+                }
+
+                alpha = Math.Max(alpha, bestMove.Score);
             }
             else
             {
@@ -217,6 +228,13 @@ public sealed class Core : IDisposable
                 {
                     bestMove = new Move(move.Position, move.Target, outcome, score);
                 }
+
+                if (score < alpha)
+                {
+                    return bestMove;
+                }
+
+                beta = Math.Min(beta, bestMove.Score);
             }
         }
 
@@ -303,5 +321,10 @@ public sealed class Core : IDisposable
         _cancellationTokenSource?.Dispose();
         
         _getMoveTask?.Dispose();
+    }
+
+    public override string ToString()
+    {
+        return _board.ToString();
     }
 }
