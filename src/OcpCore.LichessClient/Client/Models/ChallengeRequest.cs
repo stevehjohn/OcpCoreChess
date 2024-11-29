@@ -11,6 +11,9 @@ public class ChallengeRequest
     [JsonPropertyName("clock")]
     public Clock Clock { get; set; }
     
+    [JsonPropertyName("color")]
+    public string Colour { get; set; }
+    
     [JsonPropertyName("keepAliveStream")]
     public bool KeepAliveStream { get; set; }
     

@@ -50,7 +50,7 @@ public static class EntryPoint
                 }
             }
 
-            var client = new Client.LichessClient();
+            var client = new Client.LichessClient(true);
 
             try
             {

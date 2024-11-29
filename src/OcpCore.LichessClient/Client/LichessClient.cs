@@ -23,6 +23,8 @@ public sealed class LichessClient : IDisposable
     private readonly JsonSerializerOptions _serializerOptions;
     
     private readonly bool _logCommunications;
+
+    private string _engineLastMove;
     
     private Core _core;
 
@@ -54,6 +56,7 @@ public sealed class LichessClient : IDisposable
 
         var response = await Post<ChallengeRequest, ChallengeResponse>($"challenge/{username}", new ChallengeRequest
         {
+            Colour = "black",
             Clock = new Clock
             {
                 Increment = 10,
@@ -152,6 +155,8 @@ public sealed class LichessClient : IDisposable
 
     private async Task<int> PlayGame(string id)
     {
+        _engineLastMove = "XXXX";
+        
         using var response = await _client.GetAsync($"api/bot/game/stream/{id}", HttpCompletionOption.ResponseHeadersRead);
 
         response.EnsureSuccessStatusCode();
@@ -178,6 +183,8 @@ public sealed class LichessClient : IDisposable
 
                 continue;
             }
+            
+            OutputLine(line);
             
             GameState state;
             
@@ -236,13 +243,20 @@ public sealed class LichessClient : IDisposable
             lastMove = moves[^1];
         }
 
+        if (lastMove == _engineLastMove)
+        {
+            return 0;
+        }
+
         OutputLine(engineIsWhite && moves.Length % 2 == 0 ? "Engine move." : "API move.");
         
-        if (engineIsWhite && moves.Length % 2 == 0)
+        if (moves.Length == 0)
         {
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
             var engineMove = _core.GetMove(Depth);
+
+            _engineLastMove = engineMove.ToString()[..4];
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
             
@@ -289,26 +303,26 @@ public sealed class LichessClient : IDisposable
             OutputLine();
             
             _core.OutputBoard(! engineIsWhite);
-
+            
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
             var engineMove = _core.GetMove(Depth);
-
+            
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
-
+            
             if ((engineMove.Outcome & MoveOutcome.Null) > 0)
             {
                 OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
                 return -1;
             }
-
+            
             if ((engineMove.Outcome & MoveOutcome.CheckMate) > 0)
             {
                 await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.ToString()[..4]}", null);
-
+            
                 OutputLine("&NL;  &Green;Checkmate :)&White;...");
-
+            
                 return 1;
             }
             
@@ -318,9 +332,9 @@ public sealed class LichessClient : IDisposable
             {
                 throw new ClientException("Error communicating with Lichess API.");
             }
-
+            
             _core.MakeMove(engineMove.ToString()[..4]);
-
+            
             OutputLine();
             
             _core.OutputBoard(! engineIsWhite);
