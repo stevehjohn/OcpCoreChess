@@ -55,4 +55,18 @@ public class CoreTests
             Assert.Equal($"{move} is not a valid move for a {kind}.", exception.Message);
         }
     }
+
+    [Fact]
+    private void GetMoveFiresCallbackIfActionProvided()
+    {
+        var core = new Core(Colour.White, Constants.InitialBoardFen);
+
+        var called = false;
+
+        core.GetMove(2, () => called = true);
+        
+        Thread.Sleep(100);
+        
+        Assert.True(called);
+    }
 }
