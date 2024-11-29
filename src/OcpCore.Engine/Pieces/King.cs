@@ -63,25 +63,31 @@ public class King : Piece
         }
         
         var rankStart = colour == Colour.White ? 0 : Constants.BlackRankCellStart;
-        
-        if (board[rankStart + Files.LeftKnight] == 0 && board[rankStart + Files.LeftBishop] == 0 && board[rankStart + Files.Queen] == 0)
+
+        if (Cell.Kind(board[rankStart + Files.LeftRook]) == Kind.Rook && Cell.Colour(board[rankStart + Files.LeftRook]) == colour)
         {
-            if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide)) > 0)
+            if (board[rankStart + Files.LeftKnight] == 0 && board[rankStart + Files.LeftBishop] == 0 && board[rankStart + Files.Queen] == 0)
             {
-                if (! board.IsKingInCheck(colour, position - 1))
+                if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide)) > 0)
                 {
-                    moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move));
+                    if (! board.IsKingInCheck(colour, position - 1))
+                    {
+                        moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move));
+                    }
                 }
             }
         }
-        
-        if (board[rankStart + Files.RightBishop] == 0 && board[rankStart + Files.RightKnight] == 0)
+
+        if (Cell.Kind(board[rankStart + Files.RightRook]) == Kind.Rook && Cell.Colour(board[rankStart + Files.RightRook]) == colour)
         {
-            if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide)) > 0)
+            if (board[rankStart + Files.RightBishop] == 0 && board[rankStart + Files.RightKnight] == 0)
             {
-                if (! board.IsKingInCheck(colour, position + 1))
+                if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide)) > 0)
                 {
-                    moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move));
+                    if (! board.IsKingInCheck(colour, position + 1))
+                    {
+                        moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move));
+                    }
                 }
             }
         }

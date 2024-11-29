@@ -1,3 +1,4 @@
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.Pieces;
 using Xunit;
@@ -104,5 +105,24 @@ public class KingTests : PieceTestBase<King>
         Piece.GetMoves(board, position, colour, moves);
         
         AssertExpectedMoves(expectedMoves, moves);
+    }
+
+    [Theory]
+    [InlineData("rnbqk2B/ppppnp1p/4p3/8/8/bP6/P1PPPPPP/RN1QKBNR b KQkq - 0 4", "e8g8")]
+    public void NoFalsePositiveCastling(string fen, string excludedMove)
+    {
+        var core = new Core(Colour.White, fen);
+
+        var moves = core.GetAllowedMoves();
+
+        foreach (var move in moves)
+        {
+            Console.WriteLine($"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}");
+            
+            if (move.Position == excludedMove[..2].FromStandardNotation() && move.Target == excludedMove[2..].FromStandardNotation())
+            {
+                Assert.Fail("Invalid castling move created.");
+            }
+        }
     }
 }
