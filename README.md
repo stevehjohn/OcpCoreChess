@@ -2,21 +2,17 @@
 
 3rd attempt at making a chess playing engine.
 
-## Developer Notes
+## TODOs
 
-### TODOs
-
-- Core can check whether a move is valid.
-- Do not castle through check.
-- Promote to Queen or Knight.
-- Hybrid copy/do/undo - only make a copy if recursing, just undo otherwise?
-- Almost certainly safer to use 2 bits for colour.
-- Promotions.
-- Get movement working before adding pooling to `_cells` in `Board`.
+- Promote to Knight?
 - Move ordering?
-  - Captures preferred. 
+  - Captures preferred.
   - Lower valur taking higher even better.
   - Moves that don't go onto an attacked square.
+
+## Developer Notes
+
+- `WhiteScore - BlackScore` will be positive if white has more material.
 
 ### Cell Arrangement
 
