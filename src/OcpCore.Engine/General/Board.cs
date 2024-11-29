@@ -217,8 +217,10 @@ public class Board
             }
         }
         
-        foreach (var direction in Constants.KnightMoves)
+        for (var d = 0; d < Constants.KnightMoves.Length; d++)
         {
+            var direction = Constants.DirectionalMovesAnnotated[d];
+
             cellRank = kingRank;
 
             cellFile = kingFile;

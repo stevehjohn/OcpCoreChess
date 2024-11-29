@@ -227,8 +227,10 @@ public sealed class Core : IDisposable
 
             PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
 
-            foreach (var move in moves)
+            for (var i = 0; i < moves.Count; i++)
             {
+                var move = moves[i];
+                
                 var copy = new Board(board);
 
                 copy.MakeMove(cell, move.Target);
