@@ -48,4 +48,4 @@ Rank 8 | 56 57 58 59 60 61 62 62  Black
 - K: White King cell.
 - k: Black king cell.
 - h: Halfmove clock.
-- m: Full~~~~move count.
+- m: Fullmove count.

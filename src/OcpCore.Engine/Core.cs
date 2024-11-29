@@ -103,6 +103,15 @@ public sealed class Core : IDisposable
         return _getMoveTask;
     }
     
+    public List<Move> GetAllowedMoves()
+    {
+        var moves = new List<Move>();
+
+        GetAllMoves(_board, moves);
+
+        return moves;
+    }
+    
     private void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
