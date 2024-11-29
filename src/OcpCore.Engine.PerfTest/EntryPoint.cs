@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
+using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.PerfTest;
@@ -100,11 +101,22 @@ public static class EntryPoint
             }
         }
 
+        var fen = Constants.InitialBoardFen;
+
+        var customFen = false;
+        
+        if (arguments.Length > 1)
+        {
+            fen = arguments[1];
+
+            customFen = true;
+        }
+
         Console.WriteLine();
 
         for (var maxDepth = 1; maxDepth <= depth; maxDepth++)
         {
-            using var core = new Core(Colour.White);
+            using var core = new Core(Colour.White, fen);
             
             Console.WriteLine($" Created engine {Core.Name} {Core.Copyright}.");
             
@@ -120,7 +132,7 @@ public static class EntryPoint
 
             // ReSharper disable once AccessToModifiedClosure
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(maxDepth, move => PlyComplete(core, maxDepth, stopwatch, move))
+            core.GetMove(maxDepth, move => PlyComplete(core, maxDepth, stopwatch, move, customFen))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
@@ -164,93 +176,96 @@ public static class EntryPoint
         }
     }
 
-    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch, Move move)
+    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch, Move move, bool customFen)
     {
         stopwatch.Stop();
 
-        for (var depth = 1; depth <= maxDepth; depth++)
+        if (! customFen)
         {
-            var count = core.GetDepthCount(depth);
-
-            var expected = ExpectedCombinations[depth - 1];
-
-            var pass = count == expected;
-
-            Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,15:N0}  Expected: {expected,15:N0}");
-
-            if (! pass)
+            for (var depth = 1; depth <= maxDepth; depth++)
             {
-                var delta = count - expected;
+                var count = core.GetDepthCount(depth);
 
-                Console.Write($"  Delta: {(delta > 0 ? ">" : "<")}{delta,13:N0}");
-            }
+                var expected = ExpectedCombinations[depth - 1];
 
-            Console.WriteLine();
+                var pass = count == expected;
 
-            Console.Write($"      Capture:    {core.GetMoveOutcome(depth, MoveOutcome.Capture),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture) ? "✓" : string.Empty)}");
-            if (ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture))
-            {
+                Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,15:N0}  Expected: {expected,15:N0}");
+
+                if (! pass)
+                {
+                    var delta = count - expected;
+
+                    Console.Write($"  Delta: {(delta > 0 ? ">" : "<")}{delta,13:N0}");
+                }
+
                 Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Capture) - ExpectedOutcomes[(depth, MoveOutcome.Capture)],13:N0}");
-            }
 
-            Console.Write($"      En Passant: {core.GetMoveOutcome(depth, MoveOutcome.EnPassant),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetMoveOutcome(depth, MoveOutcome.EnPassant) ? "✓" : string.Empty)}");
-            if (ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetMoveOutcome(depth, MoveOutcome.EnPassant))
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.EnPassant) - ExpectedOutcomes[(depth, MoveOutcome.EnPassant)],13:N0}");
-            }
+                Console.Write($"      Capture:    {core.GetMoveOutcome(depth, MoveOutcome.Capture),13:N0}");
+                Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture) ? "✓" : string.Empty)}");
+                if (ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture))
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Capture) - ExpectedOutcomes[(depth, MoveOutcome.Capture)],13:N0}");
+                }
 
-            Console.Write($"      Castle:     {core.GetMoveOutcome(depth, MoveOutcome.Castle),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetMoveOutcome(depth, MoveOutcome.Castle) ? "✓" : string.Empty)}");
-            if (ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetMoveOutcome(depth, MoveOutcome.Castle))
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Castle) - ExpectedOutcomes[(depth, MoveOutcome.Castle)],13:N0}");
-            }
+                Console.Write($"      En Passant: {core.GetMoveOutcome(depth, MoveOutcome.EnPassant),13:N0}");
+                Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetMoveOutcome(depth, MoveOutcome.EnPassant) ? "✓" : string.Empty)}");
+                if (ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetMoveOutcome(depth, MoveOutcome.EnPassant))
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.EnPassant) - ExpectedOutcomes[(depth, MoveOutcome.EnPassant)],13:N0}");
+                }
 
-            Console.Write($"      Promotion:  {core.GetMoveOutcome(depth, MoveOutcome.Promotion),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetMoveOutcome(depth, MoveOutcome.Promotion) ? "✓" : string.Empty)}");
-            if (ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetMoveOutcome(depth, MoveOutcome.Promotion))
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Promotion) - ExpectedOutcomes[(depth, MoveOutcome.Promotion)],13:N0}");
-            }
+                Console.Write($"      Castle:     {core.GetMoveOutcome(depth, MoveOutcome.Castle),13:N0}");
+                Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetMoveOutcome(depth, MoveOutcome.Castle) ? "✓" : string.Empty)}");
+                if (ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetMoveOutcome(depth, MoveOutcome.Castle))
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Castle) - ExpectedOutcomes[(depth, MoveOutcome.Castle)],13:N0}");
+                }
 
-            Console.Write($"      Check:      {core.GetMoveOutcome(depth, MoveOutcome.Check),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check) ? "✓" : string.Empty)}");
-            if (ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check))
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Check) - ExpectedOutcomes[(depth, MoveOutcome.Check)],13:N0}");
-            }
+                Console.Write($"      Promotion:  {core.GetMoveOutcome(depth, MoveOutcome.Promotion),13:N0}");
+                Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetMoveOutcome(depth, MoveOutcome.Promotion) ? "✓" : string.Empty)}");
+                if (ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetMoveOutcome(depth, MoveOutcome.Promotion))
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Promotion) - ExpectedOutcomes[(depth, MoveOutcome.Promotion)],13:N0}");
+                }
 
-            Console.Write($"      Check Mate: {core.GetMoveOutcome(depth, MoveOutcome.CheckMate),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetMoveOutcome(depth, MoveOutcome.CheckMate) ? "✓" : string.Empty)}");
-            if (ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetMoveOutcome(depth, MoveOutcome.CheckMate))
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
+                Console.Write($"      Check:      {core.GetMoveOutcome(depth, MoveOutcome.Check),13:N0}");
+                Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check) ? "✓" : string.Empty)}");
+                if (ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check))
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Check) - ExpectedOutcomes[(depth, MoveOutcome.Check)],13:N0}");
+                }
+
+                Console.Write($"      Check Mate: {core.GetMoveOutcome(depth, MoveOutcome.CheckMate),13:N0}");
+                Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetMoveOutcome(depth, MoveOutcome.CheckMate) ? "✓" : string.Empty)}");
+                if (ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetMoveOutcome(depth, MoveOutcome.CheckMate))
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
+                }
             }
         }
 

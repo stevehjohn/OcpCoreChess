@@ -1,3 +1,3 @@
 cd src
-dotnet run --project OcpCore.Engine.PerfTest -c Release $*
+dotnet run --project OcpCore.Engine.PerfTest -c Release "$@"
 cd -
