@@ -139,12 +139,12 @@ public class Board
 
     public bool IsColour(int cell, Colour colour)
     {
-        return (_bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] & 1ul << cell) > 0;
+        return (_bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] & (1ul << cell)) == 1ul <<  cell;
     }
     
     public bool IsOccupied(int cell)
     {
-        return (_bitboards[Bitboards.White] & _bitboards[Bitboards.Black] & 1ul << cell) > 0;
+        return ((_bitboards[Bitboards.White] | _bitboards[Bitboards.Black]) & (1ul << cell)) > 0;
     }
 
     public bool IsKingInCheck(Colour player, int probeCell = -1)
