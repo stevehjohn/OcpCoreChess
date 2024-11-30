@@ -2,7 +2,7 @@ using OcpCore.Engine.Extensions;
 
 namespace OcpCore.Engine.General;
 
-public struct Move : IComparable<Move>
+public readonly struct Move : IComparable<Move>
 {
     public int Position { get; }
     
