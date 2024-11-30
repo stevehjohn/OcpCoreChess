@@ -21,6 +21,8 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
 
+        _bitboards = new ulong[Bitboards.Count];
+
         State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0, 0, 1);
     }
 
