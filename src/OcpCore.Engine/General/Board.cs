@@ -10,6 +10,8 @@ namespace OcpCore.Engine.General;
 public class Board
 {
     private readonly byte[] _cells;
+    
+    private readonly ulong[] _bitboards;
 
     public byte this[int index] => _cells[index];
 
@@ -25,13 +27,22 @@ public class Board
     public Board(string fen)
     {
         _cells = new byte[Constants.Cells];
-        
+
+        _bitboards = new ulong[Bitboards.Count];
+
         ParseFen(fen);
     }
 
     public unsafe Board(Board board)
     {
         _cells = new byte[Constants.Cells];
+        
+        _bitboards = new ulong[Bitboards.Count];
+
+        for (var i = 0; i < Bitboards.Count; i++)
+        {
+            _bitboards[i] = board._bitboards[i];
+        }
         
         fixed (byte* destination = _cells)
         {
@@ -114,12 +125,26 @@ public class Board
         {
             State.IncrementHalfmoves();
         }
+        
+        ClearBitboards(position);
 
+        SetBitboardColour(target, State.Player);
+        
         State.InvertPlayer();
 
         return outcome;
     }
+    
+    public bool IsColour(int cell, Colour colour)
+    {
+        return (_bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] & (1ul << cell)) == 1ul <<  cell;
+    }
 
+    public bool IsOccupied(int cell)
+    {
+        return ((_bitboards[Bitboards.White] | _bitboards[Bitboards.Black]) & (1ul << cell)) > 0;
+    }
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private MoveOutcome PerformCastle(byte piece, int position, int target)
     {
@@ -364,7 +389,27 @@ public class Board
         return builder.ToString();
     }
 #pragma warning restore CS8524
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void SetBitboardColour(int cell, Colour colour)
+    {
+        _bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] |= 1ul << cell;
 
+        _bitboards[colour == Colour.White ? Bitboards.Black : Bitboards.White] &= ~(1ul << cell);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void ClearBitboards(int cell)
+    {
+        var mask = ~(1ul << cell);
+
+        _bitboards[Bitboards.White] &= mask;
+
+        _bitboards[Bitboards.Black] &= mask;
+
+        _bitboards[Bitboards.Knight] &= mask;
+    }
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private MoveOutcome PerformEnPassant(byte piece, int target)
     {
@@ -560,7 +605,20 @@ public class Board
                 {
                     throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
                 }
+                
+                if (char.IsUpper(cell))
+                {
+                    colour = Colour.White;
 
+                    SetBitboardColour(cellIndex, Colour.White);
+                }
+                else
+                {
+                    colour = Colour.Black;
+
+                    SetBitboardColour(cellIndex, Colour.Black);
+                }
+                
                 _cells[cellIndex] = (byte) piece;
 
                 if (Cell.Is((byte) piece, Kind.King))

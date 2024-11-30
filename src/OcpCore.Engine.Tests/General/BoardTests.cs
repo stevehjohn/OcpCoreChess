@@ -30,6 +30,23 @@ public class BoardTests
         Assert.Equal(expectedMessage, exception.Message);
     }
 
+    [Fact]
+    public void ParseFenSetsColourBitboardsCorrectly()
+    {
+        var board = new Board(Constants.InitialBoardFen);
+
+        for (var file = 0; file < Constants.Files; file++)
+        {
+            Assert.True(board.IsColour(Ranks.BlackPawnRank * 8 + file, Colour.Black));
+
+            Assert.True(board.IsColour(Ranks.BlackHomeRank * 8  + file, Colour.Black));
+
+            Assert.True(board.IsColour(Ranks.WhiteHomeRank * 8  + file, Colour.White));
+
+            Assert.True(board.IsColour(Ranks.WhitePawnRank * 8  + file, Colour.White));
+        }
+    }
+    
     [Theory]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 8, 16, Castle.All, Castle.All)]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 1", 0, 16, Castle.All, Castle.All ^ Castle.WhiteQueenSide)]
