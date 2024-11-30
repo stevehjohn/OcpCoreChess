@@ -11,6 +11,8 @@ public class Board
 {
     private readonly byte[] _cells;
 
+    private readonly ulong[] _bitboards;
+
     public byte this[int index] => _cells[index];
 
     public State State { get; private set; }
@@ -25,6 +27,8 @@ public class Board
     public Board(string fen)
     {
         _cells = new byte[Constants.Cells];
+
+        _bitboards = new ulong[Bitboards.Count];
         
         ParseFen(fen);
     }
@@ -33,6 +37,8 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
         
+        _bitboards = new ulong[Bitboards.Count];
+
         fixed (byte* destination = _cells)
         {
             fixed (byte* source = board._cells)
@@ -120,29 +126,14 @@ public class Board
         return outcome;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private MoveOutcome PerformCastle(byte piece, int position, int target)
+    public bool IsColour(int cell, Colour colour)
     {
-        var delta = position - target;
-
-        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
-        {
-            var rank = Cell.GetRank(position);
-
-            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
-
-            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
-
-            var sourceFile = Cell.GetCell(rank, file);
-
-            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
-
-            _cells[sourceFile] = 0;
-
-            return MoveOutcome.Castle;
-        }
-
-        return MoveOutcome.Move;
+        return (_bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] & 1ul << cell) > 0;
+    }
+    
+    public bool IsOccupied(int cell)
+    {
+        return (_bitboards[Bitboards.White] & _bitboards[Bitboards.Black] & 1ul << cell) > 0;
     }
 
     public bool IsKingInCheck(Colour player, int probeCell = -1)
@@ -366,6 +357,31 @@ public class Board
 #pragma warning restore CS8524
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private MoveOutcome PerformCastle(byte piece, int position, int target)
+    {
+        var delta = position - target;
+
+        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
+        {
+            var rank = Cell.GetRank(position);
+
+            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
+
+            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
+
+            var sourceFile = Cell.GetCell(rank, file);
+
+            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
+
+            _cells[sourceFile] = 0;
+
+            return MoveOutcome.Castle;
+        }
+
+        return MoveOutcome.Move;
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private MoveOutcome PerformEnPassant(byte piece, int target)
     {
         if (Cell.Is(piece, Kind.Pawn) && target == State.EnPassantTarget)
@@ -541,7 +557,22 @@ public class Board
                     continue;
                 }
 
-                var colour = char.IsUpper(cell) ? Colour.White : Colour.Black;
+                Colour colour;
+
+                var cellIndex = Cell.GetCell(rank, file);
+
+                if (char.IsUpper(cell))
+                {
+                    colour = Colour.White;
+
+                    _bitboards[Bitboards.White] |= 1ul << cellIndex;
+                }
+                else
+                {
+                    colour = Colour.Black;
+                    
+                    _bitboards[Bitboards.Black] |= 1ul << cellIndex;
+                }
 
                 var piece = char.ToUpper(cell) switch
                 {
@@ -553,8 +584,6 @@ public class Board
                     'K' => (byte) Kind.King | (byte) colour,
                     _ => throw new FenParseException($"Invalid piece token in rank {rank + 1}: {cell}.")
                 };
-
-                var cellIndex = Cell.GetCell(rank, file);
 
                 if (cellIndex < 0)
                 {

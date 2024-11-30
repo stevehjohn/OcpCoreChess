@@ -36,14 +36,14 @@ public abstract class Piece
 
                 var content = board[cell];
 
-                if (content == 0)
+                if (! board.IsOccupied(cell))
                 {
                     moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
                     
                     continue;
                 }
 
-                if (Cell.Colour(content) == colour)
+                if (board.IsColour(cell, colour))
                 {
                     break;
                 }
