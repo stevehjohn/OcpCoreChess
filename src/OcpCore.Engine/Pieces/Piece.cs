@@ -27,28 +27,26 @@ public abstract class Piece
 
                 var newFile = file + distance * direction.FileDelta;
 
-                var cell = Cell.GetCell(newRank, newFile);
+                var target = Cell.GetCell(newRank, newFile);
 
-                if (cell < 0)
+                if (target < 0)
                 {
                     break;
                 }
 
-                var content = board[cell];
-
-                if (content == 0)
+                if (! board.IsOccupied(target))
                 {
-                    moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
-                    
+                    moveList.Add(new Move(position, target, MoveOutcome.Move, 0));
+
                     continue;
                 }
 
-                if (Cell.Colour(content) == colour)
+                if (board.IsColour(target, colour))
                 {
                     break;
                 }
 
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
+                moveList.Add(new Move(position, target, MoveOutcome.Capture, PieceCache.Get(board[target]).Value * 10 + Value));
                 
                 break;    
             }

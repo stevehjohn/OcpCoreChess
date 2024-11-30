@@ -144,31 +144,6 @@ public class Board
     {
         return ((_bitboards[Bitboards.White] | _bitboards[Bitboards.Black]) & (1ul << cell)) > 0;
     }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private MoveOutcome PerformCastle(byte piece, int position, int target)
-    {
-        var delta = position - target;
-
-        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
-        {
-            var rank = Cell.GetRank(position);
-
-            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
-
-            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
-
-            var sourceFile = Cell.GetCell(rank, file);
-
-            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
-
-            _cells[sourceFile] = 0;
-
-            return MoveOutcome.Castle;
-        }
-
-        return MoveOutcome.Move;
-    }
 
     public bool IsKingInCheck(Colour player, int probeCell = -1)
     {
@@ -409,7 +384,32 @@ public class Board
 
         _bitboards[Bitboards.Knight] &= mask;
     }
-    
+        
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private MoveOutcome PerformCastle(byte piece, int position, int target)
+    {
+        var delta = position - target;
+
+        if (Cell.Is(piece, Kind.King) && Math.Abs(delta) == 2)
+        {
+            var rank = Cell.GetRank(position);
+
+            var file = delta > 0 ? Files.LeftRook : Files.RightRook;
+
+            var targetFile = delta > 0 ? Files.Queen : Files.RightBishop;
+
+            var sourceFile = Cell.GetCell(rank, file);
+
+            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
+
+            _cells[sourceFile] = 0;
+
+            return MoveOutcome.Castle;
+        }
+
+        return MoveOutcome.Move;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private MoveOutcome PerformEnPassant(byte piece, int target)
     {
