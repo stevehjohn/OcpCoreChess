@@ -101,10 +101,6 @@ public class Board
         }
 
         _cells[position] = 0;
-
-        ClearBitboards(position);
-        
-        SetBitboardColour(target, State.Player);
         
         outcome |= PerformCastle(piece, position, target);
 
@@ -131,6 +127,10 @@ public class Board
         {
             State.IncrementHalfmoves();
         }
+
+        ClearBitboards(position);
+        
+        SetBitboardColour(target, State.Player);
 
         if (Cell.Is(piece, Kind.Knight))
         {
@@ -390,9 +390,13 @@ public class Board
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void ClearBitboards(int cell)
     {
-        _bitboards[Bitboards.White] &= ~(1ul << cell);
+        var mask = ~(1ul << cell);
         
-        _bitboards[Bitboards.Black] &= ~(1ul << cell);
+        _bitboards[Bitboards.White] &= mask;
+        
+        _bitboards[Bitboards.Black] &= mask;
+
+        _bitboards[Bitboards.Knight] &= mask;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
