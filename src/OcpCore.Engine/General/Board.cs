@@ -367,6 +367,7 @@ public class Board
     }
 #pragma warning restore CS8524
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SetBitboardColour(int cell, Colour colour)
     {
         _bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] |= 1ul << cell;
@@ -374,6 +375,7 @@ public class Board
         _bitboards[colour == Colour.White ? Bitboards.Black : Bitboards.White] &= ~(1ul << cell);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void ClearBitboards(int cell)
     {
         _bitboards[Bitboards.White] &= ~(1ul << cell);
