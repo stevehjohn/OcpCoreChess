@@ -189,12 +189,12 @@ public class Board
                     break;
                 }
 
-                piece = _cells[cell];
-
-                if (piece > 0 && Cell.Colour(piece) == player)
+                if (IsOccupied(cell) && IsColour(cell, player))
                 {
                     break;
                 }
+
+                piece = _cells[cell];
 
                 var kind = Cell.Kind(piece);
 
@@ -237,13 +237,13 @@ public class Board
             {
                 continue;
             }
-            
-            piece = _cells[cell];
 
-            if (piece > 0 && Cell.Colour(piece) == player)
+            if (IsOccupied(cell) && IsColour(cell, player))
             {
                 continue;
             }
+
+            piece = _cells[cell];
         
             if (Cell.Is(piece, Kind.Knight))
             {
