@@ -132,6 +132,13 @@ public class Board
             State.IncrementHalfmoves();
         }
 
+        if (Cell.Is(piece, Kind.Knight))
+        {
+            _bitboards[Bitboards.Knight] |= 1ul << target;
+
+            _bitboards[Bitboards.Knight] &= ~(1ul << position);
+        }
+
         State.InvertPlayer();
 
         return outcome;
@@ -218,38 +225,43 @@ public class Board
                 }
             }
         }
-        
-        for (var d = 0; d < Constants.KnightMoves.Length; d++)
+
+        if ((_bitboards[Bitboards.Knight] & AttackBitboards.KnightAttacks[kingCell] & _bitboards[player == Colour.White ? Bitboards.Black : Bitboards.White]) > 0)
         {
-            var direction = Constants.KnightMoves[d];
-
-            cellRank = kingRank;
-
-            cellFile = kingFile;
-
-            cellRank += direction.RankDelta;
-
-            cellFile += direction.FileDelta;
-
-            cell = Cell.GetCell(cellRank, cellFile);
-        
-            if (cell < 0)
-            {
-                continue;
-            }
-
-            if (IsOccupied(cell) && IsColour(cell, player))
-            {
-                continue;
-            }
-
-            piece = _cells[cell];
-        
-            if (Cell.Is(piece, Kind.Knight))
-            {
-                return true;
-            }
+            return true;
         }
+
+        // for (var d = 0; d < Constants.KnightMoves.Length; d++)
+        // {
+        //     var direction = Constants.KnightMoves[d];
+        //
+        //     cellRank = kingRank;
+        //
+        //     cellFile = kingFile;
+        //
+        //     cellRank += direction.RankDelta;
+        //
+        //     cellFile += direction.FileDelta;
+        //
+        //     cell = Cell.GetCell(cellRank, cellFile);
+        //
+        //     if (cell < 0)
+        //     {
+        //         continue;
+        //     }
+        //
+        //     if (IsOccupied(cell) && IsColour(cell, player))
+        //     {
+        //         continue;
+        //     }
+        //
+        //     piece = _cells[cell];
+        //
+        //     if (Cell.Is(piece, Kind.Knight))
+        //     {
+        //         return true;
+        //     }
+        // }
         
         var rankDirection = player == Colour.White ? Direction.White : Direction.Black;
         
@@ -627,6 +639,13 @@ public class Board
                     _ => throw new FenParseException($"Invalid piece token in rank {rank + 1}: {cell}.")
                 };
 
+                switch (char.ToUpper(cell))
+                {
+                    case 'N':
+                        _bitboards[Bitboards.Knight] |= 1ul << cellIndex;
+                        break;
+                }
+                
                 _cells[cellIndex] = (byte) piece;
 
                 if (Cell.Is((byte) piece, Kind.King))
