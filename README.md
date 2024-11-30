@@ -7,7 +7,7 @@
 - Promote to Knight?
 - Move ordering?
   - Captures preferred.
-  - Lower valur taking higher even better.
+  - Lower value taking higher even better.
   - Moves that don't go onto an attacked square.
 
 ## Current Best Timings
