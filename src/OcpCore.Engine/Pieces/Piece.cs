@@ -36,10 +36,6 @@ public abstract class Piece
 
                 var content = board[target];
 
-                if (target == 49)
-                {
-                }
-
                 if (! board.IsOccupied(target))
                 {
                     moveList.Add(new Move(position, target, MoveOutcome.Move, 0));
@@ -47,29 +43,10 @@ public abstract class Piece
                     continue;
                 }
 
-                // if (content == 0)
-                // {
-                //     moveList.Add(new Move(position, target, MoveOutcome.Move, 0));
-                //     
-                //     continue;
-                // }
-
-                if (Cell.Colour(content) == colour)
+                if (board.IsColour(target, colour))
                 {
                     break;
                 }
-                
-                // if (! board.IsOccupied(cell))
-                // {
-                //     moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
-                //     
-                //     continue;
-                // }
-                //
-                // if (board.IsColour(cell, colour))
-                // {
-                //     break;
-                // }
 
                 moveList.Add(new Move(position, target, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
                 
