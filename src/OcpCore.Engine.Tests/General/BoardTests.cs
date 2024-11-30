@@ -180,13 +180,33 @@ public class BoardTests
     [Theory]
     [InlineData("rn1qkbnr/p1pppppp/bp6/8/P7/4P3/1PPP1PPP/RNBQKBNR w KQkq - 1 3")]
     [InlineData("rn1qkbnr/2pppppp/bp6/p7/8/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 4")]
-    public void BoardDetectsCheck(string fen)
+    public void BoardDetectsCheckAfterMove(string fen)
     {
         var board = new Board(fen);
 
         board.MakeMove(4, 12);
 
         Assert.True(board.IsKingInCheck(Colour.White));
+    }
+    
+    [Theory]
+    [InlineData("8/8/8/3K4/8/4n3/8/8 w - - 0 1", true)]
+    [InlineData("8/8/8/3K4/5n2/8/8/8 w - - 0 1", true)]
+    [InlineData("8/8/5n2/3K4/8/8/8/8 w - - 0 1", true)]
+    [InlineData("8/4n3/8/3K4/8/8/8/8 w - - 0 1", true)]
+    [InlineData("8/8/8/3K4/8/2n5/8/8 w - - 0 1", true)]
+    [InlineData("8/8/8/3K4/1n6/8/8/8 w - - 0 1", true)]
+    [InlineData("8/8/1n6/3K4/8/8/8/8 w - - 0 1", true)]
+    [InlineData("8/2n5/8/3K4/8/8/8/8 w - - 0 1", true)]
+    [InlineData("K7/2n5/8/8/8/8/8/8 w - - 0 1", true)]
+    [InlineData("K7/8/1n6/8/8/8/8/8 w - - 0 1", true)]
+    [InlineData("K7/8/2n5/8/8/8/8/8 w - - 0 1", false)]
+    [InlineData("K7/2N5/8/8/8/8/8/8 w - - 0 1", false)]
+    public void BoardDetectsCheck(string fen, bool isCheck)
+    {
+        var board = new Board(fen);
+
+        Assert.Equal(isCheck, board.IsKingInCheck(Colour.White));
     }
 
     [Theory]
@@ -280,6 +300,23 @@ public class BoardTests
         var exception = Assert.Throws<InvalidMoveException>(() => board.MakeMove(16, 24));
         
         Assert.Equal("No piece at position a3.", exception.Message);
+    }
+
+    [Fact]
+    public void ParseFenSetsColourBitboardsCorrectly()
+    {
+        var board = new Board(Constants.InitialBoardFen);
+
+        for (var file = 0; file < Constants.Files; file++)
+        {
+            Assert.True(board.IsColour(Ranks.BlackPawnRank * 8 + file, Colour.Black));
+            
+            Assert.True(board.IsColour(Ranks.BlackHomeRank * 8  + file, Colour.Black));
+            
+            Assert.True(board.IsColour(Ranks.WhiteHomeRank * 8  + file, Colour.White));
+            
+            Assert.True(board.IsColour(Ranks.WhitePawnRank * 8  + file, Colour.White));
+        }
     }
 
     [Fact]

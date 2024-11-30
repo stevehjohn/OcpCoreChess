@@ -103,11 +103,11 @@ public sealed class Core : IDisposable
 
         return _getMoveTask;
     }
-
+    
     public List<Move> GetAllowedMoves()
     {
         var moves = new List<Move>();
-        
+
         GetAllMoves(_board, moves);
 
         return moves;
@@ -144,7 +144,7 @@ public sealed class Core : IDisposable
         
         GetAllMoves(board, moves);
         
-        // TODO: This is where move ordering could be applied
+        moves.Sort();
 
         var player = board.State.Player;
                
@@ -165,6 +165,8 @@ public sealed class Core : IDisposable
 
             _depthCounts[ply]++;
 
+            var score = board.State.WhiteScore - board.State.BlackScore;
+            
             if (perftNode == null)
             {
                 perftNode = $"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}";
@@ -248,8 +250,10 @@ public sealed class Core : IDisposable
 
             PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
 
-            foreach (var move in moves)
+            for (var i = 0; i < moves.Count; i++)
             {
+                var move = moves[i];
+                
                 var copy = new Board(board);
 
                 copy.MakeMove(cell, move.Target);

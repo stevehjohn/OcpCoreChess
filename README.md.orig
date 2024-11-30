@@ -4,10 +4,23 @@
 
 ## TODOs
 
+<<<<<<< HEAD
+### TODOs
+
+- Promote to Queen or Knight.
+- Hybrid copy/do/undo - only make a copy if recursing, just undo otherwise?
+- Almost certainly safer to use 2 bits for colour.
+- Promotions.
+- Get movement working before adding pooling to `_cells` in `Board`.
+- Move ordering?
+  - Captures preferred. 
+  - Lower value taking higher even better.
+=======
 - Promote to Knight?
 - Move ordering?
   - Captures preferred.
   - Lower valur taking higher even better.
+>>>>>>> bitboards
   - Moves that don't go onto an attacked square.
 
 ## Developer Notes
@@ -33,7 +46,7 @@ Rank 8 | 56 57 58 59 60 61 62 62  Black
 ### Board State
 
 ```
-(int)  mmmm_mmmm_mmmm_hhhh_hhhh_kkkk_kkKK_KKKK_bbbb_bbbb_wwww_wwww_eeee_eeep_cccc
+(ulong)  mmmm_mmmm_mmmm_hhhh_hhhh_kkkk_kkKK_KKKK_bbbb_bbbb_wwww_wwww_eeee_eeep_cccc
 ```
 
 - c: Castling rights.

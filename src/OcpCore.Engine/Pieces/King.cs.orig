@@ -72,7 +72,11 @@ public class King : Piece
                 {
                     if (! board.IsKingInCheck(colour, position - 1))
                     {
+<<<<<<< HEAD
+                        moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move));
+=======
                         moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move, 0));
+>>>>>>> bitboards
                     }
                 }
             }
@@ -86,7 +90,11 @@ public class King : Piece
                 {
                     if (! board.IsKingInCheck(colour, position + 1))
                     {
+<<<<<<< HEAD
+                        moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move));
+=======
                         moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move, 0));
+>>>>>>> bitboards
                     }
                 }
             }

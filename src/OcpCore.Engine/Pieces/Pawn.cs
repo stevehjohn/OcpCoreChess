@@ -23,7 +23,7 @@ public class Pawn : Piece
         {
             if (board[cell] == 0 && board[cell - direction * 8] == 0)
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Move));
+                moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
             }
         }
 
@@ -31,18 +31,18 @@ public class Pawn : Piece
         
         if (board[cell] == 0)
         {
-            moveList.Add(new Move(position, cell, MoveOutcome.Move));
+            moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
         }
 
         cell = Cell.GetCell(rank + direction, file - 1);
 
         if (cell >= 0)
         {
-            var piece = board[cell];
+            var content = board[cell];
 
-            if (cell == board.State.EnPassantTarget || (piece > 0 && Cell.Colour(piece) != colour))
+            if (cell == board.State.EnPassantTarget || (content > 0 && Cell.Colour(content) != colour))
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture, Value * 10 + Value));
             }
         }
 
@@ -50,11 +50,11 @@ public class Pawn : Piece
 
         if (cell >= 0)
         {
-            var piece = board[cell];
+            var content = board[cell];
 
-            if (cell == board.State.EnPassantTarget || (piece > 0 && Cell.Colour(piece) != colour))
+            if (cell == board.State.EnPassantTarget || (content > 0 && Cell.Colour(content) != colour))
             {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture));
+                moveList.Add(new Move(position, cell, MoveOutcome.Capture, Value * 10 + Value));
             }
         }
     }

@@ -1,4 +1,5 @@
 using System.Numerics;
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
@@ -52,7 +53,30 @@ public sealed class Core : IDisposable
         var position = move[..2].FromStandardNotation();
 
         var target = move[2..].FromStandardNotation();
+
+        var moves = new List<Move>();
         
+        var piece = PieceCache.Get(_board[position]);
+
+        piece.GetMoves(_board, position, _board.State.Player, moves);
+        
+        var found = false;
+
+        for (var i = 0; i < moves.Count; i++)
+        {
+            if (moves[i].Target == target)
+            {
+                found = true;
+                
+                break;
+            }
+        }
+
+        if (! found)
+        {
+            throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
+        }
+
         _board.MakeMove(position, target);
     }
 
@@ -79,7 +103,28 @@ public sealed class Core : IDisposable
 
         return _getMoveTask;
     }
+<<<<<<< HEAD
+
+    public List<Move> GetAllowedMoves()
+    {
+        var moves = new List<Move>();
+        
+=======
     
+    public List<Move> GetAllowedMoves()
+    {
+        var moves = new List<Move>();
+
+>>>>>>> bitboards
+        GetAllMoves(_board, moves);
+
+        return moves;
+    }
+<<<<<<< HEAD
+
+=======
+    
+>>>>>>> bitboards
     private void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
@@ -111,7 +156,7 @@ public sealed class Core : IDisposable
         
         GetAllMoves(board, moves);
         
-        // TODO: This is where move ordering could be applied
+        moves.Sort();
 
         var player = board.State.Player;
                
@@ -145,9 +190,7 @@ public sealed class Core : IDisposable
             }
 
 =======
-            var score = board.State.WhiteScore - board.State.BlackScore;
-            
->>>>>>> master
+>>>>>>> bitboards
             if (copy.IsKingInCheck(player.Invert()))
             {
                 outcome |= MoveOutcome.Check;
@@ -220,8 +263,10 @@ public sealed class Core : IDisposable
 
             PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
 
-            foreach (var move in moves)
+            for (var i = 0; i < moves.Count; i++)
             {
+                var move = moves[i];
+                
                 var copy = new Board(board);
 
                 copy.MakeMove(cell, move.Target);
