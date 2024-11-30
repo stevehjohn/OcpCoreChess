@@ -598,6 +598,11 @@ public class Board
 
                 var cellIndex = Cell.GetCell(rank, file);
 
+                if (cellIndex < 0)
+                {
+                    throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
+                }
+                
                 if (char.IsUpper(cell))
                 {
                     colour = Colour.White;
@@ -610,7 +615,7 @@ public class Board
                     
                     SetBitboardColour(cellIndex, Colour.Black);
                 }
-
+                
                 var piece = char.ToUpper(cell) switch
                 {
                     'P' => (byte) Kind.Pawn | (byte) colour,
@@ -621,11 +626,6 @@ public class Board
                     'K' => (byte) Kind.King | (byte) colour,
                     _ => throw new FenParseException($"Invalid piece token in rank {rank + 1}: {cell}.")
                 };
-
-                if (cellIndex < 0)
-                {
-                    throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
-                }
 
                 _cells[cellIndex] = (byte) piece;
 
