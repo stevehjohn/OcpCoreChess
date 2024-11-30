@@ -34,8 +34,6 @@ public abstract class Piece
                     break;
                 }
 
-                var content = board[target];
-
                 if (! board.IsOccupied(target))
                 {
                     moveList.Add(new Move(position, target, MoveOutcome.Move, 0));
@@ -48,7 +46,7 @@ public abstract class Piece
                     break;
                 }
 
-                moveList.Add(new Move(position, target, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
+                moveList.Add(new Move(position, target, MoveOutcome.Capture, PieceCache.Get(board[target]).Value * 10 + Value));
                 
                 break;    
             }
