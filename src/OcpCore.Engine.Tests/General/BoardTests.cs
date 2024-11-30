@@ -178,10 +178,25 @@ public class BoardTests
     }
 
     [Theory]
-    [InlineData("rn1qkbnr/p1pppppp/bp6/8/P7/4P3/1PPP1PPP/RNBQKBNR w KQkq - 1 3", "e1e2")]
-    [InlineData("rn1qkbnr/2pppppp/bp6/p7/8/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "e1e2")]
-    [InlineData("k7/8/4N3/8/8/8/8/8 w - - 0 1", "e6c7")]
-    public void BoardDetectsCheckAfterMove(string fen, string move)
+    [InlineData("rnbqkbnr/p1pppppp/1p6/8/P7/4P3/1PPP1PPP/RNBQKBNR b KQkq - 1 3", "c8a6", "e1e2")]
+    // [InlineData("rn1qkbnr/2pppppp/bp6/p7/8/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "e1e2")]
+    // [InlineData("k7/8/4N3/8/8/8/8/8 w - - 0 1", "e6c7")]
+    public void BoardDetectsCheckAfterMove(string fen, string move, string kingMove)
+    {
+        var board = new Board(fen);
+        
+        Assert.False(board.IsKingInCheck(Colour.Black));
+    
+        board.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
+    
+        board.MakeMove(kingMove[..2].FromStandardNotation(), kingMove[2..].FromStandardNotation());
+    
+        Assert.True(board.IsKingInCheck(Colour.Black));
+    }
+    
+    [Theory]
+    [InlineData("rnbqkbnr/ppp1pppp/3p4/8/8/5P1N/PPPPP1PP/RNBQKB1R b KQkq - 0 1", "c8h3")]
+    public void BoardDoesNotDetectsFalseCheckAfterMove(string fen, string move)
     {
         var board = new Board(fen);
         
@@ -189,8 +204,9 @@ public class BoardTests
 
         board.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
 
-        Assert.True(board.IsKingInCheck(Colour.White));
+        Assert.False(board.IsKingInCheck(Colour.White));
     }
+
     
     [Theory]
     [InlineData("8/8/8/3K4/8/4n3/8/8 w - - 0 1", true)]

@@ -226,42 +226,42 @@ public class Board
             }
         }
 
-        if ((_bitboards[Bitboards.Knight] & AttackBitboards.KnightAttacks[kingCell] & _bitboards[player == Colour.White ? Bitboards.Black : Bitboards.White]) > 0)
-        {
-            return true;
-        }
-
-        // for (var d = 0; d < Constants.KnightMoves.Length; d++)
+        // if ((_bitboards[Bitboards.Knight] & AttackBitboards.KnightAttacks[kingCell] & _bitboards[player == Colour.White ? Bitboards.Black : Bitboards.White]) > 0)
         // {
-        //     var direction = Constants.KnightMoves[d];
-        //
-        //     cellRank = kingRank;
-        //
-        //     cellFile = kingFile;
-        //
-        //     cellRank += direction.RankDelta;
-        //
-        //     cellFile += direction.FileDelta;
-        //
-        //     cell = Cell.GetCell(cellRank, cellFile);
-        //
-        //     if (cell < 0)
-        //     {
-        //         continue;
-        //     }
-        //
-        //     if (IsOccupied(cell) && IsColour(cell, player))
-        //     {
-        //         continue;
-        //     }
-        //
-        //     piece = _cells[cell];
-        //
-        //     if (Cell.Is(piece, Kind.Knight))
-        //     {
-        //         return true;
-        //     }
+        //     return true;
         // }
+
+        for (var d = 0; d < Constants.KnightMoves.Length; d++)
+        {
+            var direction = Constants.KnightMoves[d];
+        
+            cellRank = kingRank;
+        
+            cellFile = kingFile;
+        
+            cellRank += direction.RankDelta;
+        
+            cellFile += direction.FileDelta;
+        
+            cell = Cell.GetCell(cellRank, cellFile);
+        
+            if (cell < 0)
+            {
+                continue;
+            }
+        
+            if (IsOccupied(cell) && IsColour(cell, player))
+            {
+                continue;
+            }
+        
+            piece = _cells[cell];
+        
+            if (Cell.Is(piece, Kind.Knight))
+            {
+                return true;
+            }
+        }
         
         var rankDirection = player == Colour.White ? Direction.White : Direction.Black;
         
