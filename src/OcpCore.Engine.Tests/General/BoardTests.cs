@@ -283,6 +283,23 @@ public class BoardTests
     }
 
     [Fact]
+    public void ParseFenSetsColourBitboardsCorrectly()
+    {
+        var board = new Board(Constants.InitialBoardFen);
+
+        for (var file = 0; file < Constants.Files; file++)
+        {
+            Assert.True(board.IsColour(Ranks.BlackPawnRank * 8 + file, Colour.Black));
+            
+            Assert.True(board.IsColour(Ranks.BlackHomeRank * 8  + file, Colour.Black));
+            
+            Assert.True(board.IsColour(Ranks.WhiteHomeRank * 8  + file, Colour.White));
+            
+            Assert.True(board.IsColour(Ranks.WhitePawnRank * 8  + file, Colour.White));
+        }
+    }
+
+    [Fact]
     public void ToStringGeneratesReadableOutput()
     {
         var board = new Board(Constants.InitialBoardFen);

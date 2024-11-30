@@ -21,6 +21,8 @@ public class Board
     {
         _cells = new byte[Constants.Cells];
 
+        _bitboards = new ulong[Bitboards.Count];
+
         State = new State(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0, 0, 1);
     }
 
@@ -598,13 +600,13 @@ public class Board
                 {
                     colour = Colour.White;
 
-                    SetBitboardColour(cell, Colour.White);
+                    SetBitboardColour(cellIndex, Colour.White);
                 }
                 else
                 {
                     colour = Colour.Black;
                     
-                    SetBitboardColour(cell, Colour.Black);
+                    SetBitboardColour(cellIndex, Colour.Black);
                 }
 
                 var piece = char.ToUpper(cell) switch
