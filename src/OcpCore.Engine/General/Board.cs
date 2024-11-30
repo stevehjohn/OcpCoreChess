@@ -39,6 +39,11 @@ public class Board
         
         _bitboards = new ulong[Bitboards.Count];
 
+        for (var i = 0; i < Bitboards.Count; i++)
+        {
+            _bitboards[i] = board._bitboards[i];
+        }
+
         fixed (byte* destination = _cells)
         {
             fixed (byte* source = board._cells)
@@ -95,6 +100,10 @@ public class Board
 
         _cells[position] = 0;
 
+        ClearBitboards(position);
+        
+        SetBitboardColour(target, State.Player);
+        
         outcome |= PerformCastle(piece, position, target);
 
         outcome |= PerformEnPassant(piece, target);
@@ -356,6 +365,20 @@ public class Board
     }
 #pragma warning restore CS8524
 
+    private void SetBitboardColour(int cell, Colour colour)
+    {
+        _bitboards[colour == Colour.White ? Bitboards.White : Bitboards.Black] |= 1ul << cell;
+        
+        _bitboards[colour == Colour.White ? Bitboards.Black : Bitboards.White] &= ~(1ul << cell);
+    }
+
+    private void ClearBitboards(int cell)
+    {
+        _bitboards[Bitboards.White] &= ~(1ul << cell);
+        
+        _bitboards[Bitboards.Black] &= ~(1ul << cell);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private MoveOutcome PerformCastle(byte piece, int position, int target)
     {
@@ -371,9 +394,15 @@ public class Board
 
             var sourceFile = Cell.GetCell(rank, file);
 
-            _cells[Cell.GetCell(rank, targetFile)] = _cells[sourceFile];
+            var targetCell = Cell.GetCell(rank, targetFile);
+            
+            _cells[targetCell] = _cells[sourceFile];
 
             _cells[sourceFile] = 0;
+            
+            ClearBitboards(sourceFile);
+        
+            SetBitboardColour(targetCell, State.Player);
 
             return MoveOutcome.Castle;
         }
@@ -400,8 +429,12 @@ public class Board
             {
                 State.UpdateBlackScore(-score);
             }
+
+            var targetCell = target + direction * Constants.Files;
             
-            _cells[target + direction * Constants.Files] = 0;
+            _cells[targetCell] = 0;
+            
+            ClearBitboards(targetCell);
             
             return MoveOutcome.EnPassant | MoveOutcome.Capture;
         }
@@ -565,13 +598,13 @@ public class Board
                 {
                     colour = Colour.White;
 
-                    _bitboards[Bitboards.White] |= 1ul << cellIndex;
+                    SetBitboardColour(cell, Colour.White);
                 }
                 else
                 {
                     colour = Colour.Black;
                     
-                    _bitboards[Bitboards.Black] |= 1ul << cellIndex;
+                    SetBitboardColour(cell, Colour.Black);
                 }
 
                 var piece = char.ToUpper(cell) switch
