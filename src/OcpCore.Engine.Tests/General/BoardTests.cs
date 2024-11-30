@@ -178,13 +178,16 @@ public class BoardTests
     }
 
     [Theory]
-    [InlineData("rn1qkbnr/p1pppppp/bp6/8/P7/4P3/1PPP1PPP/RNBQKBNR w KQkq - 1 3")]
-    [InlineData("rn1qkbnr/2pppppp/bp6/p7/8/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 4")]
-    public void BoardDetectsCheckAfterMove(string fen)
+    [InlineData("rn1qkbnr/p1pppppp/bp6/8/P7/4P3/1PPP1PPP/RNBQKBNR w KQkq - 1 3", "e1e2")]
+    [InlineData("rn1qkbnr/2pppppp/bp6/p7/8/4PN2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "e1e2")]
+    [InlineData("k7/8/4N3/8/8/8/8/8 w - - 0 1", "e6c7")]
+    public void BoardDetectsCheckAfterMove(string fen, string move)
     {
         var board = new Board(fen);
+        
+        Assert.False(board.IsKingInCheck(Colour.White));
 
-        board.MakeMove(4, 12);
+        board.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
 
         Assert.True(board.IsKingInCheck(Colour.White));
     }
