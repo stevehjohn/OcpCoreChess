@@ -10,6 +10,21 @@
   - Lower valur taking higher even better.
   - Moves that don't go onto an attacked square.
 
+## Current Best Timings
+
+```
+ Ply | Time
+-----+-----------
+ 1   | < 1 ms
+ 2   | < 1 ms
+ 3   | < 10 ms
+ 4   | ~ 100 ms
+ 5   | < 1 s
+ 6   | ~ 15 ms
+ 7   | ~ 7 m
+ 8   | ~ 3 h
+```
+
 ## Developer Notes
 
 - `WhiteScore - BlackScore` will be positive if white has more material.
