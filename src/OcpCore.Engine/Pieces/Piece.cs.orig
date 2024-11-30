@@ -37,7 +37,11 @@ public abstract class Piece
                 if (! board.IsOccupied(target))
                 {
                     moveList.Add(new Move(position, target, MoveOutcome.Move, 0));
+<<<<<<< HEAD
+                    
+=======
 
+>>>>>>> bit-boards
                     continue;
                 }
 
