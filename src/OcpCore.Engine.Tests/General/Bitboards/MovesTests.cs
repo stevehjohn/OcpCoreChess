@@ -400,4 +400,60 @@ public class MovesTests
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
+
+    [Theory]
+    [InlineData(48, "00000000" +
+                    "00000000" +
+                    "00000010" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(49, "00000000" +
+                    "00000000" +
+                    "00000101" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(54, "00000000" +
+                    "00000000" +
+                    "10100000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(55, "00000000" +
+                    "00000000" +
+                    "01000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(41, "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000101" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(46, "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "10100000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    public void GeneratesBlackPawnAttacksCorrectly(int cell, string expected)
+    {
+        var attack = _moves[Kind.Pawn][MoveSet.PawnAttackToWhite][cell];
+
+        Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
+    }
 }

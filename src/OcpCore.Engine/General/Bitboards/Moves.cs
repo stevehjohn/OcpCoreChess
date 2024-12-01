@@ -50,8 +50,10 @@ public class Moves
             {
                 mask |= 1ul << target;
             }
-
+            
             this[Kind.Pawn][MoveSet.PawnAttackToBlack][cell] = mask;
+
+            mask = 0ul;
 
             target = Cell.GetCell(Cell.GetRank(cell) - 1, Cell.GetFile(cell) + 1);
 
