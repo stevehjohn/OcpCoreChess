@@ -1,6 +1,6 @@
-namespace OcpCore.Engine.General;
+namespace OcpCore.Engine.General.Bitboards;
 
-public enum Direction
+public enum MoveSet
 {
     Horizontal   = 0,
     Vertical     = 1,

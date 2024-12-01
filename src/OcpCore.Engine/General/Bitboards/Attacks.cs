@@ -5,17 +5,17 @@ namespace OcpCore.Engine.General.Bitboards;
 
 public class Attacks
 {
-    private readonly DirectionalAttacks[] _attacks;
+    private readonly DirectionalMoves[] _attacks;
     
-    public DirectionalAttacks this[Kind kind] => _attacks[(int) kind];
+    public DirectionalMoves this[Kind kind] => _attacks[(int) kind];
 
     public Attacks()
     {
-        _attacks = new DirectionalAttacks[Constants.Pieces + 1];
+        _attacks = new DirectionalMoves[Constants.Pieces + 1];
 
         for (var i = 0; i <= Constants.Pieces; i++)
         {
-            _attacks[i] = new DirectionalAttacks();
+            _attacks[i] = new DirectionalMoves();
         }
         
         GeneratePawnAttacks();
@@ -51,7 +51,7 @@ public class Attacks
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][Direction.ToBlack][cell] = mask;
+            this[Kind.Pawn][MoveSet.ToBlack][cell] = mask;
 
             target = Cell.GetCell(Cell.GetRank(cell) - 1, Cell.GetFile(cell) + 1);
 
@@ -67,7 +67,7 @@ public class Attacks
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][Direction.ToWhite][cell] = mask;
+            this[Kind.Pawn][MoveSet.ToWhite][cell] = mask;
         }
     }
 
@@ -75,9 +75,9 @@ public class Attacks
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[Kind.Rook][Direction.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
+            this[Kind.Rook][MoveSet.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
 
-            this[Kind.Rook][Direction.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
+            this[Kind.Rook][MoveSet.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
         }
     }
 
@@ -97,7 +97,7 @@ public class Attacks
                 }
             }
 
-            this[Kind.Knight][Direction.Specific][cell] = mask;
+            this[Kind.Knight][MoveSet.Specific][cell] = mask;
         }
     }
 
@@ -105,9 +105,9 @@ public class Attacks
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[Kind.Bishop][Direction.Diagonal][cell] = GenerateDiagonalAttacks(cell);
+            this[Kind.Bishop][MoveSet.Diagonal][cell] = GenerateDiagonalAttacks(cell);
 
-            this[Kind.Bishop][Direction.AntiDiagonal][cell] = GenerateAntiDiagonalAttacks(cell);
+            this[Kind.Bishop][MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalAttacks(cell);
         }
     }
 
@@ -115,13 +115,13 @@ public class Attacks
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[Kind.Queen][Direction.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
+            this[Kind.Queen][MoveSet.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
 
-            this[Kind.Queen][Direction.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
+            this[Kind.Queen][MoveSet.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
 
-            this[Kind.Queen][Direction.Diagonal][cell] = GenerateDiagonalAttacks(cell);
+            this[Kind.Queen][MoveSet.Diagonal][cell] = GenerateDiagonalAttacks(cell);
 
-            this[Kind.Queen][Direction.AntiDiagonal][cell] = GenerateAntiDiagonalAttacks(cell);
+            this[Kind.Queen][MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalAttacks(cell);
         }
     }
 
@@ -141,7 +141,7 @@ public class Attacks
                 }
             }
 
-            this[Kind.King][Direction.Specific][cell] = mask;
+            this[Kind.King][MoveSet.Specific][cell] = mask;
         }
     }
     
