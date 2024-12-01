@@ -23,6 +23,7 @@
  6   | ~ 15 ms
  7   | ~ 7 m
  8   | ~ 3 h
+ 9   | ~ 3.5 d
 ```
 
 ## Developer Notes
