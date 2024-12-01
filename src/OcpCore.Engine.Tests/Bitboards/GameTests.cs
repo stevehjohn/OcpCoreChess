@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.General.StaticData;
 using Xunit;
 
@@ -160,5 +161,15 @@ public class GameTests
         _game.MakeMove(3, 0);
         
         Assert.Equal(expectedPlane, _game[Plane.Queen]);
+    }
+
+    [Fact]
+    public void ThrowsExceptionOnMoveIfNoPieceInFromCell()
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+
+        var exception = Assert.Throws<InvalidMoveException>(() => _game.MakeMove(16, 17));
+        
+        Assert.Equal("No piece at a3.", exception.Message);
     }
 }
