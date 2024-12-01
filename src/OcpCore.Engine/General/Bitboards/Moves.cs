@@ -3,13 +3,13 @@ using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General.Bitboards;
 
-public class Attacks
+public class Moves
 {
     private readonly DirectionalMoves[] _attacks;
     
     public DirectionalMoves this[Kind kind] => _attacks[(int) kind];
 
-    public Attacks()
+    public Moves()
     {
         _attacks = new DirectionalMoves[Constants.Pieces + 1];
 

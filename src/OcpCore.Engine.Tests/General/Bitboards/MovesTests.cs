@@ -6,9 +6,9 @@ using Xunit;
 
 namespace OcpCore.Engine.Tests.General.Bitboards;
 
-public class AttacksTests
+public class MovesTests
 {
-    private readonly Attacks _attacks = new();
+    private readonly Moves _moves = new();
     
     [Theory]
     [InlineData(0, "00000000" +
@@ -45,7 +45,7 @@ public class AttacksTests
                     "00000000")]
     public void GeneratesHorizontalAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Queen][MoveSet.Horizontal][cell];
+        var attack = _moves[Kind.Queen][MoveSet.Horizontal][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -85,7 +85,7 @@ public class AttacksTests
                     "10000000")]
     public void GeneratesVerticalAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Queen][MoveSet.Vertical][cell];
+        var attack = _moves[Kind.Queen][MoveSet.Vertical][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -157,7 +157,7 @@ public class AttacksTests
                     "00000000")]
     public void GeneratesDiagonalAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Queen][MoveSet.Diagonal][cell];
+        var attack = _moves[Kind.Queen][MoveSet.Diagonal][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -229,7 +229,7 @@ public class AttacksTests
                     "00000000")]
     public void GeneratesAntiDiagonalAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Queen][MoveSet.AntiDiagonal][cell];
+        var attack = _moves[Kind.Queen][MoveSet.AntiDiagonal][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -277,7 +277,7 @@ public class AttacksTests
                     "00000000")]
     public void GeneratesKnightAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Knight][MoveSet.Specific][cell];
+        var attack = _moves[Kind.Knight][MoveSet.Specific][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -325,7 +325,7 @@ public class AttacksTests
                     "00000000")]
     public void GeneratesKingAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.King][MoveSet.Specific][cell];
+        var attack = _moves[Kind.King][MoveSet.Specific][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -397,7 +397,7 @@ public class AttacksTests
                     "00000000")]
     public void GeneratesWhitePawnAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Pawn][MoveSet.ToBlack][cell];
+        var attack = _moves[Kind.Pawn][MoveSet.ToBlack][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
