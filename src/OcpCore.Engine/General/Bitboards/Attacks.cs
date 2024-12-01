@@ -55,13 +55,13 @@ public class Attacks
 
         var mask = 0ul;
         
-        for (var r = 0; r < 8; r++)
+        for (var r = 0; r < Constants.Ranks; r++)
         {
-            for (var f = 0; f < 8; f++)
+            for (var f = 0; f < Constants.Files; f++)
             {
                 if (r - f == index)
                 {
-                    mask |= 1UL << (r * 8 + f);
+                    mask |= 1ul << (r * 8 + f);
                 }
             }
         }
@@ -70,6 +70,24 @@ public class Attacks
 
     private static ulong GenerateAntiDiagonalAttacks(int cell)
     {
-        return 0;
+        var rank = Cell.GetRank(cell);
+        
+        var file = Cell.GetFile(cell);
+        
+        var index = rank + file;
+
+        var mask = 0ul;
+        
+        for (var r = 0; r < Constants.Ranks; r++)
+        {
+            for (var f = 0; f < Constants.Files; f++)
+            {
+                if (r + f == index)
+                {
+                    mask |= 1ul << (r * 8 + f);
+                }
+            }
+        }
+        return mask;
     }
 }

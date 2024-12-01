@@ -153,4 +153,68 @@ public class AttacksTests
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
+
+    [Theory]
+    [InlineData(7, "00000001" +
+                   "00000010" +
+                   "00000100" +
+                   "00001000" +
+                   "00010000" +
+                   "00100000" +
+                   "01000000" +
+                   "10000000")]
+    [InlineData(6, "00000000" +
+                   "00000001" +
+                   "00000010" +
+                   "00000100" +
+                   "00001000" +
+                   "00010000" +
+                   "00100000" +
+                   "01000000")]
+    [InlineData(1, "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000001" +
+                   "00000010")]
+    [InlineData(0, "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000001")]
+    [InlineData(15, "00000010" +
+                    "00000100" +
+                    "00001000" +
+                    "00010000" +
+                    "00100000" +
+                    "01000000" +
+                    "10000000" +
+                    "00000000")]
+    [InlineData(55, "01000000" +
+                    "10000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(62, "10000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    public void GeneratesAntiDiagonalAttacksCorrectly(int cell, string expected)
+    {
+        var attack = _attacks[Kind.Queen][Direction.AntiDiagonal][cell];
+
+        Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
+    }
 }
