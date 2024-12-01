@@ -3,7 +3,7 @@ using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
 using Xunit;
 
-namespace OcpCore.Engine.Tests.General.Bitboards;
+namespace OcpCore.Engine.Tests.Bitboards;
 
 public class MovesTests
 {
