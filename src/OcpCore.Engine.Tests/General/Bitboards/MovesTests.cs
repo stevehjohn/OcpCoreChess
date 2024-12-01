@@ -42,7 +42,7 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000")]
-    public void GeneratesHorizontalAttacksCorrectly(int cell, string expected)
+    public void GeneratesHorizontalMovesCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.Queen][MoveSet.Horizontal][cell];
         
@@ -82,7 +82,7 @@ public class MovesTests
                     "10000000" +
                     "10000000" +
                     "10000000")]
-    public void GeneratesVerticalAttacksCorrectly(int cell, string expected)
+    public void GeneratesVerticalMovesCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.Queen][MoveSet.Vertical][cell];
         
@@ -162,7 +162,7 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000")]
-    public void GeneratesDiagonalAttacksCorrectly(int cell, string expected)
+    public void GeneratesDiagonalMovesCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.Queen][MoveSet.Diagonal][cell];
 
@@ -242,7 +242,7 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000")]
-    public void GeneratesAntiDiagonalAttacksCorrectly(int cell, string expected)
+    public void GeneratesAntiDiagonalMovesCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.Queen][MoveSet.AntiDiagonal][cell];
 
@@ -290,7 +290,7 @@ public class MovesTests
                     "00101000" +
                     "00000000" +
                     "00000000")]
-    public void GeneratesKnightAttacksCorrectly(int cell, string expected)
+    public void GeneratesKnightMovesCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.Knight][MoveSet.Specific][cell];
 
@@ -338,7 +338,7 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000")]
-    public void GeneratesKingAttacksCorrectly(int cell, string expected)
+    public void GeneratesKingMovesCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.King][MoveSet.Specific][cell];
 
