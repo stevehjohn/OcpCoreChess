@@ -1,4 +1,5 @@
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -120,12 +121,22 @@ public class Game
         switch (colour)
         {
             case Colour.White:
+                if ((this[Plane.White] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.White] &= ~fromBit;
-                this[Plane.White] |= fromBit;
+                this[Plane.White] |= toBit;
                 break;
 
             case Colour.Black:
-                this[Plane.Black] &= ~toBit;
+                if ((this[Plane.Black] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
+                this[Plane.Black] &= ~fromBit;
                 this[Plane.Black] |= toBit;
                 break;
         }
@@ -134,33 +145,63 @@ public class Game
         switch (kind)
         {
             case Kind.Pawn:
+                if ((this[Plane.Pawn] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.Pawn] &= ~fromBit;
-                this[Plane.Pawn] |= fromBit;
+                this[Plane.Pawn] |= toBit;
                 break;
 
             case Kind.Rook:
+                if ((this[Plane.Rook] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.Rook] &= ~fromBit;
-                this[Plane.Rook] |= fromBit;
+                this[Plane.Rook] |= toBit;
                 break;
 
             case Kind.Knight:
+                if ((this[Plane.Knight] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.Knight] &= ~fromBit;
-                this[Plane.Knight] |= fromBit;
+                this[Plane.Knight] |= toBit;
                 break;
 
             case Kind.Bishop:
+                if ((this[Plane.Bishop] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.Bishop] &= ~fromBit;
-                this[Plane.Bishop] |= fromBit;
+                this[Plane.Bishop] |= toBit;
                 break;
 
             case Kind.Queen:
+                if ((this[Plane.Queen] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.Queen] &= ~fromBit;
-                this[Plane.Queen] |= fromBit;
+                this[Plane.Queen] |= toBit;
                 break;
 
             case Kind.King:
+                if ((this[Plane.King] & fromBit) == 0)
+                {
+                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
+                }
+
                 this[Plane.King] &= ~fromBit;
-                this[Plane.King] |= fromBit;
+                this[Plane.King] |= toBit;
                 break;
         }
     }
