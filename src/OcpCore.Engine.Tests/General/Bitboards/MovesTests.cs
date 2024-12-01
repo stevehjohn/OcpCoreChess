@@ -88,7 +88,7 @@ public class MovesTests
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
-    
+
     [Theory]
     [InlineData(0, "10000000" +
                    "01000000" +
@@ -98,6 +98,14 @@ public class MovesTests
                    "00000100" +
                    "00000010" +
                    "00000001")]
+    [InlineData(36, "10000000" +
+                    "01000000" +
+                    "00100000" +
+                    "00010000" +
+                    "00001000" +
+                    "00000100" +
+                    "00000010" +
+                    "00000001")]
     [InlineData(1, "00000000" +
                    "10000000" +
                    "01000000" +
@@ -128,7 +136,7 @@ public class MovesTests
                    "00001000" +
                    "00000100" +
                    "00000010" +
-                   "00000001" + 
+                   "00000001" +
                    "00000000")]
     [InlineData(48, "00000010" +
                     "00000001" +
@@ -136,7 +144,7 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000" +
-                    "00000000" + 
+                    "00000000" +
                     "00000000")]
     [InlineData(57, "00000010" +
                     "00000001" +
@@ -144,7 +152,7 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000" +
-                    "00000000" + 
+                    "00000000" +
                     "00000000")]
     [InlineData(56, "00000001" +
                     "00000000" +
@@ -152,12 +160,12 @@ public class MovesTests
                     "00000000" +
                     "00000000" +
                     "00000000" +
-                    "00000000" + 
+                    "00000000" +
                     "00000000")]
     public void GeneratesDiagonalAttacksCorrectly(int cell, string expected)
     {
         var attack = _moves[Kind.Queen][MoveSet.Diagonal][cell];
-        
+
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
 
@@ -170,6 +178,14 @@ public class MovesTests
                    "00100000" +
                    "01000000" +
                    "10000000")]
+    [InlineData(35, "00000001" +
+                    "00000010" +
+                    "00000100" +
+                    "00001000" +
+                    "00010000" +
+                    "00100000" +
+                    "01000000" +
+                    "10000000")]
     [InlineData(6, "00000000" +
                    "00000001" +
                    "00000010" +
