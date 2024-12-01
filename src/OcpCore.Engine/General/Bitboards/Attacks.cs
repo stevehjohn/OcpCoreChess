@@ -11,9 +11,9 @@ public class Attacks
 
     public Attacks()
     {
-        _attacks = new DirectionalAttacks[Constants.Pieces];
+        _attacks = new DirectionalAttacks[Constants.Pieces + 1];
 
-        for (var i = 0; i < Constants.Pieces; i++)
+        for (var i = 0; i <= Constants.Pieces; i++)
         {
             _attacks[i] = new DirectionalAttacks();
         }
@@ -25,6 +25,8 @@ public class Attacks
         GenerateBishopAttacks();
         
         GenerateQueenAttacks();
+        
+        GenerateKingAttacks();
     }
 
     private void GenerateRookAttacks()
@@ -81,6 +83,26 @@ public class Attacks
         }
     }
 
+    private void GenerateKingAttacks()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var mask = 0ul;
+            
+            foreach (var move in Constants.DirectionalMoves)
+            {
+                var target = Cell.GetCell(Cell.GetRank(cell) + move.RankDelta, Cell.GetFile(cell) + move.FileDelta);
+
+                if (target >= 0)
+                {
+                    mask |= 1ul << target;
+                }
+            }
+
+            this[Kind.King][Direction.Specific][cell] = mask;
+        }
+    }
+    
     private static ulong GenerateHorizontalAttacks(int rank)
     {
         return 0b1111_1111ul << (rank * 8);

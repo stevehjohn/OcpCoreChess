@@ -6,5 +6,7 @@ public enum Direction
     Vertical     = 1,
     Diagonal     = 2,
     AntiDiagonal = 3,
-    Specific     = 4
+    Specific     = 4,
+    ToBlack      = 5,
+    ToWhite      = 6
 }

@@ -281,4 +281,52 @@ public class AttacksTests
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
+    
+    [Theory]
+    [InlineData(0, "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000011" +
+                   "00000010")]
+    [InlineData(7, "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "11000000" +
+                   "01000000")]
+    [InlineData(56, "00000010" +
+                    "00000011" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(63, "01000000" +
+                    "11000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(36, "00000000" +
+                    "00000000" +
+                    "00111000" +
+                    "00101000" +
+                    "00111000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    public void GeneratesKingAttacksCorrectly(int cell, string expected)
+    {
+        var attack = _attacks[Kind.King][Direction.Specific][cell];
+
+        Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
+    }
 }
