@@ -1,6 +1,6 @@
 using OcpCore.Engine.General.StaticData;
 
-namespace OcpCore.Engine.General.Bitboards;
+namespace OcpCore.Engine.Bitboards;
 
 public class DirectionalMoves
 {

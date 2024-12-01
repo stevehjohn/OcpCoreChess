@@ -1,7 +1,8 @@
+using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
 
-namespace OcpCore.Engine.General.Bitboards;
+namespace OcpCore.Engine.Bitboards;
 
 public class Moves
 {

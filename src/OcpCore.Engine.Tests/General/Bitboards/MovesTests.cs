@@ -1,4 +1,4 @@
-using OcpCore.Engine.General.Bitboards;
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
 using Xunit;

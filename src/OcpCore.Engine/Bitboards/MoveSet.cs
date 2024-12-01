@@ -1,4 +1,4 @@
-namespace OcpCore.Engine.General.Bitboards;
+namespace OcpCore.Engine.Bitboards;
 
 public enum MoveSet
 {
