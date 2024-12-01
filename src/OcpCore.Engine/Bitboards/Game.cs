@@ -141,7 +141,7 @@ public class Game
                 break;
         }
         
-        // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (kind)
         {
             case Kind.Pawn:
