@@ -267,6 +267,14 @@ public class AttacksTests
                     "00000000" +
                     "00000000" +
                     "00000000")]
+    [InlineData(36, "00000000" +
+                    "00101000" +
+                    "01000100" +
+                    "00000000" +
+                    "01000100" +
+                    "00101000" +
+                    "00000000" +
+                    "00000000")]
     public void GeneratesKnightAttacksCorrectly(int cell, string expected)
     {
         var attack = _attacks[Kind.Knight][Direction.Specific][cell];
