@@ -18,7 +18,31 @@ public class Attacks
             _attacks[i] = new DirectionalAttacks();
         }
 
+        GenerateRookAttacks();
+        
+        GenerateBishopAttacks();
+        
         GenerateQueenAttacks();
+    }
+
+    private void GenerateRookAttacks()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            this[Kind.Rook][Direction.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
+
+            this[Kind.Rook][Direction.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
+        }
+    }
+
+    private void GenerateBishopAttacks()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            this[Kind.Bishop][Direction.Diagonal][cell] = GenerateDiagonalAttacks(cell);
+
+            this[Kind.Bishop][Direction.AntiDiagonal][cell] = GenerateAntiDiagonalAttacks(cell);
+        }
     }
 
     private void GenerateQueenAttacks()
