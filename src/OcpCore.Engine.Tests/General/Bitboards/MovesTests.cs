@@ -456,4 +456,44 @@ public class MovesTests
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
+
+    [Theory]
+    [InlineData(8, "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000001" +
+                   "00000001" +
+                   "00000000" +
+                   "00000000")]
+    [InlineData(9, "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000000" +
+                   "00000010" +
+                   "00000010" +
+                   "00000000" +
+                   "00000000")]
+    [InlineData(14, "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "01000000" +
+                    "01000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(15, "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "10000000" +
+                    "10000000" +
+                    "00000000" +
+                    "00000000")]
+    public void GeneratesWhitePawnMovesCorrectly(int cell, string expected)
+    {
+        var attack = _moves[Kind.Pawn][MoveSet.PawnToBlack][cell];
+
+        Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
+    }
 }
