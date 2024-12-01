@@ -10,7 +10,7 @@ public class GameTests
     private readonly Game _game = new();
 
     [Theory]
-    [InlineData(Constants.InitialBoardFen, 
+    [InlineData(
         0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_11111111,
         0b11111111_11111111_00000000_00000000_00000000_00000000_00000000_00000000,
         0b00000000_11111111_00000000_00000000_00000000_00000000_11111111_00000000,
@@ -19,34 +19,35 @@ public class GameTests
         0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
         0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
         0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00010000)]
-    public void ParsesFenCorrectly(string fen, ulong whitePlane, ulong blackPlane, ulong pawnPlane, ulong rookPlane, ulong knightPlane, ulong bishopPlane, ulong queenPlane, ulong kingPlane)
+    public void ParsesInitialFenCorrectly(ulong whitePlane, ulong blackPlane, ulong pawnPlane, ulong rookPlane, ulong knightPlane, ulong bishopPlane, ulong queenPlane,
+        ulong kingPlane)
     {
-        _game.ParseFen(fen);
-        
+        _game.ParseFen(Constants.InitialBoardFen);
+
         Assert.Equal(whitePlane, _game[Plane.White]);
-        
+
         Assert.Equal(blackPlane, _game[Plane.Black]);
-        
+
         Assert.Equal(pawnPlane, _game[Plane.Pawn]);
-        
+
         Assert.Equal(rookPlane, _game[Plane.Rook]);
-        
+
         Assert.Equal(knightPlane, _game[Plane.Knight]);
-        
+
         Assert.Equal(bishopPlane, _game[Plane.Bishop]);
-        
+
         Assert.Equal(queenPlane, _game[Plane.Queen]);
-        
+
         Assert.Equal(kingPlane, _game[Plane.King]);
     }
 
     [Theory]
-    [InlineData(Constants.InitialBoardFen, 
+    [InlineData( 
         0b00000000_00000000_00000000_00000000_00000000_00000001_11111110_11111111,
         0b11111111_11111111_00000000_00000000_00000000_00000000_00000000_00000000)]
-    public void UpdatesOnWhiteMoveCorrectly(string fen, ulong whitePlane, ulong blackPlane)
+    public void UpdatesOnWhiteMoveCorrectly(ulong whitePlane, ulong blackPlane)
     {
-        _game.ParseFen(fen);
+        _game.ParseFen(Constants.InitialBoardFen);
         
         _game.MakeMove(Kind.Pawn, Colour.White, 8, 16);
         
@@ -56,12 +57,12 @@ public class GameTests
     }
     
     [Theory]
-    [InlineData(Constants.InitialBoardFen, 
+    [InlineData( 
         0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_11111111,
         0b11111111_11111110_00000001_00000000_00000000_00000000_00000000_00000000)]
-    public void UpdatesOnBlackMoveCorrectly(string fen, ulong whitePlane, ulong blackPlane)
+    public void UpdatesOnBlackMoveCorrectly(ulong whitePlane, ulong blackPlane)
     {
-        _game.ParseFen(fen);
+        _game.ParseFen(Constants.InitialBoardFen);
         
         _game.MakeMove(Kind.Pawn, Colour.Black, 48, 40);
         
@@ -71,26 +72,62 @@ public class GameTests
     }
 
     [Theory]
-    [InlineData(Constants.InitialBoardFen, 
+    [InlineData( 
         0b00000000_11111111_00000000_00000000_00000000_00000001_11111110_00000000)]
-    public void UpdatesOnPawnMoveCorrectly(string fen, ulong pawnPlane)
+    public void UpdatesOnPawnMoveCorrectly(ulong expectedPlane)
     {
-        _game.ParseFen(fen);
+        _game.ParseFen(Constants.InitialBoardFen);
         
         _game.MakeMove(Kind.Pawn, Colour.White, 8, 16);
         
-        Assert.Equal(pawnPlane, _game[Plane.Pawn]);
+        Assert.Equal(expectedPlane, _game[Plane.Pawn]);
     }
     
     [Theory]
-    [InlineData(Constants.InitialBoardFen, 
+    [InlineData( 
         0b10000001_00000000_00000000_00000000_00000000_00000000_00000001_10000000)]
-    public void UpdatesOnRookMoveCorrectly(string fen, ulong pawnPlane)
+    public void UpdatesOnRookMoveCorrectly(ulong expectedPlane)
     {
-        _game.ParseFen(fen);
+        _game.ParseFen(Constants.InitialBoardFen);
         
         _game.MakeMove(Kind.Rook, Colour.White, 0, 8);
         
-        Assert.Equal(pawnPlane, _game[Plane.Rook]);
+        Assert.Equal(expectedPlane, _game[Plane.Rook]);
+    }
+    
+    [Theory]
+    [InlineData( 
+        0b01000010_00000000_00000000_00000000_00000000_00000000_00001000_01000000)]
+    public void UpdatesOnKnightMoveCorrectly(ulong expectedPlane)
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+        
+        _game.MakeMove(Kind.Knight, Colour.White, 1, 11);
+        
+        Assert.Equal(expectedPlane, _game[Plane.Knight]);
+    }
+    
+    [Theory]
+    [InlineData(
+        0b00100100_00000000_00000000_00000000_00000000_00000000_00000010_00100000)]
+    public void UpdatesOnBishopMoveCorrectly(ulong expectedPlane)
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+        
+        _game.MakeMove(Kind.Bishop, Colour.White, 2, 9);
+        
+        Assert.Equal(expectedPlane, _game[Plane.Bishop]);
+    }
+    
+    [Theory]
+    [InlineData( 
+        0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000001)]
+    public void UpdatesOnQueenMoveCorrectly(ulong expectedPlane)
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+        
+        _game.MakeMove(Kind.Queen, Colour.White, 3, 0);
+        
+        Assert.Equal(expectedPlane, _game[Plane.Queen]);
     }
 }
