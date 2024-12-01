@@ -3,6 +3,8 @@ namespace OcpCore.Engine.General.StaticData;
 public static class Constants
 {
     public const int Cells = 64;
+
+    public const int Pieces = 6;
     
     public const int Ranks = 8;
     public const int Files = 8;

@@ -249,7 +249,7 @@ public class Board
             }
         }
         
-        var rankDirection = player == Colour.White ? Directions.White : Directions.Black;
+        var rankDirection = player == Colour.White ? ColourDirections.White : ColourDirections.Black;
         
         cell = Cell.GetCell(kingRank + rankDirection, kingFile - 1);
         
@@ -372,7 +372,7 @@ public class Board
         {
             var colour = Cell.Colour(piece);
 
-            var direction = colour == Colour.White ? Directions.Black : Directions.White;
+            var direction = colour == Colour.White ? ColourDirections.Black : ColourDirections.White;
 
             var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
 

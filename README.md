@@ -28,6 +28,7 @@
 
 ## Developer Notes
 
+- Attack bitboards are indexed `[piece][cell][direction]`.
 - `WhiteScore - BlackScore` will be positive if white has more material.
 
 ### Cell Arrangement
