@@ -5,17 +5,17 @@ namespace OcpCore.Engine.General.Bitboards;
 
 public class Attacks
 {
-    private readonly ulong[][][] _attacks;
+    private readonly DirectionalAttacks[] _attacks;
     
-    public ulong[][] this[Kind kind] => _attacks[(int) kind];
+    public DirectionalAttacks this[Kind kind] => _attacks[(int) kind];
 
     public Attacks()
     {
-        _attacks = new ulong[Constants.Pieces][][];
+        _attacks = new DirectionalAttacks[Constants.Pieces];
 
         for (var i = 0; i < Constants.Pieces; i++)
         {
-            _attacks[i] = new ulong[Constants.Cells][];
+            _attacks[i] = new DirectionalAttacks();
         }
 
         GenerateQueenAttacks();
@@ -25,11 +25,9 @@ public class Attacks
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[Kind.Queen][cell] = new ulong[4];
+            this[Kind.Queen][Direction.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
 
-            this[Kind.Queen][cell][(int) Direction.Horizontal] = GenerateHorizontalAttacks(Cell.GetRank(cell));
-            
-            this[Kind.Queen][cell][(int) Direction.Vertical] = GenerateVerticalAttacks(Cell.GetFile(cell));
+            this[Kind.Queen][Direction.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
         }
     }
 

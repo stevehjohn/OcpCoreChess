@@ -17,7 +17,7 @@ public class AttacksTests
     [InlineData(63, "1111111100000000000000000000000000000000000000000000000000000000")]
     public void GeneratesHorizontalAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Queen][cell][(int) Direction.Horizontal];
+        var attack = _attacks[Kind.Queen][Direction.Horizontal][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -29,7 +29,7 @@ public class AttacksTests
     [InlineData(63, "1000000010000000100000001000000010000000100000001000000010000000")]
     public void GeneratesVerticalAttacksCorrectly(int cell, string expected)
     {
-        var attack = _attacks[Kind.Queen][cell][(int) Direction.Vertical];
+        var attack = _attacks[Kind.Queen][Direction.Vertical][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
