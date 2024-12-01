@@ -1,3 +1,4 @@
+using System.Numerics;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
@@ -30,9 +31,22 @@ public class Game
         Buffer.BlockCopy(game._planes, 0, _planes, 0, planeCount * sizeof(ulong));
     }
 
-    public void MakeMove(Kind kind, Colour colour, int from, int to)
+    public void MakeMove(int from, int to)
     {
-        UpdateBitboards(kind, colour, from, to);
+        var fromBit = 1ul << from;
+
+        var toBit = 1ul << to;
+        
+        if (((this[Plane.White] | this[Plane.Black]) & fromBit) == 0)
+        {
+            throw new InvalidMoveException($"No piece at {from.ToStandardNotation()}.");
+        }
+
+        var colour = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
+
+        var kind = GetKind(fromBit); 
+
+        UpdateBitboards(kind, colour, fromBit, toBit);
     }
 
     public void ParseFen(string fen)
@@ -110,32 +124,53 @@ public class Game
             }
         }
     }
-    
-    private void UpdateBitboards(Kind kind, Colour colour, int from, int to)
-    {
-        var fromBit = 1ul << from;
 
-        var toBit = 1ul << to;
+    private Kind GetKind(ulong cellBit)
+    {
+        if ((this[Plane.Pawn] & cellBit) == cellBit)
+        {
+            return Kind.Pawn;
+        }
         
+        if ((this[Plane.Rook] & cellBit) == cellBit)
+        {
+            return Kind.Rook;
+        }
+        
+        if ((this[Plane.Knight] & cellBit) == cellBit)
+        {
+            return Kind.Knight;
+        }
+        
+        if ((this[Plane.Bishop] & cellBit) == cellBit)
+        {
+            return Kind.Bishop;
+        }
+        
+        if ((this[Plane.Queen] & cellBit) == cellBit)
+        {
+            return Kind.Queen;
+        }
+        
+        if ((this[Plane.King] & cellBit) == cellBit)
+        {
+            return Kind.King;
+        }
+
+        throw new InvalidMoveException($"No piece at {BitOperations.TrailingZeroCount(cellBit).ToStandardNotation()}.");
+    }
+
+    private void UpdateBitboards(Kind kind, Colour colour, ulong fromBit, ulong toBit)
+    {
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (colour)
         {
             case Colour.White:
-                if ((this[Plane.White] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.White] &= ~fromBit;
                 this[Plane.White] |= toBit;
                 break;
 
             case Colour.Black:
-                if ((this[Plane.Black] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.Black] &= ~fromBit;
                 this[Plane.Black] |= toBit;
                 break;
@@ -145,61 +180,31 @@ public class Game
         switch (kind)
         {
             case Kind.Pawn:
-                if ((this[Plane.Pawn] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.Pawn] &= ~fromBit;
                 this[Plane.Pawn] |= toBit;
                 break;
 
             case Kind.Rook:
-                if ((this[Plane.Rook] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.Rook] &= ~fromBit;
                 this[Plane.Rook] |= toBit;
                 break;
 
             case Kind.Knight:
-                if ((this[Plane.Knight] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.Knight] &= ~fromBit;
                 this[Plane.Knight] |= toBit;
                 break;
 
             case Kind.Bishop:
-                if ((this[Plane.Bishop] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.Bishop] &= ~fromBit;
                 this[Plane.Bishop] |= toBit;
                 break;
 
             case Kind.Queen:
-                if ((this[Plane.Queen] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.Queen] &= ~fromBit;
                 this[Plane.Queen] |= toBit;
                 break;
 
             case Kind.King:
-                if ((this[Plane.King] & fromBit) == 0)
-                {
-                    throw new InvalidMoveException($"No {colour} {kind} at {from.ToStandardNotation()}.");
-                }
-
                 this[Plane.King] &= ~fromBit;
                 this[Plane.King] |= toBit;
                 break;

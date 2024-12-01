@@ -1,6 +1,5 @@
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 using Xunit;
 
 namespace OcpCore.Engine.Tests.Bitboards;
@@ -49,7 +48,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Pawn, Colour.White, 8, 16);
+        _game.MakeMove(8, 16);
         
         Assert.Equal(whitePlane, _game[Plane.White]);
         
@@ -64,7 +63,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Pawn, Colour.Black, 48, 40);
+        _game.MakeMove(48, 40);
         
         Assert.Equal(whitePlane, _game[Plane.White]);
         
@@ -78,7 +77,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Pawn, Colour.White, 8, 16);
+        _game.MakeMove(8, 16);
         
         Assert.Equal(expectedPlane, _game[Plane.Pawn]);
     }
@@ -90,7 +89,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Rook, Colour.White, 0, 8);
+        _game.MakeMove(0, 8);
         
         Assert.Equal(expectedPlane, _game[Plane.Rook]);
     }
@@ -102,7 +101,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Knight, Colour.White, 1, 11);
+        _game.MakeMove(1, 11);
         
         Assert.Equal(expectedPlane, _game[Plane.Knight]);
     }
@@ -114,7 +113,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Bishop, Colour.White, 2, 9);
+        _game.MakeMove(2, 9);
         
         Assert.Equal(expectedPlane, _game[Plane.Bishop]);
     }
@@ -126,7 +125,7 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        _game.MakeMove(Kind.Queen, Colour.White, 3, 0);
+        _game.MakeMove(3, 0);
         
         Assert.Equal(expectedPlane, _game[Plane.Queen]);
     }
