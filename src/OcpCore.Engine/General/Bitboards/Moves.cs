@@ -18,7 +18,7 @@ public class Moves
             _moves[i] = new DirectionalMoves();
         }
         
-        GeneratePawnMoves();
+        GeneratePawnAttacks();
 
         GenerateRookMoves();
 
@@ -31,7 +31,7 @@ public class Moves
         GenerateKingMoves();
     }
 
-    private void GeneratePawnMoves()
+    private void GeneratePawnAttacks()
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
@@ -51,7 +51,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][MoveSet.ToBlack][cell] = mask;
+            this[Kind.Pawn][MoveSet.PawnAttackToBlack][cell] = mask;
 
             target = Cell.GetCell(Cell.GetRank(cell) - 1, Cell.GetFile(cell) + 1);
 
@@ -67,7 +67,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][MoveSet.ToWhite][cell] = mask;
+            this[Kind.Pawn][MoveSet.PawnAttackToWhite][cell] = mask;
         }
     }
 
