@@ -5,5 +5,6 @@ public enum Direction
     Horizontal   = 0,
     Vertical     = 1,
     Diagonal     = 2,
-    AntiDiagonal = 3
+    AntiDiagonal = 3,
+    Specific     = 4
 }

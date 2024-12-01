@@ -19,6 +19,8 @@ public class Attacks
         }
 
         GenerateRookAttacks();
+
+        GenerateKnightAttacks();
         
         GenerateBishopAttacks();
         
@@ -32,6 +34,26 @@ public class Attacks
             this[Kind.Rook][Direction.Horizontal][cell] = GenerateHorizontalAttacks(Cell.GetRank(cell));
 
             this[Kind.Rook][Direction.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
+        }
+    }
+
+    private void GenerateKnightAttacks()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var mask = 0ul;
+            
+            foreach (var move in Constants.KnightMoves)
+            {
+                var target = Cell.GetCell(Cell.GetRank(cell) + move.RankDelta, Cell.GetFile(cell) + move.FileDelta);
+
+                if (target >= 0)
+                {
+                    mask |= 1ul << target;
+                }
+            }
+
+            this[Kind.Knight][Direction.Specific][cell] = mask;
         }
     }
 

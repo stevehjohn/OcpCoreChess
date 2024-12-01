@@ -6,7 +6,7 @@ public static class Constants
 
     public const int Pieces = 6;
 
-    public const int Directions = 4;
+    public const int Directions = 5;
     
     public const int Ranks = 8;
     public const int Files = 8;
