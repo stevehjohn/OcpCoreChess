@@ -17,6 +17,8 @@ public class Attacks
         {
             _attacks[i] = new DirectionalAttacks();
         }
+        
+        GeneratePawnAttacks();
 
         GenerateRookAttacks();
 
@@ -27,6 +29,46 @@ public class Attacks
         GenerateQueenAttacks();
         
         GenerateKingAttacks();
+    }
+
+    private void GeneratePawnAttacks()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var mask = 0ul;
+
+            var target = Cell.GetCell(Cell.GetRank(cell) + 1, Cell.GetFile(cell) + 1);
+
+            if (target >= 0)
+            {
+                mask |= 1ul << target;
+            }
+
+            target = Cell.GetCell(Cell.GetRank(cell) + 1, Cell.GetFile(cell) - 1);
+
+            if (target >= 0)
+            {
+                mask |= 1ul << target;
+            }
+
+            this[Kind.Pawn][Direction.ToBlack][cell] = mask;
+
+            target = Cell.GetCell(Cell.GetRank(cell) - 1, Cell.GetFile(cell) + 1);
+
+            if (target >= 0)
+            {
+                mask |= 1ul << target;
+            }
+
+            target = Cell.GetCell(Cell.GetRank(cell) - 1, Cell.GetFile(cell) - 1);
+
+            if (target >= 0)
+            {
+                mask |= 1ul << target;
+            }
+
+            this[Kind.Pawn][Direction.ToWhite][cell] = mask;
+        }
     }
 
     private void GenerateRookAttacks()
