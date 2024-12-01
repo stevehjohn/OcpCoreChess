@@ -70,6 +70,10 @@ public class Attacks
 
     private static ulong GenerateAntiDiagonalAttacks(int cell)
     {
+        if (cell == 62)
+        {
+        }
+
         var rank = Cell.GetRank(cell);
         
         var file = Cell.GetFile(cell);
