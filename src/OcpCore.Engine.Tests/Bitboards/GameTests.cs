@@ -18,8 +18,7 @@ public class GameTests
         0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
         0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
         0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00010000)]
-    public void ParsesInitialFenCorrectly(ulong whitePlane, ulong blackPlane, ulong pawnPlane, ulong rookPlane, ulong knightPlane, ulong bishopPlane, ulong queenPlane,
-        ulong kingPlane)
+    public void ParsesInitialFenCorrectly(ulong whitePlane, ulong blackPlane, ulong pawnPlane, ulong rookPlane, ulong knightPlane, ulong bishopPlane, ulong queenPlane, ulong kingPlane)
     {
         _game.ParseFen(Constants.InitialBoardFen);
 
@@ -40,6 +39,39 @@ public class GameTests
         Assert.Equal(kingPlane, _game[Plane.King]);
     }
 
+    [Theory]
+    [InlineData(
+        0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_11111111,
+        0b11111111_11111111_00000000_00000000_00000000_00000000_00000000_00000000,
+        0b00000000_11111111_00000000_00000000_00000000_00000000_11111111_00000000,
+        0b10000001_00000000_00000000_00000000_00000000_00000000_00000000_10000001,
+        0b01000010_00000000_00000000_00000000_00000000_00000000_00000000_01000010,
+        0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
+        0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
+        0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00010000)]
+    public void CopiesSelfCorrectly(ulong whitePlane, ulong blackPlane, ulong pawnPlane, ulong rookPlane, ulong knightPlane, ulong bishopPlane, ulong queenPlane, ulong kingPlane)
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+
+        var copy = new Game(_game);
+
+        Assert.Equal(whitePlane, copy[Plane.White]);
+
+        Assert.Equal(blackPlane, copy[Plane.Black]);
+
+        Assert.Equal(pawnPlane, copy[Plane.Pawn]);
+
+        Assert.Equal(rookPlane, copy[Plane.Rook]);
+
+        Assert.Equal(knightPlane, copy[Plane.Knight]);
+
+        Assert.Equal(bishopPlane, copy[Plane.Bishop]);
+
+        Assert.Equal(queenPlane, copy[Plane.Queen]);
+
+        Assert.Equal(kingPlane, copy[Plane.King]);
+    }
+    
     [Theory]
     [InlineData( 
         0b00000000_00000000_00000000_00000000_00000000_00000001_11111110_11111111,
