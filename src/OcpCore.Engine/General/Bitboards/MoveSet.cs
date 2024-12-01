@@ -8,5 +8,7 @@ public enum MoveSet
     AntiDiagonal    = 3,
     Specific        = 4,
     PawnBlackAttack = 5,
-    PawnWhiteAttack = 6
+    PawnWhiteAttack = 6,
+    PawnToWhite     = 7,
+    PawnToBlack     = 8
 }
