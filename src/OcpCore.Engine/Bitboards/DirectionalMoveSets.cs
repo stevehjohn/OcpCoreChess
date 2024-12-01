@@ -2,13 +2,13 @@ using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Bitboards;
 
-public class DirectionalMoves
+public class DirectionalMoveSets
 {
     private readonly ulong[][] _attack;
 
     public ulong[] this[MoveSet direction] => _attack[(int) direction];
 
-    public DirectionalMoves()
+    public DirectionalMoveSets()
     {
         var sets = Enum.GetValues<MoveSet>().Length;
 

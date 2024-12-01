@@ -6,17 +6,17 @@ namespace OcpCore.Engine.Bitboards;
 
 public class Moves
 {
-    private readonly DirectionalMoves[] _moves;
+    private readonly DirectionalMoveSets[] _moves;
     
-    public DirectionalMoves this[Kind kind] => _moves[(int) kind];
+    public DirectionalMoveSets this[Kind kind] => _moves[(int) kind];
 
     public Moves()
     {
-        _moves = new DirectionalMoves[Constants.Pieces + 1];
+        _moves = new DirectionalMoveSets[Constants.Pieces + 1];
 
         for (var i = 0; i <= Constants.Pieces; i++)
         {
-            _moves[i] = new DirectionalMoves();
+            _moves[i] = new DirectionalMoveSets();
         }
 
         GeneratePawnMoves();
