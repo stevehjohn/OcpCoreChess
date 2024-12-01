@@ -29,9 +29,9 @@ public class Attacks
 
             this[Kind.Queen][Direction.Vertical][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
 
-            this[Kind.Queen][Direction.Diagonal][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
+            this[Kind.Queen][Direction.Diagonal][cell] = GenerateDiagonalAttacks(Cell.GetFile(cell));
 
-            this[Kind.Queen][Direction.AntiDiagonal][cell] = GenerateVerticalAttacks(Cell.GetFile(cell));
+            this[Kind.Queen][Direction.AntiDiagonal][cell] = GenerateAntiDiagonalAttacks(Cell.GetFile(cell));
         }
     }
 
@@ -47,7 +47,7 @@ public class Attacks
 
     private static ulong GenerateDiagonalAttacks(int cell)
     {
-        return 0b1000_0000_0100_0000_0010_0000_0001_0000_0000_1000_0000_0100_0000_0010_0000_0001;
+        return 0b1000_0000_0100_0000_0010_0000_0001_0000_0000_1000_0000_0100_0000_0010_0000_0001 << (Cell.GetRank(cell) * 8) << Cell.GetFile(cell);
     }
 
     private static ulong GenerateAntiDiagonalAttacks(int cell)
