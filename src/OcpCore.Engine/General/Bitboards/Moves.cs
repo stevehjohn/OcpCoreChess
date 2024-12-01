@@ -17,6 +17,8 @@ public class Moves
         {
             _moves[i] = new DirectionalMoves();
         }
+
+        GeneratePawnMoves();
         
         GeneratePawnAttacks();
 
@@ -31,6 +33,48 @@ public class Moves
         GenerateKingMoves();
     }
 
+    private void GeneratePawnMoves()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            var mask = 0ul;
+
+            var target = Cell.GetCell(Cell.GetRank(cell) + 1, Cell.GetFile(cell));
+
+            if (target >= 0)
+            {
+                mask |= 1ul << target;
+            }
+
+            if (Cell.GetRank(cell) == Ranks.WhitePawnRank)
+            {
+                target += 8;
+                
+                mask |= 1ul << target;
+            }
+
+            this[Kind.Pawn][MoveSet.PawnToBlack][cell] = mask;
+
+            mask = 0ul;
+
+            target = Cell.GetCell(Cell.GetRank(cell) - 1, Cell.GetFile(cell));
+
+            if (target >= 0)
+            {
+                mask |= 1ul << target;
+            }
+
+            if (Cell.GetRank(cell) == Ranks.BlackPawnRank)
+            {
+                target -= 8;
+                
+                mask |= 1ul << target;
+            }
+
+            this[Kind.Pawn][MoveSet.PawnToWhite][cell] = mask;
+        }
+    }
+    
     private void GeneratePawnAttacks()
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
