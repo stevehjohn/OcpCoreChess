@@ -379,6 +379,22 @@ public class AttacksTests
                     "00000000" +
                     "00000000" +
                     "00000000")]
+    [InlineData(56, "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
+    [InlineData(63, "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000" +
+                    "00000000")]
     public void GeneratesWhitePawnAttacksCorrectly(int cell, string expected)
     {
         var attack = _attacks[Kind.Pawn][Direction.ToBlack][cell];
