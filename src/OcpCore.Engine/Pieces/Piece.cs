@@ -34,8 +34,8 @@ public abstract class Piece
         var positionBit = 1ul << position;
 
         var mask = Moves[Kind.Rook][MoveSet.Horizontal][position];
-        
-        var rightBlockers = (game[colour] | game[opponentColour])& mask & (~(positionBit - 1) - positionBit);
+
+        var rightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
         var firstRightBlocker = rightBlockers != 0 ? BitOperations.TrailingZeroCount(rightBlockers) : 64;
 
@@ -47,10 +47,10 @@ public abstract class Piece
         }
 
         var leftBlockers = game[colour] & mask & positionBit - 1;
-        
+
         var firstLeftBlocker = leftBlockers != 0 ? BitOperations.LeadingZeroCount(leftBlockers) - 1 : 64;
-        
-        var leftMask = firstLeftBlocker < 64 ? ~((1ul << (63 - firstLeftBlocker)) - 1 ): ulong.MaxValue;
+
+        var leftMask = firstLeftBlocker < 64 ? ~((1ul << (63 - firstLeftBlocker)) - 1) : ulong.MaxValue;
 
         if (leftBlockers != 0 && (game[opponentColour] & (1ul << firstLeftBlocker)) != 0)
         {
