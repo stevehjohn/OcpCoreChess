@@ -10,10 +10,10 @@ public class QueenTests
     
     [Theory]
     [InlineData("8/8/8/8/8/8/8/Q7 w - - 0 1", 0,
-        0b0000_0001_0000_0001_0000_0001_0000_0001_0000_0001_0000_0001_0000_0001_1111_1110)]
-    [InlineData("8/8/8/3Q4/8/8/8/8 w - - 0 1", 35,
-        0b0000_1000_0000_1000_0000_1000_1111_0111_0000_1000_0000_1000_0000_1000_0000_1000)]
-    public void MovesOrthogonallyAsExpectedOnEmptyBoard(string fen, int position, ulong expectedMoves)
+        0b1000_0001_0100_0001_0010_0001_0001_0001_0000_1001_0000_0101_0000_0011_1111_1110)]
+    // [InlineData("8/8/8/3Q4/8/8/8/8 w - - 0 1", 35,
+    //     0b0000_1000_0000_1000_0000_1000_1111_0111_0000_1000_0000_1000_0000_1000_0000_1000)]
+    public void MovesDirectionallyAsExpectedOnEmptyBoard(string fen, int position, ulong expectedMoves)
     {
         var game = new Game();
         

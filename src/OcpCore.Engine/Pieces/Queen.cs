@@ -17,6 +17,8 @@ public class Queen : Piece
         var moves = GetHorizontalSlidingMoves(game, colour, opponentColour, position);
         
         moves |= GetVerticalSlidingMoves(game, colour, opponentColour, position);
+
+        moves |= GetDiagonalSlidingMoves(game, colour, opponentColour, position);
         
         return moves;
     }

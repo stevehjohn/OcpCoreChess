@@ -90,4 +90,35 @@ public abstract class Piece
 
         return upMask & downMask & mask;
     }
+    
+    protected ulong GetDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    {
+        var positionBit = 1ul << position;
+
+        var mask = Moves[Kind.Bishop][MoveSet.Diagonal][position];
+
+        var topRightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
+
+        var firstTopRightBlocker = topRightBlockers != 0 ? BitOperations.TrailingZeroCount(topRightBlockers) : 64;
+        
+        var topRightMask = firstTopRightBlocker < 64 ? (1ul << firstTopRightBlocker) - 1 - positionBit : ulong.MaxValue;
+
+        if (topRightBlockers != 0 && (game[opponentColour] & (1ul << firstTopRightBlocker)) != 0)
+        {
+            topRightMask |= 1ul << firstTopRightBlocker;
+        }
+
+        var bottomLeftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
+
+        var firstBottomLeftBlocker = bottomLeftBlockers != 0 ? BitOperations.LeadingZeroCount(bottomLeftBlockers) - 1 : 64;
+        
+        var bottomLeftMask = firstBottomLeftBlocker < 64 ? ~((1ul << (63 - firstBottomLeftBlocker)) - 1) : ulong.MaxValue;
+
+        if (bottomLeftBlockers != 0 && (game[opponentColour] & (1ul << (63 - firstBottomLeftBlocker - 1))) != 0)
+        {
+            bottomLeftMask |= 1ul << (63 - firstBottomLeftBlocker - 1);
+        }
+
+        return topRightMask & bottomLeftMask & mask;
+    }
 }
