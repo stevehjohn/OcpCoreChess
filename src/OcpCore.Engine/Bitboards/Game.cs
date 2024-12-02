@@ -49,6 +49,17 @@ public class Game
         UpdateBitboards(kind, colour, fromBit, toBit);
     }
 
+    public bool Is(Kind kind, int cell)
+    {
+        switch (kind)
+        {
+            case Kind.Rook:
+                return (this[Plane.Rook] & (1ul << cell)) > 0;
+        }
+
+        return false;
+    }
+
     public void ParseFen(string fen)
     {
         var parts = fen.Split(' ', StringSplitOptions.RemoveEmptyEntries);

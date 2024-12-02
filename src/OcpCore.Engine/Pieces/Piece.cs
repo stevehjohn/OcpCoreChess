@@ -9,7 +9,7 @@ public abstract class Piece
     
     public abstract int Value { get; }
 
-    protected Moves Moves;
+    protected readonly Moves Moves;
 
     protected Piece(Moves moves)
     {
@@ -25,5 +25,5 @@ public abstract class Piece
         return GetMoves(game, colour, colour.InvertColour(), position) & ~positionBit;
     }
 
-    protected abstract ulong GetMoves(Game game, Plane colour, Plane opponentColour, int positionBit);
+    protected abstract ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position);
 }

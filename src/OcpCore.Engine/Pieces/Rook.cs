@@ -16,11 +16,19 @@ public class Rook : Piece
     {
         var moves = 0ul;
 
-        var mask = Moves[Kind.Rook][MoveSet.Horizontal][position];
+        var positionBit = 1ul << position;
         
-        var path = (long) mask & (long) game[colour] & -(long) game[colour];
+        var mask = Moves[Kind.Rook][MoveSet.Horizontal][position] & ~positionBit;
+        
+        // Remove blockers, account for opponents
 
-        moves |= (ulong) path;
+        moves |= mask;
+
+        mask = Moves[Kind.Rook][MoveSet.Vertical][position] & ~positionBit;
+        
+        // Remove blockers, account for opponents
+
+        moves |= mask;
         
         return moves;
     }
