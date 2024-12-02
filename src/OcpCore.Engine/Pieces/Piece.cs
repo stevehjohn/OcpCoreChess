@@ -66,7 +66,7 @@ public abstract class Piece
 
         var mask = Moves[Kind.Rook][MoveSet.Vertical][position];
 
-        var upBlockers = game[colour] & mask & (~(positionBit - 1) - positionBit);
+        var upBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
         var firstUpBlocker = upBlockers != 0 ? BitOperations.TrailingZeroCount(upBlockers) : 64;
 
@@ -77,7 +77,7 @@ public abstract class Piece
             upMask |= 1ul << firstUpBlocker;
         }
 
-        var downBlockers = game[colour] & mask & positionBit - 1;
+        var downBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
 
         var firstDownBlocker = downBlockers != 0 ? BitOperations.LeadingZeroCount(downBlockers) - 1 : 64;
 
