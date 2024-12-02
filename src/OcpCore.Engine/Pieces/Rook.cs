@@ -65,12 +65,22 @@ public class Rook : Piece
         var firstUpBlocker = upBlockers != 0 ? BitOperations.TrailingZeroCount(upBlockers) : 64;
 
         var upMask = firstUpBlocker < 64 ? (1ul << firstUpBlocker) - 1 - positionBit : ulong.MaxValue;
+        
+        if (upBlockers != 0 && (game[opponentColour] & (1ul << firstUpBlocker)) != 0)
+        {
+            upMask |= 1ul << firstUpBlocker;
+        }
 
         var downBlockers = game[colour] & mask & positionBit - 1;
         
         var firstDownBlocker = downBlockers != 0 ? BitOperations.LeadingZeroCount(downBlockers) - 1 : 64;
         
         var downMask = firstDownBlocker < 64 ? ~((1ul << (63 - firstDownBlocker)) - 1 ): ulong.MaxValue;
+        
+        if (downBlockers != 0 && (game[opponentColour] & (1ul << firstDownBlocker)) != 0)
+        {
+            downMask |= 1ul << firstDownBlocker;
+        }
 
         return upMask & downMask & mask;
     }
