@@ -53,6 +53,18 @@ public class Rook : Piece
 
         var mask = Moves[Kind.Rook][MoveSet.Vertical][position];
 
-        return mask;
+        var rightBlockers = game[colour] & mask & (~(positionBit - 1) - positionBit);
+
+        var firstRightBlocker = rightBlockers != 0 ? BitOperations.TrailingZeroCount(rightBlockers) : 64;
+
+        var rightMask = firstRightBlocker < 64 ? (1ul << firstRightBlocker) - 1 - positionBit : ulong.MaxValue;
+
+        var leftBlockers = game[colour] & mask & positionBit - 1;
+        
+        var firstLeftBlocker = leftBlockers != 0 ? BitOperations.LeadingZeroCount(leftBlockers) - 1 : 64;
+        
+        var leftMask = firstLeftBlocker < 64 ? ~((1ul << (63 - firstLeftBlocker)) - 1 ): ulong.MaxValue;
+
+        return leftMask & rightMask & mask;
     }
 }
