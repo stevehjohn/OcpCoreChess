@@ -38,7 +38,7 @@ public class KingTests : PieceTestBase<King>
         var moves = new List<Move>();
         
         Piece.GetMoves(board, position, Colour.Black, moves);
-        
+         
         AssertExpectedMoves(expectedMoves, moves);
     }
     

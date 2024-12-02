@@ -2,13 +2,17 @@
 
 3rd attempt at making a chess playing engine.
 
-## TODOs
+## Functionality TODOs
 
 - Promote to Knight?
 - Move ordering?
   - Captures preferred.
   - Lower value taking higher even better.
   - Moves that don't go onto an attacked square.
+
+## Code Cleanup TODOs
+
+- Rename `Game` to `Board` once current `Board` can be replaced.
 
 ## Current Best Timings
 

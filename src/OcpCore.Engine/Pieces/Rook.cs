@@ -1,16 +1,30 @@
-using OcpCore.Engine.General;
-using OcpCore.Engine.General.StaticData;
+using OcpCore.Engine.Bitboards;
 
 namespace OcpCore.Engine.Pieces;
 
 public class Rook : Piece
 {
+    private readonly Moves _moves;
+    
     public override Kind Kind => Kind.Rook;
     
     public override int Value => 5;
-    
-    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
+
+    public Rook(Moves moves)
     {
-        GetDirectionalMoves(board, position, colour, moveList, Constants.OrthogonalMoves);
+        _moves = moves;
+    }
+
+    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
+    {
+        var moves = 0ul;
+
+        var mask = _moves[Kind.Rook][MoveSet.Horizontal][position];
+        
+        var path = (long) mask & (long) game[colour] & -(long) game[colour];
+
+        moves |= (ulong) path;
+        
+        return moves;
     }
 }

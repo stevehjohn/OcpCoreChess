@@ -1,5 +1,5 @@
-using OcpCore.Engine.General;
-using OcpCore.Engine.General.StaticData;
+using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Extensions;
 
 namespace OcpCore.Engine.Pieces;
 
@@ -9,49 +9,14 @@ public abstract class Piece
     
     public abstract int Value { get; }
 
-    public abstract void GetMoves(Board board, int position, Colour colour, List<Move> moveList);
-
-    protected void GetDirectionalMoves(Board board, int position, Colour colour, List<Move> moveList, params (int RankDelta, int FileDelta)[] directions)
+    public ulong GetMoves(Game game, int position)
     {
-        var rank = Cell.GetRank(position);
+        var positionBit = 1ul << position;
 
-        var file = Cell.GetFile(position);
-        
-        for (var i = 0; i < directions.Length; i++)
-        {
-            var direction = directions[i];
-            
-            for (var distance = 1; distance <= Constants.MaxMoveDistance; distance++)
-            {
-                var newRank = rank + distance * direction.RankDelta;
+        var colour = (game[Plane.White] & positionBit) == positionBit ? Plane.White : Plane.Black;
 
-                var newFile = file + distance * direction.FileDelta;
-
-                var cell = Cell.GetCell(newRank, newFile);
-
-                if (cell < 0)
-                {
-                    break;
-                }
-
-                var content = board[cell];
-
-                if (content == 0)
-                {
-                    moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
-                    
-                    continue;
-                }
-
-                if (Cell.Colour(content) == colour)
-                {
-                    break;
-                }
-
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
-                
-                break;    
-            }
-        }
+        return GetMoves(game, colour, colour.InvertColour(), position) & ~positionBit;
     }
+
+    protected abstract ulong GetMoves(Game game, Plane colour, Plane opponentColour, int positionBit);
 }
