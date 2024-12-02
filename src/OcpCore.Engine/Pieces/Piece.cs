@@ -121,4 +121,35 @@ public abstract class Piece
 
         return topRightMask & bottomLeftMask & mask;
     }
+    
+    protected ulong GetAntiDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    {
+        var positionBit = 1ul << position;
+
+        var mask = Moves[Kind.Bishop][MoveSet.AntiDiagonal][position];
+        
+        var topLeftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
+
+        var firstTopLeftBlocker = topLeftBlockers != 0 ? BitOperations.LeadingZeroCount(topLeftBlockers) - 1 : 64;
+
+        var topLeftMask = firstTopLeftBlocker < 64 ? ~((1ul << (63 - firstTopLeftBlocker)) - 1) : ulong.MaxValue;
+
+        if (topLeftBlockers != 0 && (game[opponentColour] & (1ul << (63 - firstTopLeftBlocker - 1))) != 0)
+        {
+            topLeftMask |= 1ul << (63 - firstTopLeftBlocker - 1);
+        }
+        
+        var bottomRightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
+
+        var firstBottomRightBlocker = bottomRightBlockers != 0 ? BitOperations.TrailingZeroCount(bottomRightBlockers) : 64;
+
+        var bottomRightMask = firstBottomRightBlocker < 64 ? (1ul << firstBottomRightBlocker) - 1 - positionBit : ulong.MaxValue;
+
+        if (bottomRightBlockers != 0 && (game[opponentColour] & (1ul << firstBottomRightBlocker)) != 0)
+        {
+            bottomRightMask |= 1ul << firstBottomRightBlocker;
+        }
+
+        return topLeftMask & bottomRightMask & mask;
+    }
 }

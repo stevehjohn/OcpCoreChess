@@ -19,6 +19,8 @@ public class Queen : Piece
         moves |= GetVerticalSlidingMoves(game, colour, opponentColour, position);
 
         moves |= GetDiagonalSlidingMoves(game, colour, opponentColour, position);
+
+        moves |= GetAntiDiagonalSlidingMoves(game, colour, opponentColour, position);
         
         return moves;
     }
