@@ -1,4 +1,6 @@
+using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine.Pieces;
 
@@ -15,16 +17,20 @@ public class Rook : Piece
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var moves = 0ul;
+        
+        var mask = Moves[Kind.Rook][MoveSet.Horizontal][position];
+        
+        // Exclude blockers
+        mask &= ~game[colour];
+                
+        // Include opponents
+        //mask &= game[opponentColour];
 
-        var positionBit = 1ul << position;
-        
-        var mask = Moves[Kind.Rook][MoveSet.Horizontal][position] & ~positionBit;
-        
         // Remove blockers, account for opponents
 
         moves |= mask;
 
-        mask = Moves[Kind.Rook][MoveSet.Vertical][position] & ~positionBit;
+        mask = Moves[Kind.Rook][MoveSet.Vertical][position];
         
         // Remove blockers, account for opponents
 
