@@ -53,17 +53,17 @@ public class Rook : Piece
 
         var mask = Moves[Kind.Rook][MoveSet.Vertical][position];
 
-        var downBlockers = game[colour] & mask & (~(positionBit - 1) - positionBit);
+        var upBlockers = game[colour] & mask & (~(positionBit - 1) - positionBit);
 
-        var firstDownBlocker = downBlockers != 0 ? BitOperations.TrailingZeroCount(downBlockers) : 64;
+        var firstDownBlocker = upBlockers != 0 ? BitOperations.TrailingZeroCount(upBlockers) : 64;
 
-        var downMask = firstDownBlocker < 64 ? (1ul << firstDownBlocker) - 1 - positionBit : ulong.MaxValue;
+        var upMask = firstDownBlocker < 64 ? (1ul << firstDownBlocker) - 1 - positionBit : ulong.MaxValue;
 
-        var upBlockers = game[colour] & mask & positionBit - 1;
+        var downBlockers = game[colour] & mask & positionBit - 1;
         
-        var firstUpBlocker = upBlockers != 0 ? BitOperations.LeadingZeroCount(upBlockers) - 1 : 64;
+        var firstUpBlocker = downBlockers != 0 ? BitOperations.LeadingZeroCount(downBlockers) - 1 : 64;
         
-        var upMask = firstUpBlocker < 64 ? ~((1ul << (63 - firstUpBlocker)) - 1 ): ulong.MaxValue;
+        var downMask = firstUpBlocker < 64 ? ~((1ul << (63 - firstUpBlocker)) - 1 ): ulong.MaxValue;
 
         return upMask & downMask & mask;
     }
