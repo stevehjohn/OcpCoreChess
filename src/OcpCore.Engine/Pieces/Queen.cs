@@ -14,6 +14,10 @@ public class Queen : Piece
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        return 0;
+        var moves = GetHorizontalSlidingMoves(game, colour, opponentColour, position);
+        
+        moves |= GetVerticalSlidingMoves(game, colour, opponentColour, position);
+        
+        return moves;
     }
 }
