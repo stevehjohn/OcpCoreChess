@@ -16,6 +16,8 @@ public class Bishop : Piece
     {
         var moves = GetDiagonalSlidingMoves(game, colour, opponentColour, position);
         
+        moves |= GetAntiDiagonalSlidingMoves(game, colour, opponentColour, position);
+
         return moves;
     }
 }
