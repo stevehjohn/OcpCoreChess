@@ -51,13 +51,12 @@ public class Game
 
     public bool Is(Kind kind, int cell)
     {
-        switch (kind)
+        return kind switch
         {
-            case Kind.Rook:
-                return (this[Plane.Rook] & (1ul << cell)) > 0;
-        }
-
-        return false;
+            Kind.Pawn => (this[Plane.Pawn] & (1ul << cell)) > 0,
+            Kind.Rook => (this[Plane.Rook] & (1ul << cell)) > 0,
+            _ => false
+        };
     }
 
     public void ParseFen(string fen)
