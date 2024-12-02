@@ -14,6 +14,8 @@ public class Bishop : Piece
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        return 0;
+        var moves = GetDiagonalSlidingMoves(game, colour, opponentColour, position);
+        
+        return moves;
     }
 }
