@@ -4,22 +4,19 @@ namespace OcpCore.Engine.Pieces;
 
 public class Rook : Piece
 {
-    private readonly Moves _moves;
-    
     public override Kind Kind => Kind.Rook;
     
     public override int Value => 5;
 
-    public Rook(Moves moves)
+    public Rook(Moves moves) : base(moves)
     {
-        _moves = moves;
     }
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var moves = 0ul;
 
-        var mask = _moves[Kind.Rook][MoveSet.Horizontal][position];
+        var mask = Moves[Kind.Rook][MoveSet.Horizontal][position];
         
         var path = (long) mask & (long) game[colour] & -(long) game[colour];
 

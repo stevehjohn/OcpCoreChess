@@ -57,7 +57,7 @@ public sealed class Core : IDisposable
         
         var piece = PieceCache.Get(_board[position]);
 
-        piece.GetMoves(_board, position, _board.State.Player, moves);
+        //piece.GetMoves(_board, position, _board.State.Player, moves);
         
         var found = false;
 
@@ -203,7 +203,7 @@ public sealed class Core : IDisposable
                 continue;
             }
             
-            PieceCache.Get(piece).GetMoves(board, cell, board.State.Player, moves);
+            //PieceCache.Get(piece).GetMoves(board, cell, board.State.Player, moves);
         }
     }
 
@@ -225,7 +225,7 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
+            //PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
 
             for (var i = 0; i < moves.Count; i++)
             {
