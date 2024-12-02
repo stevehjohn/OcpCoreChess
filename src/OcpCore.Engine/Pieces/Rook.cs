@@ -1,6 +1,4 @@
-using System.Numerics;
 using OcpCore.Engine.Bitboards;
-using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine.Pieces;
 
