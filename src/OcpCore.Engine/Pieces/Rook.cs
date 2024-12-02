@@ -16,8 +16,20 @@ public class Rook : Piece
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        var positionBit = 1ul << position;
+        var moves = GetHorizontalSlidingMoves(game, colour, opponentColour, position);
+
+        // Include opponents
+        //mask &= game[opponentColour];
         
+        moves |= GetVerticalSlidingMoves(game, colour, opponentColour, position);
+        
+        return moves;
+    }
+
+    private ulong GetHorizontalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    {
+        var positionBit = 1ul << position;
+
         var mask = Moves[Kind.Rook][MoveSet.Horizontal][position];
         
         var rightBlockers = game[colour] & mask & (~(positionBit - 1) - positionBit);
@@ -32,14 +44,15 @@ public class Rook : Piece
         
         var leftMask = firstLeftBlocker < 64 ? ~((1ul << (63 - firstLeftBlocker)) - 1 ): ulong.MaxValue;
 
-        var moves = leftMask & rightMask & mask;
+        return leftMask & rightMask & mask;
+    }
 
-        // Include opponents
-        //mask &= game[opponentColour];
-        mask = Moves[Kind.Rook][MoveSet.Vertical][position];
+    private ulong GetVerticalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    {
+        var positionBit = 1ul << position;
 
-        moves |= mask;
-        
-        return moves;
+        var mask = Moves[Kind.Rook][MoveSet.Vertical][position];
+
+        return mask;
     }
 }
