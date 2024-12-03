@@ -24,13 +24,11 @@ public class Moves
         
         GeneratePawnAttacks();
 
-        GenerateRookMoves();
+        GenerateOrthogonalMoves();
+        
+        GenerateDiagonalMoves();
 
         GenerateKnightMoves();
-        
-        GenerateBishopMoves();
-        
-        GenerateQueenMoves();
         
         GenerateKingMoves();
     }
@@ -119,13 +117,23 @@ public class Moves
         }
     }
 
-    private void GenerateRookMoves()
+    private void GenerateOrthogonalMoves()
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
             this[MoveSet.Horizontal][cell] = GenerateHorizontalMoves(Cell.GetRank(cell));
 
             this[MoveSet.Vertical][cell] = GenerateVerticalMoves(Cell.GetFile(cell));
+        }
+    }
+
+    private void GenerateDiagonalMoves()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            this[MoveSet.Diagonal][cell] = GenerateDiagonalMoves(cell);
+
+            this[MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalMoves(cell);
         }
     }
 
@@ -146,30 +154,6 @@ public class Moves
             }
 
             this[MoveSet.Knight][cell] = mask;
-        }
-    }
-
-    private void GenerateBishopMoves()
-    {
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            this[MoveSet.Diagonal][cell] = GenerateDiagonalMoves(cell);
-
-            this[MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalMoves(cell);
-        }
-    }
-
-    private void GenerateQueenMoves()
-    {
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            this[MoveSet.Horizontal][cell] = GenerateHorizontalMoves(Cell.GetRank(cell));
-
-            this[MoveSet.Vertical][cell] = GenerateVerticalMoves(Cell.GetFile(cell));
-
-            this[MoveSet.Diagonal][cell] = GenerateDiagonalMoves(cell);
-
-            this[MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalMoves(cell);
         }
     }
 
