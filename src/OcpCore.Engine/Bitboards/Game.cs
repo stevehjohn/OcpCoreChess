@@ -10,6 +10,8 @@ namespace OcpCore.Engine.Bitboards;
 public class Game
 {
     private readonly ulong[] _planes;
+
+    private static readonly Moves Moves = new();
     
     public State State { get; private set; } 
 
@@ -51,6 +53,18 @@ public class Game
         var colour = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
 
         var kind = GetKindInternal(fromBit);
+
+        if (kind == Kind.King)
+        {
+            if (colour == Colour.White)
+            {
+                State.SetWhiteKingCell(to);
+            }
+            else
+            {
+                State.SetBlackKingCell(to);
+            }
+        }
 
         var outcome = MoveOutcome.Move;
 
@@ -95,6 +109,22 @@ public class Game
     public Kind GetKind(int cell)
     {
         return GetKindInternal(1ul << cell);
+    }
+
+    public bool IsKingInCheck(Colour colour)
+    {
+        var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
+    
+        var opponentColor = colour == Colour.White ? Plane.Black : Plane.White;
+    
+        var attacks = Moves[Kind.Knight][MoveSet.Specific][position];
+        
+        if ((attacks & this[opponentColor]) > 0)
+        {
+            return true;
+        }
+    
+        return false;
     }
 
     public void ParseFen(string fen)

@@ -173,12 +173,21 @@ public sealed class Core : IDisposable
             {
                 // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
                 
-                _depthCounts[ply]++;
-                
                 var copy = new Game(game);
 
                 var outcome = copy.MakeMove(cell, move);
+
+                if (copy.IsKingInCheck(player))
+                {
+                    move = Piece.PopNextMove(ref moves);
+                    
+                    Console.WriteLine("Check");
                 
+                    continue;
+                }
+                
+                _depthCounts[ply]++;
+
                 for (var j = 0; j <= Constants.MoveOutcomes; j++)
                 {
                     if (((byte) outcome & (1 << j)) > 0)
