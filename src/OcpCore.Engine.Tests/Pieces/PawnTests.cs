@@ -27,6 +27,7 @@ public class PawnTests
         
         Assert.Equal(expectedMoves, moves);
     }
+    
     // [InlineData("8/8/8/8/8/8/P7/8 w - - 0 1", 8, Colour.White, "16,24")]
     // [InlineData("8/p7/8/8/8/8/p7/8 b - - 0 1", 48, Colour.Black, "40,32")]
     // [InlineData("8/8/8/8/8/8/2P5/8 w - - 0 1", 10, Colour.White, "18,26")]
