@@ -9,10 +9,10 @@ public class KnightTests
     private readonly Knight _knight = new(new Moves());
     
     [Theory]
-    [InlineData("8/8/8/8/8/8/8/n7 b - - 0 1", 0, 
+    [InlineData("8/8/8/8/8/8/8/n7 b - - 0 1", 0,
         0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0010_0000_0100_0000_0000)]
-    // [InlineData("8/8/8/3n4/8/8/8/8 b - - 0 1", 35, 
-    //     0b0)]
+    [InlineData("8/8/8/3n4/8/8/8/8 b - - 0 1", 35,
+        0b0000_0000_0001_0100_0010_0010_0000_0000_0010_0010_0001_0100_0000_0000_0000_0000)]
     public void MovesAccordingToKnightRulesOnEmptyBoard(string fen, int position, ulong expectedMoves)
     {
         var game = new Game();
