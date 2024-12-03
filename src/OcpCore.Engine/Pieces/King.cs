@@ -14,6 +14,10 @@ public class King : Piece
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        return 0;
+        var moves = Moves[Kind.King][MoveSet.Specific][position];
+
+        moves &= ~game[colour];
+        
+        return moves;
     }
 }
