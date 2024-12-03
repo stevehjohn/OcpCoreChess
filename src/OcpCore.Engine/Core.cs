@@ -1,5 +1,6 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -50,37 +51,37 @@ public sealed class Core : IDisposable
         _game.ParseFen(fen);
     }
 
-    // public void MakeMove(string move)
-    // {
-    //     var position = move[..2].FromStandardNotation();
-    //
-    //     var target = move[2..].FromStandardNotation();
-    //
-    //     var moves = new List<Move>();
-    //     
-    //     var piece = PieceCache.Get(_board[position]);
-    //
-    //     //piece.GetMoves(_board, position, _board.State.Player, moves);
-    //     
-    //     var found = false;
-    //
-    //     for (var i = 0; i < moves.Count; i++)
-    //     {
-    //         if (moves[i].Target == target)
-    //         {
-    //             found = true;
-    //             
-    //             break;
-    //         }
-    //     }
-    //
-    //     if (! found)
-    //     {
-    //         throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
-    //     }
-    //
-    //     _board.MakeMove(position, target);
-    // }
+    public void MakeMove(string move)
+    {
+        var position = move[..2].FromStandardNotation();
+    
+        var target = move[2..].FromStandardNotation();
+    
+        // // var moves = new List<Move>();
+        // //
+        // // var piece = PieceCache.Get(_board[position]);
+        //
+        // //piece.GetMoves(_board, position, _board.State.Player, moves);
+        //
+        // var found = false;
+        //
+        // for (var i = 0; i < moves.Count; i++)
+        // {
+        //     if (moves[i].Target == target)
+        //     {
+        //         found = true;
+        //         
+        //         break;
+        //     }
+        // }
+        //
+        // if (! found)
+        // {
+        //     throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
+        // }
+    
+        _game.MakeMove(position, target);
+    }
 
     public void GetMove(int depth)
     {
