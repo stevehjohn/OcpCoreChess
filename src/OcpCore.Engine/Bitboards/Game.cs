@@ -37,7 +37,7 @@ public class Game
         State = new State(game.State);
     }
 
-    public void MakeMove(int from, int to)
+    public MoveOutcome MakeMove(int from, int to)
     {
         var fromBit = 1ul << from;
 
@@ -50,11 +50,20 @@ public class Game
 
         var colour = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
 
-        var kind = GetKindInternal(fromBit); 
+        var kind = GetKindInternal(fromBit);
+
+        var outcome = MoveOutcome.Move;
 
         UpdateBitboards(kind, colour, fromBit, toBit);
-        
+
+        if (IsColour(colour.Invert(), to))
+        {
+            outcome |= MoveOutcome.Capture;
+        }
+
         State.InvertPlayer();
+
+        return outcome;
     }
 
     public bool IsKind(Kind kind, int cell)
