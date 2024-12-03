@@ -140,7 +140,7 @@ public sealed class Core : IDisposable
         callback?.Invoke();
     }
 
-    private void ProcessPly(Game game, int maxDepth, int depth)
+    private void ProcessPly(Game game, int maxDepth, int depth, string perftNode = null)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
@@ -187,11 +187,34 @@ public sealed class Core : IDisposable
                     }
                 }
                 
+                if (perftNode == null)
+                {
+                    perftNode = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
+
+                    _perftCounts.Add(perftNode, 1);
+                }
+                else
+                {
+                    _perftCounts[perftNode]++;
+                }
+
+                if (! game.IsColour(player, cell))
+                {
+                    continue;
+                }
+                
                 if (depth > 1)
                 {
                     ProcessPly(copy, maxDepth, depth - 1);
+
+                    _perftCounts[perftNode]--;
                 }
 
+                if (depth == maxDepth)
+                {
+                    perftNode = null;
+                }
+                
                 move = Piece.PopNextMove(ref moves);
             }
 
