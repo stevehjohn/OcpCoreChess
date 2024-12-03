@@ -6,7 +6,7 @@ namespace OcpCore.Engine.Tests.Pieces;
 
 public class QueenTests
 {
-    private readonly Queen _queen = new(new Moves());
+    private readonly Queen _queen = new();
     
     [Theory]
     [InlineData("8/8/8/8/8/8/8/Q7 w - - 0 1", 0,

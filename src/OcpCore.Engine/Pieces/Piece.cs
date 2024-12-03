@@ -7,16 +7,11 @@ namespace OcpCore.Engine.Pieces;
 
 public abstract class Piece
 {
+    protected static readonly Moves Moves = new();
+    
     public abstract Kind Kind { get; }
     
     public abstract int Value { get; }
-
-    protected readonly Moves Moves;
-
-    protected Piece(Moves moves)
-    {
-        Moves = moves;
-    }
 
     public static int PopNextMove(ref ulong moves)
     {
@@ -43,11 +38,11 @@ public abstract class Piece
 
     protected abstract ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position);
 
-    protected ulong GetHorizontalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetHorizontalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[Kind.Rook][MoveSet.Horizontal][position];
+        var mask = Moves[MoveSet.Horizontal][position];
 
         var rightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
@@ -74,11 +69,11 @@ public abstract class Piece
         return leftMask & rightMask & mask;
     }
 
-    protected ulong GetVerticalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetVerticalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[Kind.Rook][MoveSet.Vertical][position];
+        var mask = Moves[MoveSet.Vertical][position];
 
         var upBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
@@ -105,11 +100,11 @@ public abstract class Piece
         return upMask & downMask & mask;
     }
     
-    protected ulong GetDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[Kind.Bishop][MoveSet.Diagonal][position];
+        var mask = Moves[MoveSet.Diagonal][position];
 
         var topRightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
@@ -136,11 +131,11 @@ public abstract class Piece
         return topRightMask & bottomLeftMask & mask;
     }
     
-    protected ulong GetAntiDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetAntiDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[Kind.Bishop][MoveSet.AntiDiagonal][position];
+        var mask = Moves[MoveSet.AntiDiagonal][position];
         
         var topLeftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
 

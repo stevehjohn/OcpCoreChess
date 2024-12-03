@@ -6,7 +6,7 @@ namespace OcpCore.Engine.Tests.Pieces;
 
 public class RookTests
 {
-    private readonly Rook _rook = new(new Moves());
+    private readonly Rook _rook = new();
     
     [Theory]
     [InlineData("8/8/8/8/8/8/8/R7 w - - 0 1", 0,

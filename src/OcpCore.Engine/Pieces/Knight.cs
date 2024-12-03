@@ -7,14 +7,10 @@ public class Knight : Piece
     public override Kind Kind => Kind.Knight;
     
     public override int Value => 3;
-
-    public Knight(Moves moves) : base(moves)
-    {
-    }
     
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        var moves = Moves[Kind.Knight][MoveSet.Specific][position];
+        var moves = Moves[MoveSet.Knight][position];
 
         moves &= ~game[colour];
         

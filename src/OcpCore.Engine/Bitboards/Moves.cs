@@ -1,35 +1,34 @@
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.Bitboards;
 
 public class Moves
 {
-    private readonly DirectionalMoveSets[] _moves;
+    private readonly ulong[][] _moveSets;
     
-    public DirectionalMoveSets this[Kind kind] => _moves[(int) kind];
+    public ulong[] this[MoveSet moveSet] => _moveSets[(int) moveSet];
 
     public Moves()
     {
-        _moves = new DirectionalMoveSets[Constants.Pieces + 1];
+        var sets = Enum.GetValues<MoveSet>().Length;
 
-        for (var i = 0; i <= Constants.Pieces; i++)
+        _moveSets = new ulong[sets + 1][];
+        
+        for (var i = 0; i < sets; i++)
         {
-            _moves[i] = new DirectionalMoveSets();
+            _moveSets[i] = new ulong[Constants.Cells];
         }
 
         GeneratePawnMoves();
         
         GeneratePawnAttacks();
 
-        GenerateRookMoves();
+        GenerateOrthogonalMoves();
+        
+        GenerateDiagonalMoves();
 
         GenerateKnightMoves();
-        
-        GenerateBishopMoves();
-        
-        GenerateQueenMoves();
         
         GenerateKingMoves();
     }
@@ -54,7 +53,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][MoveSet.PawnToBlack][cell] = mask;
+            this[MoveSet.PawnToBlack][cell] = mask;
 
             mask = 0ul;
 
@@ -72,7 +71,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][MoveSet.PawnToWhite][cell] = mask;
+            this[MoveSet.PawnToWhite][cell] = mask;
         }
     }
     
@@ -96,7 +95,7 @@ public class Moves
                 mask |= 1ul << target;
             }
             
-            this[Kind.Pawn][MoveSet.PawnWhiteAttack][cell] = mask;
+            this[MoveSet.PawnWhiteAttack][cell] = mask;
 
             mask = 0ul;
 
@@ -114,17 +113,27 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][MoveSet.PawnBlackAttack][cell] = mask;
+            this[MoveSet.PawnBlackAttack][cell] = mask;
         }
     }
 
-    private void GenerateRookMoves()
+    private void GenerateOrthogonalMoves()
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[Kind.Rook][MoveSet.Horizontal][cell] = GenerateHorizontalMoves(Cell.GetRank(cell));
+            this[MoveSet.Horizontal][cell] = GenerateHorizontalMoves(Cell.GetRank(cell));
 
-            this[Kind.Rook][MoveSet.Vertical][cell] = GenerateVerticalMoves(Cell.GetFile(cell));
+            this[MoveSet.Vertical][cell] = GenerateVerticalMoves(Cell.GetFile(cell));
+        }
+    }
+
+    private void GenerateDiagonalMoves()
+    {
+        for (var cell = 0; cell < Constants.Cells; cell++)
+        {
+            this[MoveSet.Diagonal][cell] = GenerateDiagonalMoves(cell);
+
+            this[MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalMoves(cell);
         }
     }
 
@@ -144,31 +153,7 @@ public class Moves
                 }
             }
 
-            this[Kind.Knight][MoveSet.Specific][cell] = mask;
-        }
-    }
-
-    private void GenerateBishopMoves()
-    {
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            this[Kind.Bishop][MoveSet.Diagonal][cell] = GenerateDiagonalMoves(cell);
-
-            this[Kind.Bishop][MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalMoves(cell);
-        }
-    }
-
-    private void GenerateQueenMoves()
-    {
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            this[Kind.Queen][MoveSet.Horizontal][cell] = GenerateHorizontalMoves(Cell.GetRank(cell));
-
-            this[Kind.Queen][MoveSet.Vertical][cell] = GenerateVerticalMoves(Cell.GetFile(cell));
-
-            this[Kind.Queen][MoveSet.Diagonal][cell] = GenerateDiagonalMoves(cell);
-
-            this[Kind.Queen][MoveSet.AntiDiagonal][cell] = GenerateAntiDiagonalMoves(cell);
+            this[MoveSet.Knight][cell] = mask;
         }
     }
 
@@ -188,7 +173,7 @@ public class Moves
                 }
             }
 
-            this[Kind.King][MoveSet.Specific][cell] = mask;
+            this[MoveSet.King][cell] = mask;
         }
     }
     
