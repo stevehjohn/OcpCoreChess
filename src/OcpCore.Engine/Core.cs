@@ -1,6 +1,5 @@
 using System.Numerics;
-using OcpCore.Engine.Exceptions;
-using OcpCore.Engine.Extensions;
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -13,7 +12,8 @@ public sealed class Core : IDisposable
 
     public const string Author = "Stevo John";
 
-    private readonly Board _board;
+    private readonly Game _game;
+
     private readonly Colour _engineColour;
 
     private long[] _depthCounts;
@@ -39,46 +39,52 @@ public sealed class Core : IDisposable
     public Core(Colour engineColour)
     {
         _engineColour = engineColour;
+
+        _game = new Game();
         
-        _board = new Board(Constants.InitialBoardFen);
+        _game.ParseFen(Constants.InitialBoardFen);
     }
 
     public Core(Colour engineColour, string fen)
     {
-        _board = new Board(fen);
+        _engineColour = engineColour;
+
+        _game = new Game();
+        
+        _game.ParseFen(fen);
     }
 
-    public void MakeMove(string move)
-    {
-        var position = move[..2].FromStandardNotation();
-
-        var target = move[2..].FromStandardNotation();
-
-        var moves = new List<Move>();
-        
-        var piece = PieceCache.Get(_board[position]);
-
-        piece.GetMoves(_board, position, _board.State.Player, moves);
-        
-        var found = false;
-
-        for (var i = 0; i < moves.Count; i++)
-        {
-            if (moves[i].Target == target)
-            {
-                found = true;
-                
-                break;
-            }
-        }
-
-        if (! found)
-        {
-            throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
-        }
-
-        _board.MakeMove(position, target);
-    }
+    // public void MakeMove(string move)
+    // {
+    //     var position = move[..2].FromStandardNotation();
+    //
+    //     var target = move[2..].FromStandardNotation();
+    //
+    //     var moves = new List<Move>();
+    //     
+    //     var piece = PieceCache.Get(_board[position]);
+    //
+    //     //piece.GetMoves(_board, position, _board.State.Player, moves);
+    //     
+    //     var found = false;
+    //
+    //     for (var i = 0; i < moves.Count; i++)
+    //     {
+    //         if (moves[i].Target == target)
+    //         {
+    //             found = true;
+    //             
+    //             break;
+    //         }
+    //     }
+    //
+    //     if (! found)
+    //     {
+    //         throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
+    //     }
+    //
+    //     _board.MakeMove(position, target);
+    // }
 
     public void GetMove(int depth)
     {
@@ -104,15 +110,15 @@ public sealed class Core : IDisposable
         return _getMoveTask;
     }
     
-    public List<Move> GetAllowedMoves()
-    {
-        var moves = new List<Move>();
-
-        GetAllMoves(_board, moves);
-
-        return moves;
-    }
-
+    // public List<Move> GetAllowedMoves()
+    // {
+    //     var moves = new List<Move>();
+    //
+    //     GetAllMoves(_game, moves);
+    //
+    //     return moves;
+    // }
+    
     private void GetMoveInternal(int depth, Action callback = null)
     {
         _depthCounts = new long[depth + 1];
@@ -128,105 +134,104 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        ProcessPly(_board, depth, depth);
+        ProcessPly(_game, depth, depth);
 
         callback?.Invoke();
     }
 
-    private void ProcessPly(Board board, int maxDepth, int depth, string perftNode = null)
+    private void ProcessPly(Game game, int maxDepth, int depth)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
             return;
         }   
         
-        var moves = new List<Move>();
-        
-        GetAllMoves(board, moves);
-        
-        moves.Sort();
-
-        var player = board.State.Player;
+        var player = game.State.Player;
                
         var ply = maxDepth - depth + 1;
-        
-        for (var i = 0; i < moves.Count; i++)
-        {
-            var move = moves[i];
 
-            var copy = new Board(board);
-
-            var outcome = copy.MakeMove(move.Position, move.Target);
-
-            if (copy.IsKingInCheck(player))
-            {
-                continue;
-            }
-
-            _depthCounts[ply]++;
-
-            var score = board.State.WhiteScore - board.State.BlackScore;
-            
-            if (perftNode == null)
-            {
-                perftNode = $"{move.Position.ToStandardNotation()}{move.Target.ToStandardNotation()}";
-
-                _perftCounts.Add(perftNode, 1);
-            }
-            else
-            {
-                _perftCounts[perftNode]++;
-            }
-
-            if (copy.IsKingInCheck(player.Invert()))
-            {
-                outcome |= MoveOutcome.Check;
-                
-                if (! CanMove(copy, player.Invert()))
-                {
-                    outcome |= MoveOutcome.CheckMate;
-                }
-            }
-            
-            for (var j = 0; j <= Constants.MoveOutcomes; j++)
-            {
-                if (((byte) outcome & (1 << j)) > 0)
-                {
-                    _outcomes[ply][j + 1]++;
-                }
-            }
-
-            if (depth > 1)
-            {
-                ProcessPly(copy, maxDepth, depth - 1, perftNode);
-
-                _perftCounts[perftNode]--;
-            }
-
-            if (depth == maxDepth)
-            {
-                perftNode = null;
-            }
-        }
-    }
-
-    private static void GetAllMoves(Board board, List<Move> moves)
-    {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            var piece = board[cell];
-
-            if (piece == 0)
+            if (game.IsEmpty(cell))
             {
                 continue;
             }
 
-            if (Cell.Colour(piece) != board.State.Player)
+            if (! game.IsColour(player, cell))
             {
                 continue;
             }
+
+            var kind = game.GetKind(cell);
+
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
             
-            PieceCache.Get(piece).GetMoves(board, cell, board.State.Player, moves);
+            while (move > -1)
+            {
+                // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
+                
+                _depthCounts[ply]++;
+                
+                var copy = new Game(game);
+
+                var outcome = copy.MakeMove(cell, move);
+                
+                for (var j = 0; j <= Constants.MoveOutcomes; j++)
+                {
+                    if (((byte) outcome & (1 << j)) > 0)
+                    {
+                        _outcomes[ply][j + 1]++;
+                    }
+                }
+                
+                if (depth > 1)
+                {
+                    ProcessPly(copy, maxDepth, depth - 1);
+                }
+
+                move = Piece.PopNextMove(ref moves);
+            }
+
+            // for (var i = 0; i < moves.Count; i++)
+            // {
+            //     var move = moves[i];
+            //
+            //     var copy = new Board(board);
+            //
+            //     var outcome = copy.MakeMove(move.Position, move.Target);
+            //
+            //     if (copy.IsKingInCheck(player))
+            //     {
+            //         continue;
+            //     }
+            //
+            //     _depthCounts[ply]++;
+            //
+            //     if (copy.IsKingInCheck(player.Invert()))
+            //     {
+            //         outcome |= MoveOutcome.Check;
+            //
+            //         if (! CanMove(copy, player.Invert()))
+            //         {
+            //             outcome |= MoveOutcome.CheckMate;
+            //         }
+            //     }
+            //
+            //     for (var j = 0; j <= Constants.MoveOutcomes; j++)
+            //     {
+            //         if (((byte) outcome & (1 << j)) > 0)
+            //         {
+            //             _outcomes[ply][j + 1]++;
+            //         }
+            //     }
+            //
+            //     if (depth > 1)
+            //     {
+            //         ProcessPly(copy, maxDepth, depth - 1);
+            //     }
+            // }
         }
     }
 
@@ -248,7 +253,7 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
+            //PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
 
             for (var i = 0; i < moves.Count; i++)
             {

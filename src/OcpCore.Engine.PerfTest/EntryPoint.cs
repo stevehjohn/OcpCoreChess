@@ -142,11 +142,19 @@ public static class EntryPoint
 
                     var remaining = ExpectedCombinations[maxDepth - 1] - depthCount;
 
-                    var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
+                    try
+                    {
+                        var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
 
-                    var etr = $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
-                    
-                    Console.Write($"  {DateTime.Now:HH:mm:ss} {percent:N2}% {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ETR: {etr}");
+                        var etr =
+                            $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
+
+                        Console.Write($"  {DateTime.Now:HH:mm:ss} {percent:N2}% {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ETR: {etr}");
+                    }
+                    catch
+                    {
+                        //
+                    }
 
                     Console.CursorLeft = y;
                 }
@@ -171,7 +179,7 @@ public static class EntryPoint
 
             var pass = count == expected;
 
-            Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,15:N0}  Expected: {expected,15:N0}");
+            Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,18:N0}  Expected: {expected,18:N0}");
 
             if (! pass)
             {
@@ -182,7 +190,7 @@ public static class EntryPoint
 
             Console.WriteLine();
 
-            Console.Write($"      Capture:    {core.GetMoveOutcome(depth, MoveOutcome.Capture),13:N0}");
+            Console.Write($"      Capture:  {core.GetMoveOutcome(depth, MoveOutcome.Capture),15:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture) ? "✓" : string.Empty)}");
             if (ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture))
             {
@@ -226,7 +234,7 @@ public static class EntryPoint
                 Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Promotion) - ExpectedOutcomes[(depth, MoveOutcome.Promotion)],13:N0}");
             }
 
-            Console.Write($"      Check:      {core.GetMoveOutcome(depth, MoveOutcome.Check),13:N0}");
+            Console.Write($"      Check:     {core.GetMoveOutcome(depth, MoveOutcome.Check),14:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check) ? "✓" : string.Empty)}");
             if (ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check))
             {

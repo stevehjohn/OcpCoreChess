@@ -72,7 +72,7 @@ public class Board
 
         if (capture != 0)
         {
-            var score = PieceCache.Get(capture).Value;
+            var score = 0; //PieceCache.Get(capture).Value;
 
             if (Cell.Colour(capture) == Colour.White)
             {
@@ -263,7 +263,7 @@ public class Board
         //     }
         // }
         
-        var rankDirection = player == Colour.White ? Direction.White : Direction.Black;
+        var rankDirection = player == Colour.White ? ColourDirections.White : ColourDirections.Black;
         
         cell = Cell.GetCell(kingRank + rankDirection, kingFile - 1);
         
@@ -437,9 +437,9 @@ public class Board
         {
             var colour = Cell.Colour(piece);
 
-            var direction = colour == Colour.White ? Direction.Black : Direction.White;
+            var direction = colour == Colour.White ? ColourDirections.Black : ColourDirections.White;
 
-            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
+            var score = 0;//PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
 
             if (Cell.Colour(piece) == Colour.White)
             {
@@ -742,11 +742,11 @@ public class Board
 
             if (Cell.Colour(content) == Colour.White)
             {
-                white += PieceCache.Get(content).Value;
+                //white += PieceCache.Get(content).Value;
             }
             else
             {
-                black += PieceCache.Get(content).Value;
+                //black += PieceCache.Get(content).Value;
             }
         }
 
