@@ -38,7 +38,7 @@ public abstract class Piece
 
     protected abstract ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position);
 
-    protected ulong GetHorizontalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetHorizontalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
@@ -69,7 +69,7 @@ public abstract class Piece
         return leftMask & rightMask & mask;
     }
 
-    protected ulong GetVerticalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetVerticalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
@@ -100,7 +100,7 @@ public abstract class Piece
         return upMask & downMask & mask;
     }
     
-    protected ulong GetDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
@@ -131,7 +131,7 @@ public abstract class Piece
         return topRightMask & bottomLeftMask & mask;
     }
     
-    protected ulong GetAntiDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected static ulong GetAntiDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
