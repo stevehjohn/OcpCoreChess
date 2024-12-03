@@ -174,8 +174,16 @@ public sealed class Core : IDisposable
                 
                 var copy = new Game(game);
 
-                copy.MakeMove(cell, move);
-
+                var outcome = copy.MakeMove(cell, move);
+                
+                for (var j = 0; j <= Constants.MoveOutcomes; j++)
+                {
+                    if (((byte) outcome & (1 << j)) > 0)
+                    {
+                        _outcomes[ply][j + 1]++;
+                    }
+                }
+                
                 if (depth > 1)
                 {
                     ProcessPly(copy, maxDepth, depth - 1);
