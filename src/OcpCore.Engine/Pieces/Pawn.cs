@@ -39,14 +39,16 @@ public class Pawn : Piece
 
         if (game.State.EnPassantTarget != null)
         {
+            var target = game.State.EnPassantTarget.Value;
+            
             // TODO: Magic numbers
-            if (Cell.GetRank(position) == 4 && Cell.GetRank(game.State.EnPassantTarget.Value) == 5)
+            if (Cell.GetRank(position) == 4 && Cell.GetRank(target) == 5 && Math.Abs(position - target) is 7 or 9)
             {
-                moves |= 1ul << game.State.EnPassantTarget.Value;
+                moves |= 1ul << target;
             } 
-            else if (Cell.GetRank(position) == 3 && Cell.GetRank(game.State.EnPassantTarget.Value) == 2)
+            else if (Cell.GetRank(position) == 3 && Cell.GetRank(target) == 2 && Math.Abs(position - target) is 7 or 9)
             {
-                moves |= 1ul << game.State.EnPassantTarget.Value;
+                moves |= 1ul << target;
             }
         }
 
