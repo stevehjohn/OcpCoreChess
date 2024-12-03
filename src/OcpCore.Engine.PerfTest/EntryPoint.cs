@@ -171,7 +171,7 @@ public static class EntryPoint
 
             var pass = count == expected;
 
-            Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,15:N0}  Expected: {expected,15:N0}");
+            Console.Write($"  {(pass ? "✓ PASS" : "  FAIL")}  Depth: {depth,2}  Combinations: {count,18:N0}  Expected: {expected,18:N0}");
 
             if (! pass)
             {
@@ -182,7 +182,7 @@ public static class EntryPoint
 
             Console.WriteLine();
 
-            Console.Write($"      Capture:    {core.GetMoveOutcome(depth, MoveOutcome.Capture),13:N0}");
+            Console.Write($"      Capture:  {core.GetMoveOutcome(depth, MoveOutcome.Capture),15:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture) ? "✓" : string.Empty)}");
             if (ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetMoveOutcome(depth, MoveOutcome.Capture))
             {
@@ -226,7 +226,7 @@ public static class EntryPoint
                 Console.WriteLine($"  Delta: {core.GetMoveOutcome(depth, MoveOutcome.Promotion) - ExpectedOutcomes[(depth, MoveOutcome.Promotion)],13:N0}");
             }
 
-            Console.Write($"      Check:      {core.GetMoveOutcome(depth, MoveOutcome.Check),13:N0}");
+            Console.Write($"      Check:     {core.GetMoveOutcome(depth, MoveOutcome.Check),14:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check) ? "✓" : string.Empty)}");
             if (ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetMoveOutcome(depth, MoveOutcome.Check))
             {
