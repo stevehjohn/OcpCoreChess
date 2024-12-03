@@ -24,5 +24,4 @@ public class Pawn : Piece
 
         return moves;
     }
-    
 }
