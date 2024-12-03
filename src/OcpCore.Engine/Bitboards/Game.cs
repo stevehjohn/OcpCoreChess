@@ -150,6 +150,13 @@ public class Game
         {
             return true;
         }
+        
+        var direction = colour == Colour.White ? 1 : -1;
+        
+        if (((1ul << (position + direction * Constants.Files * 2)) & this[Plane.Pawn] & this[opponentPlane]) > 0)
+        {
+            return true;
+        }
 
         return false;
     }
