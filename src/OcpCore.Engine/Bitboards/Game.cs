@@ -54,12 +54,12 @@ public class Game
 
         var outcome = MoveOutcome.Move;
 
-        UpdateBitboards(kind, colour, fromBit, toBit);
-
         if (IsColour(colour.Invert(), to))
         {
             outcome |= MoveOutcome.Capture;
         }
+        
+        UpdateBitboards(kind, colour, fromBit, toBit);
 
         State.InvertPlayer();
 
@@ -277,14 +277,25 @@ public class Game
             case Colour.White:
                 this[Plane.White] &= ~fromBit;
                 this[Plane.White] |= toBit;
+                
+                this[Plane.Black] &= ~toBit;
                 break;
 
             case Colour.Black:
                 this[Plane.Black] &= ~fromBit;
                 this[Plane.Black] |= toBit;
+                
+                this[Plane.White] &= ~toBit;
                 break;
         }
-        
+
+        this[Plane.Pawn] &= ~toBit;
+        this[Plane.Rook] &= ~toBit;
+        this[Plane.Knight] &= ~toBit;
+        this[Plane.Bishop] &= ~toBit;
+        this[Plane.Rook] &= ~toBit;
+        this[Plane.Rook] &= ~toBit;
+
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (kind)
         {
