@@ -166,8 +166,6 @@ public sealed class Core : IDisposable
             
             while (move > -1)
             {
-                var x = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
-
                 // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
                 
                 _depthCounts[ply]++;
