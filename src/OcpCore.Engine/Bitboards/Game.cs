@@ -114,16 +114,26 @@ public class Game
     public bool IsKingInCheck(Colour colour)
     {
         var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
-    
-        var opponentColor = colour == Colour.White ? Plane.Black : Plane.White;
+        
+        var plane = colour == Colour.White ? Plane.White : Plane.Black;
+        
+        var opponentPlane = colour == Colour.White ? Plane.Black : Plane.White;
     
         var attacks = Moves[MoveSet.Knight][position];
         
-        if ((attacks & this[opponentColor]) > 0)
+        if ((attacks & this[opponentPlane]) > 0)
         {
             return true;
         }
-        
+
+        attacks = Piece.GetDiagonalSlidingMoves(this, plane, opponentPlane, position)
+                  | Piece.GetAntiDiagonalSlidingMoves(this, plane, opponentPlane, position);
+
+        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
+        {
+            return true;
+        }
+
         return false;
     }
 
