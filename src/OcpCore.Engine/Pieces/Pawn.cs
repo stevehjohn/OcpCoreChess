@@ -8,7 +8,7 @@ public class Pawn : Piece
 {
     public override Kind Kind => Kind.Pawn;
     
-    public override int Value => 1;
+    public override int Value => Scores.Pawn;
     
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
@@ -36,6 +36,19 @@ public class Pawn : Piece
         var attackSet = colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
 
         moves |= Moves[attackSet][position] & game[opponentColour];
+
+        if (game.State.EnPassantTarget != null)
+        {
+            // TODO: Magic numbers
+            if (Cell.GetRank(position) == 4 && Cell.GetRank(game.State.EnPassantTarget.Value) == 5)
+            {
+                moves |= 1ul << game.State.EnPassantTarget.Value;
+            } 
+            if (Cell.GetRank(position) == 3 && Cell.GetRank(game.State.EnPassantTarget.Value) == 2)
+            {
+                moves |= 1ul << game.State.EnPassantTarget.Value;
+            }
+        }
 
         return moves;
     }

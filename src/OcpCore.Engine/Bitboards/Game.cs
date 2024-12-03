@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
@@ -72,9 +73,16 @@ public class Game
         {
             outcome |= MoveOutcome.Capture;
         }
-        
+
+        if (kind == Kind.Pawn && to == State.EnPassantTarget)
+        {
+            outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+        }
+
         UpdateBitboards(kind, colour, fromBit, toBit);
 
+        UpdateEnPassantState(kind, from, to);
+        
         State.InvertPlayer();
 
         return outcome;
@@ -121,7 +129,7 @@ public class Game
     
         var attacks = Moves[MoveSet.Knight][position];
         
-        if ((attacks & this[opponentPlane]) > 0)
+        if ((attacks & this[opponentPlane] & this[Plane.Knight]) > 0)
         {
             return true;
         }
@@ -129,7 +137,7 @@ public class Game
         attacks = Piece.GetDiagonalSlidingMoves(this, plane, opponentPlane, position)
                   | Piece.GetAntiDiagonalSlidingMoves(this, plane, opponentPlane, position);
         
-        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
+        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen]) & this[opponentPlane]) > 0)
         {
             return true;
         }
@@ -274,6 +282,24 @@ public class Game
         State = new State(player, castleAvailability, enPassantTarget, 0, 0, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void UpdateEnPassantState(Kind kind, int position, int target)
+    {
+        if (kind == Kind.Pawn)
+        {
+            var delta = position - target;
+
+            if (Math.Abs(delta) == Constants.Ranks * 2)
+            {
+                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
+                
+                return;
+            }
+        }
+
+        State.SetEnPassantTarget(null);
+    }
+    
     private Kind GetKindInternal(ulong cellBit)
     {
         if ((this[Plane.Pawn] & cellBit) == cellBit)

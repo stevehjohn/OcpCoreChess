@@ -181,7 +181,7 @@ public sealed class Core : IDisposable
 
                     continue;
                 }
-
+                
                 _depthCounts[ply]++;
 
                 if (copy.IsKingInCheck(player.Invert()))
