@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
@@ -75,6 +76,8 @@ public class Game
         
         UpdateBitboards(kind, colour, fromBit, toBit);
 
+        UpdateEnPassantState(kind, from, to);
+        
         State.InvertPlayer();
 
         return outcome;
@@ -274,6 +277,24 @@ public class Game
         State = new State(player, castleAvailability, enPassantTarget, 0, 0, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void UpdateEnPassantState(Kind kind, int position, int target)
+    {
+        if (kind == Kind.Pawn)
+        {
+            var delta = position - target;
+
+            if (Math.Abs(delta) == Constants.Ranks * 2)
+            {
+                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
+                
+                return;
+            }
+        }
+
+        State.SetEnPassantTarget(null);
+    }
+    
     private Kind GetKindInternal(ulong cellBit)
     {
         if ((this[Plane.Pawn] & cellBit) == cellBit)
