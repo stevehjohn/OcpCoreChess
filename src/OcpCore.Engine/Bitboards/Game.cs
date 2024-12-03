@@ -117,7 +117,7 @@ public class Game
     
         var opponentColor = colour == Colour.White ? Plane.Black : Plane.White;
     
-        var attacks = Moves[Kind.Knight][MoveSet.Specific][position];
+        var attacks = Moves[MoveSet.Knight][position];
         
         if ((attacks & this[opponentColor]) > 0)
         {
