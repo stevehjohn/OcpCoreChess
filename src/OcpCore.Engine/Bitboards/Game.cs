@@ -51,13 +51,13 @@ public class Game
             throw new InvalidMoveException($"No piece at {from.ToStandardNotation()}.");
         }
 
-        var colour = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
+        var player = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
 
         var kind = GetKindInternal(fromBit);
 
         if (kind == Kind.King)
         {
-            if (colour == Colour.White)
+            if (player == Colour.White)
             {
                 State.SetWhiteKingCell(to);
             }
@@ -69,7 +69,7 @@ public class Game
 
         var outcome = MoveOutcome.Move;
 
-        if (IsColour(colour.Invert(), to))
+        if (IsColour(player.Invert(), to))
         {
             outcome |= MoveOutcome.Capture;
         }
@@ -77,9 +77,18 @@ public class Game
         if (kind == Kind.Pawn && to == State.EnPassantTarget)
         {
             outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+
+            var target = 1ul << (State.EnPassantTarget.Value + (player == Colour.White ? -Constants.Files : Constants.Files));
+
+            // TODO: Test
+            this[Plane.White] &= ~target;
+
+            this[Plane.Black] &= ~target;
+
+            this[Plane.Pawn] &= ~target;
         }
 
-        UpdateBitboards(kind, colour, fromBit, toBit);
+        UpdateBitboards(kind, player, fromBit, toBit);
 
         UpdateEnPassantState(kind, from, to);
         
