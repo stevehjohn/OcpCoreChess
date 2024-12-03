@@ -162,11 +162,9 @@ public sealed class Core : IDisposable
             var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
-            
+
             while (move > -1)
             {
-                // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
-                
                 var copy = new Game(game);
 
                 var outcome = copy.MakeMove(cell, move);
@@ -174,13 +172,21 @@ public sealed class Core : IDisposable
                 if (copy.IsKingInCheck(player))
                 {
                     move = Piece.PopNextMove(ref moves);
-                    
-                    Console.WriteLine("Check");
-                
+
                     continue;
                 }
-                
+
                 _depthCounts[ply]++;
+
+                if (copy.IsKingInCheck(player.Invert()))
+                {
+                    outcome |= MoveOutcome.Check;
+
+                    if (! CanMove(copy, player.Invert()))
+                    {
+                        outcome |= MoveOutcome.CheckMate;
+                    }
+                }
 
                 for (var j = 0; j <= Constants.MoveOutcomes; j++)
                 {
@@ -189,7 +195,7 @@ public sealed class Core : IDisposable
                         _outcomes[ply][j + 1]++;
                     }
                 }
-                
+
                 if (depth > 1)
                 {
                     ProcessPly(copy, maxDepth, depth - 1);
@@ -197,85 +203,44 @@ public sealed class Core : IDisposable
 
                 move = Piece.PopNextMove(ref moves);
             }
-
-            // for (var i = 0; i < moves.Count; i++)
-            // {
-            //     var move = moves[i];
-            //
-            //     var copy = new Board(board);
-            //
-            //     var outcome = copy.MakeMove(move.Position, move.Target);
-            //
-            //     if (copy.IsKingInCheck(player))
-            //     {
-            //         continue;
-            //     }
-            //
-            //     _depthCounts[ply]++;
-            //
-            //     if (copy.IsKingInCheck(player.Invert()))
-            //     {
-            //         outcome |= MoveOutcome.Check;
-            //
-            //         if (! CanMove(copy, player.Invert()))
-            //         {
-            //             outcome |= MoveOutcome.CheckMate;
-            //         }
-            //     }
-            //
-            //     for (var j = 0; j <= Constants.MoveOutcomes; j++)
-            //     {
-            //         if (((byte) outcome & (1 << j)) > 0)
-            //         {
-            //             _outcomes[ply][j + 1]++;
-            //         }
-            //     }
-            //
-            //     if (depth > 1)
-            //     {
-            //         ProcessPly(copy, maxDepth, depth - 1);
-            //     }
-            // }
         }
     }
 
-    private static bool CanMove(Board board, Colour colour)
+    private static bool CanMove(Game game, Colour colour)
     {
-        var moves = new List<Move>();
-        
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            var piece = board[cell];
+            if (game.IsEmpty(cell))
+            {
+                continue;
+            }
+
+            if (! game.IsColour(colour, cell))
+            {
+                continue;
+            }
             
-            if (piece == 0)
+            var kind = game.GetKind(cell);
+
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
+
+            while (move > -1)
             {
-                continue;
-            }
+                var copy = new Game(game);
 
-            if (Cell.Colour(piece) != colour)
-            {
-                continue;
-            }
-
-            //PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
-
-            for (var i = 0; i < moves.Count; i++)
-            {
-                var move = moves[i];
-                
-                var copy = new Board(board);
-
-                copy.MakeMove(cell, move.Target);
+                copy.MakeMove(cell, move);
 
                 if (copy.IsKingInCheck(colour))
                 {
+                    move = Piece.PopNextMove(ref moves);
+                
                     continue;
                 }
 
                 return true;
             }
-            
-            moves.Clear();
         }
 
         return false;
