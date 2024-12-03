@@ -169,6 +169,13 @@ public sealed class Core : IDisposable
                 move = Piece.PopNextMove(ref moves);
             }
 
+            var copy = new Game(game);
+
+            if (depth > 1)
+            {
+                ProcessPly(copy, maxDepth, depth - 1);
+            }
+
             // for (var i = 0; i < moves.Count; i++)
             // {
             //     var move = moves[i];
