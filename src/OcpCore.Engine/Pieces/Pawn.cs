@@ -16,9 +16,9 @@ public class Pawn : Piece
     {
         var moveSet = colour == Plane.White ? MoveSet.PawnToBlack : MoveSet.PawnToWhite;
 
-        var attackSet = colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
+        var moves = Moves[Kind.Pawn][moveSet][position] & ~game[opponentColour];
 
-        var moves = Moves[Kind.Pawn][moveSet][position];
+        var attackSet = colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
 
         moves |= Moves[Kind.Pawn][attackSet][position] & game[opponentColour];
 
