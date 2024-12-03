@@ -53,6 +53,8 @@ public class Game
         var kind = GetKindInternal(fromBit); 
 
         UpdateBitboards(kind, colour, fromBit, toBit);
+        
+        State.InvertPlayer();
     }
 
     public bool IsKind(Kind kind, int cell)

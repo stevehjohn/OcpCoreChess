@@ -162,7 +162,9 @@ public sealed class Core : IDisposable
 
             var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
-            for (var move = Piece.PopNextMove(ref moves); move > -1;)
+            int move;
+            
+            for (move = Piece.PopNextMove(ref moves); move > -1;)
             {
                 _depthCounts[ply]++;
 
@@ -170,6 +172,8 @@ public sealed class Core : IDisposable
             }
 
             var copy = new Game(game);
+            
+            copy.MakeMove(cell, move);
 
             if (depth > 1)
             {
