@@ -1,5 +1,6 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -164,18 +165,25 @@ public sealed class Core : IDisposable
             
             for (move = Piece.PopNextMove(ref moves); move > -1;)
             {
+                var x = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
+
+                if (x == "h8g7")
+                {
+                }
+                // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
+                
                 _depthCounts[ply]++;
 
                 move = Piece.PopNextMove(ref moves);
-            }
-
-            var copy = new Game(game);
+                
+                var copy = new Game(game);
             
-            copy.MakeMove(cell, move);
+                copy.MakeMove(cell, move);
 
-            if (depth > 1)
-            {
-                ProcessPly(copy, maxDepth, depth - 1);
+                if (depth > 1)
+                {
+                    ProcessPly(copy, maxDepth, depth - 1);
+                }
             }
 
             // for (var i = 0; i < moves.Count; i++)
