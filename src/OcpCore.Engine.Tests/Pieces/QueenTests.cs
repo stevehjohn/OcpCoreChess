@@ -11,6 +11,8 @@ public class QueenTests
     [Theory]
     [InlineData("8/8/8/8/8/8/8/Q7 w - - 0 1", 0,
         0b1000_0001_0100_0001_0010_0001_0001_0001_0000_1001_0000_0101_0000_0011_1111_1110)]
+    [InlineData("8/8/8/8/8/8/8/7Q w - - 0 1", 7,
+        0b1000_0001_1000_0010_1000_0100_1000_1000_1001_0000_1010_0000_1100_0000_0111_1111)]
     // [InlineData("8/8/8/3Q4/8/8/8/8 w - - 0 1", 35,
     //     0b0000_1000_0000_1000_0000_1000_1111_0111_0000_1000_0000_1000_0000_1000_0000_1000)]
     public void MovesDirectionallyAsExpectedOnEmptyBoard(string fen, int position, ulong expectedMoves)
