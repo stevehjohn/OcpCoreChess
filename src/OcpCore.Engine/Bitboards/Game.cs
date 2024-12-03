@@ -71,7 +71,7 @@ public class Game
 
     public bool IsEmpty(int cell)
     {
-        return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) > 0;
+        return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) == 0;
     }
 
     public bool IsColour(Colour colour, int cell)

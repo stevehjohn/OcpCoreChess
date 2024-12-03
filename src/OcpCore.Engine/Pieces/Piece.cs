@@ -27,7 +27,7 @@ public abstract class Piece
             return -1;
         }
 
-        moves >>= emptyMoves;
+        moves ^= 1ul << emptyMoves;
 
         return emptyMoves;
     }

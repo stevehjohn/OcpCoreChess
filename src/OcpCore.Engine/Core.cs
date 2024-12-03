@@ -39,6 +39,8 @@ public sealed class Core : IDisposable
         _engineColour = engineColour;
 
         _game = new Game();
+        
+        _game.ParseFen(Constants.InitialBoardFen);
     }
 
     public Core(Colour engineColour, string fen)
