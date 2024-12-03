@@ -96,7 +96,7 @@ public class Moves
                 mask |= 1ul << target;
             }
             
-            this[Kind.Pawn][MoveSet.PawnBlackAttack][cell] = mask;
+            this[Kind.Pawn][MoveSet.PawnWhiteAttack][cell] = mask;
 
             mask = 0ul;
 
@@ -114,7 +114,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[Kind.Pawn][MoveSet.PawnWhiteAttack][cell] = mask;
+            this[Kind.Pawn][MoveSet.PawnBlackAttack][cell] = mask;
         }
     }
 
