@@ -205,7 +205,7 @@ public sealed class Core : IDisposable
                 
                 if (depth > 1)
                 {
-                    ProcessPly(copy, maxDepth, depth - 1);
+                    ProcessPly(copy, maxDepth, depth - 1, perftNode);
 
                     _perftCounts[perftNode]--;
                 }
