@@ -137,7 +137,7 @@ public class Game
         attacks = Piece.GetDiagonalSlidingMoves(this, plane, opponentPlane, position)
                   | Piece.GetAntiDiagonalSlidingMoves(this, plane, opponentPlane, position);
         
-        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen]) & this[opponentPlane]) > 0)
+        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
         {
             return true;
         }

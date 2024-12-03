@@ -44,7 +44,7 @@ public class Pawn : Piece
             {
                 moves |= 1ul << game.State.EnPassantTarget.Value;
             } 
-            if (Cell.GetRank(position) == 3 && Cell.GetRank(game.State.EnPassantTarget.Value) == 2)
+            else if (Cell.GetRank(position) == 3 && Cell.GetRank(game.State.EnPassantTarget.Value) == 2)
             {
                 moves |= 1ul << game.State.EnPassantTarget.Value;
             }
