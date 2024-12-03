@@ -116,7 +116,7 @@ public class Game
         var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
     
         var opponentColor = colour == Colour.White ? Plane.Black : Plane.White;
-    
+
         var attacks = Moves[Kind.Knight][MoveSet.Specific][position];
         
         if ((attacks & this[opponentColor]) > 0)

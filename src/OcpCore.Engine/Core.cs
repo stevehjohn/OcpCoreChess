@@ -171,8 +171,6 @@ public sealed class Core : IDisposable
             
             while (move > -1)
             {
-                // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
-                
                 var copy = new Game(game);
 
                 var outcome = copy.MakeMove(cell, move);
@@ -180,8 +178,6 @@ public sealed class Core : IDisposable
                 if (copy.IsKingInCheck(player))
                 {
                     move = Piece.PopNextMove(ref moves);
-                    
-                    Console.WriteLine("Check");
                 
                     continue;
                 }
