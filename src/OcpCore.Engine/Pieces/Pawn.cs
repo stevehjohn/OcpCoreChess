@@ -40,11 +40,11 @@ public class Pawn : Piece
         if (game.State.EnPassantTarget != null)
         {
             // TODO: Magic numbers
-            if (Cell.GetRank(position) == 4 && Cell.GetRank(game.State.EnPassantTarget.Value) == 5 && game.IsEmpty(game.State.EnPassantTarget.Value))
+            if (Cell.GetRank(position) == 4 && Cell.GetRank(game.State.EnPassantTarget.Value) == 5)
             {
                 moves |= 1ul << game.State.EnPassantTarget.Value;
             } 
-            else if (Cell.GetRank(position) == 3 && Cell.GetRank(game.State.EnPassantTarget.Value) == 2 && game.IsEmpty(game.State.EnPassantTarget.Value))
+            else if (Cell.GetRank(position) == 3 && Cell.GetRank(game.State.EnPassantTarget.Value) == 2)
             {
                 moves |= 1ul << game.State.EnPassantTarget.Value;
             }
