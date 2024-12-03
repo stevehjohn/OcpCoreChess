@@ -6,7 +6,7 @@ namespace OcpCore.Engine.Tests.Pieces;
 
 public class PawnTests
 {
-    private readonly Pawn _pawn = new(new Moves());
+    private readonly Pawn _pawn = new();
     
     [Theory]
     [InlineData("8/8/8/8/8/8/P7/8 w - - 0 1", 8,

@@ -7,20 +7,18 @@ namespace OcpCore.Engine.General;
 public static class PieceCache
 {
     private static readonly Piece[] Pieces;
-
-    private static readonly Moves Moves = new();
     
     static PieceCache()
     {
         Pieces =
         [
             null,
-            new Pawn(Moves),
-            new Rook(Moves),
-            new Knight(Moves),
-            new Bishop(Moves),
-            new Queen(Moves),
-            new King(Moves)
+            new Pawn(),
+            new Rook(),
+            new Knight(),
+            new Bishop(),
+            new Queen(),
+            new King()
         ];
     }
 

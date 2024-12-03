@@ -6,7 +6,7 @@ namespace OcpCore.Engine.Tests.Pieces;
 
 public class KnightTests
 {
-    private readonly Knight _knight = new(new Moves());
+    private readonly Knight _knight = new();
     
     [Theory]
     [InlineData("8/8/8/8/8/8/8/n7 b - - 0 1", 0,
