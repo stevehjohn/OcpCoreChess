@@ -21,7 +21,7 @@ public class PawnTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Pawn, position));
+        Assert.True(game.IsKind(Kind.Pawn, position));
 
         var moves = _pawn.GetMoves(game, position);
         

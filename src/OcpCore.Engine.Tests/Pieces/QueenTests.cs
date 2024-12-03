@@ -21,7 +21,7 @@ public class QueenTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Queen, position));
+        Assert.True(game.IsKind(Kind.Queen, position));
 
         var moves = _queen.GetMoves(game, position);
         

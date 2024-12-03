@@ -19,7 +19,7 @@ public class KnightTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Knight, position));
+        Assert.True(game.IsKind(Kind.Knight, position));
 
         var moves = _knight.GetMoves(game, position);
         
@@ -37,7 +37,7 @@ public class KnightTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Knight, position));
+        Assert.True(game.IsKind(Kind.Knight, position));
 
         var moves = _knight.GetMoves(game, position);
         
@@ -55,7 +55,7 @@ public class KnightTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Knight, position));
+        Assert.True(game.IsKind(Kind.Knight, position));
 
         var moves = _knight.GetMoves(game, position);
         

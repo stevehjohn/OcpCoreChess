@@ -19,7 +19,7 @@ public class RookTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Rook, position));
+        Assert.True(game.IsKind(Kind.Rook, position));
 
         var moves = _rook.GetMoves(game, position);
         
@@ -43,7 +43,7 @@ public class RookTests
         
         game.ParseFen(fen);
 
-        Assert.True(game.Is(Kind.Rook, position));
+        Assert.True(game.IsKind(Kind.Rook, position));
 
         var moves = _rook.GetMoves(game, position);
         
@@ -65,7 +65,7 @@ public class RookTests
         
         game.ParseFen(fen);
     
-        Assert.True(game.Is(Kind.Rook, position));
+        Assert.True(game.IsKind(Kind.Rook, position));
     
         var moves = _rook.GetMoves(game, position);
         

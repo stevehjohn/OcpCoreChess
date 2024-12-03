@@ -59,7 +59,7 @@ public class Board
 
         if (capture != 0)
         {
-            var score = PieceCache.Get(capture).Value;
+            var score = 0; //PieceCache.Get(capture).Value;
 
             if (Cell.Colour(capture) == Colour.White)
             {
@@ -374,7 +374,7 @@ public class Board
 
             var direction = colour == Colour.White ? ColourDirections.Black : ColourDirections.White;
 
-            var score = PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
+            var score = 0;//PieceCache.Get(_cells[target + direction * Constants.Files]).Value;
 
             if (Cell.Colour(piece) == Colour.White)
             {
@@ -647,11 +647,11 @@ public class Board
 
             if (Cell.Colour(content) == Colour.White)
             {
-                white += PieceCache.Get(content).Value;
+                //white += PieceCache.Get(content).Value;
             }
             else
             {
-                black += PieceCache.Get(content).Value;
+                //black += PieceCache.Get(content).Value;
             }
         }
 

@@ -24,5 +24,5 @@ public static class PieceCache
         ];
     }
 
-    public static Piece Get(byte kind) => Pieces[kind & Masks.Kind];
+    public static Piece Get(Kind kind) => Pieces[(int) kind];
 }

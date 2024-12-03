@@ -10,6 +10,8 @@ namespace OcpCore.Engine.Bitboards;
 public class Game
 {
     private readonly ulong[] _planes;
+    
+    public State State { get; private set; } 
 
     public ulong this[Plane plane]
     {
@@ -20,6 +22,8 @@ public class Game
     public Game()
     {
         _planes = new ulong[Enum.GetValues<Plane>().Length];
+
+        State = new State();
     }
 
     public Game(Game game)
@@ -29,6 +33,8 @@ public class Game
         _planes = new ulong[planeCount];
         
         Buffer.BlockCopy(game._planes, 0, _planes, 0, planeCount * sizeof(ulong));
+
+        State = new State(game.State);
     }
 
     public void MakeMove(int from, int to)
@@ -44,12 +50,12 @@ public class Game
 
         var colour = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
 
-        var kind = GetKind(fromBit); 
+        var kind = GetKindInternal(fromBit); 
 
         UpdateBitboards(kind, colour, fromBit, toBit);
     }
 
-    public bool Is(Kind kind, int cell)
+    public bool IsKind(Kind kind, int cell)
     {
         return kind switch
         {
@@ -61,6 +67,23 @@ public class Game
             Kind.King => (this[Plane.King] & (1ul << cell)) > 0,
             _ => false
         };
+    }
+
+    public bool IsEmpty(int cell)
+    {
+        return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) > 0;
+    }
+
+    public bool IsColour(Colour colour, int cell)
+    {
+        return colour == Colour.White 
+            ? (this[Plane.White] & (1ul << cell)) > 0 
+            : (this[Plane.Black] & (1ul << cell)) > 0;
+    }
+
+    public Kind GetKind(int cell)
+    {
+        return GetKindInternal(1ul << cell);
     }
 
     public void ParseFen(string fen)
@@ -78,6 +101,10 @@ public class Game
         {
             throw new FenParseException($"Incorrect number of ranks in FEN string: {ranks.Length}.");
         }
+
+        var whiteKingCell = 0;
+
+        var blackKingCell = 0;
 
         for (var rank = 0; rank < Constants.Ranks; rank++)
         {
@@ -128,6 +155,19 @@ public class Game
                 this[colourPlane] |= 1ul << cellIndex;
 
                 this[plane] |= 1ul << cellIndex;
+                
+                if (plane == Plane.King)
+                {
+                    if (colourPlane == Plane.White)
+                    {
+                        whiteKingCell = cellIndex;
+                    }
+                    else
+                    {
+                        blackKingCell = cellIndex;
+                    }
+                }
+
 
                 file++;
             }
@@ -137,9 +177,53 @@ public class Game
                 throw new FenParseException($"Not enough files in rank {rank + 1}: {files}.");
             }
         }
+        
+        var player = parts[1][0] switch
+        {
+            'b' => Colour.Black,
+            'w' => Colour.White,
+            _ => throw new FenParseException($"Invalid turn indicator: {parts[1][0]}.")
+        };
+
+        var castleAvailability = Castle.NotAvailable;
+        
+        if (parts[2] != "-")
+        {
+            foreach (var character in parts[2])
+            {
+                castleAvailability |= character switch
+                {
+                    'K' => Castle.WhiteKingSide,
+                    'Q' => Castle.WhiteQueenSide,
+                    'k' => Castle.BlackKingSide,
+                    'q' => Castle.BlackQueenSide,
+                    _ => throw new FenParseException($"Invalid castling status indicator: {character}.")
+                };
+            }
+        }
+
+        int? enPassantTarget = null;
+        
+        if (parts[3] != "-")
+        {
+            enPassantTarget = parts[3].FromStandardNotation();
+        }
+
+        if (! int.TryParse(parts[4], out var halfmoves))
+        {
+            throw new FenParseException($"Invalid value for halfmove counter: {parts[4]}.");
+        }
+
+        if (! int.TryParse(parts[5], out var fullmoves))
+        {
+            throw new FenParseException($"Invalid value for fullmove counter: {parts[5]}.");
+        }
+
+        // TODO: Scores
+        State = new State(player, castleAvailability, enPassantTarget, 0, 0, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
-    private Kind GetKind(ulong cellBit)
+    private Kind GetKindInternal(ulong cellBit)
     {
         if ((this[Plane.Pawn] & cellBit) == cellBit)
         {

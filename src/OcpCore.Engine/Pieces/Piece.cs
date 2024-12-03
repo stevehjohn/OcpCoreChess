@@ -17,7 +17,21 @@ public abstract class Piece
     {
         Moves = moves;
     }
-    
+
+    public static int PopNextMove(ref ulong moves)
+    {
+        var emptyMoves = BitOperations.TrailingZeroCount(moves);
+
+        if (emptyMoves == 64)
+        {
+            return -1;
+        }
+
+        moves >>= emptyMoves;
+
+        return emptyMoves;
+    }
+
     public ulong GetMoves(Game game, int position)
     {
         var positionBit = 1ul << position;
