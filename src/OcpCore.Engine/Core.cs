@@ -171,6 +171,11 @@ public sealed class Core : IDisposable
 
                 if (copy.IsKingInCheck(player))
                 {
+                    if (ply == 4 && kind == Kind.King)
+                    {
+                        Console.WriteLine($"Nope: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
+                    }
+
                     move = Piece.PopNextMove(ref moves);
 
                     continue;
