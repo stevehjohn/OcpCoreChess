@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Pieces;
 
@@ -6,7 +7,7 @@ public class Queen : Piece
 {
     public override Kind Kind => Kind.Queen;
     
-    public override int Value => 9;
+    public override int Value => Scores.Queen;
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {

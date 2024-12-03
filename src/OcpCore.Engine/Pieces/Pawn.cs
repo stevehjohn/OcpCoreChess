@@ -8,7 +8,7 @@ public class Pawn : Piece
 {
     public override Kind Kind => Kind.Pawn;
     
-    public override int Value => 1;
+    public override int Value => Scores.Pawn;
     
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
