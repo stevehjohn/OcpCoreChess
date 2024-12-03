@@ -4,6 +4,7 @@ using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
+using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
 
@@ -161,29 +162,26 @@ public sealed class Core : IDisposable
 
             var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
-            int move;
+            var move = Piece.PopNextMove(ref moves);
             
-            for (move = Piece.PopNextMove(ref moves); move > -1;)
+            while (move > -1)
             {
                 var x = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
 
-                if (x == "h8g7")
-                {
-                }
                 // Console.WriteLine($"{player} {kind}: {cell.ToStandardNotation()}{move.ToStandardNotation()}");
                 
                 _depthCounts[ply]++;
-
-                move = Piece.PopNextMove(ref moves);
                 
                 var copy = new Game(game);
-            
+
                 copy.MakeMove(cell, move);
 
                 if (depth > 1)
                 {
                     ProcessPly(copy, maxDepth, depth - 1);
                 }
+
+                move = Piece.PopNextMove(ref moves);
             }
 
             // for (var i = 0; i < moves.Count; i++)
