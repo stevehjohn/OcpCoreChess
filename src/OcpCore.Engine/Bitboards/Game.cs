@@ -73,7 +73,12 @@ public class Game
         {
             outcome |= MoveOutcome.Capture;
         }
-        
+
+        if (kind == Kind.Pawn && to == State.EnPassantTarget)
+        {
+            outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+        }
+
         UpdateBitboards(kind, colour, fromBit, toBit);
 
         UpdateEnPassantState(kind, from, to);
