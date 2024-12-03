@@ -14,7 +14,15 @@ public class Pawn : Piece
     
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        return 0;
+        var moveSet = colour == Plane.White ? MoveSet.PawnToBlack : MoveSet.PawnToWhite;
+
+        var attackSet = colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
+
+        var moves = Moves[Kind.Pawn][moveSet][position];
+
+        moves |= Moves[Kind.Pawn][attackSet][position] & game[opponentColour];
+
+        return moves;
     }
     
 }
