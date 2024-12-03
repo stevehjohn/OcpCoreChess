@@ -111,7 +111,7 @@ public class Game
         return GetKindInternal(1ul << cell);
     }
 
-    public bool IsKingInCheck(Colour colour)
+    public bool IsKingInCheck(Colour colour, bool log = false)
     {
         var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
         
@@ -121,16 +121,26 @@ public class Game
     
         var attacks = Moves[MoveSet.Knight][position];
         
-        if ((attacks & this[opponentPlane]) > 0)
+        if ((attacks & this[opponentPlane] & this[Plane.Knight]) > 0)
         {
+            // if (log)
+            // {
+            //     Console.WriteLine($"Knight {((int) (attacks & this[opponentPlane] & this[Plane.Knight])).ToStandardNotation()}");
+            // }
+
             return true;
         }
 
         attacks = Piece.GetDiagonalSlidingMoves(this, plane, opponentPlane, position)
                   | Piece.GetAntiDiagonalSlidingMoves(this, plane, opponentPlane, position);
         
-        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
+        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen]) & this[opponentPlane]) > 0)
         {
+            // if (log)
+            // {
+            //     Console.WriteLine($"Slider {((int) (attacks & this[opponentPlane])).ToStandardNotation()}");
+            // }
+
             return true;
         }
 
