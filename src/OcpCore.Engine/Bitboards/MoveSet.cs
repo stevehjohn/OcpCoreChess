@@ -6,9 +6,10 @@ public enum MoveSet
     Vertical        = 1,
     Diagonal        = 2,
     AntiDiagonal    = 3,
-    Specific        = 4,
-    PawnBlackAttack = 5,
-    PawnWhiteAttack = 6,
-    PawnToWhite     = 7,
-    PawnToBlack     = 8
+    Knight          = 4,
+    King            = 5,
+    PawnBlackAttack = 6,
+    PawnWhiteAttack = 7,
+    PawnToWhite     = 8,
+    PawnToBlack     = 9
 }

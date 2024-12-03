@@ -14,7 +14,7 @@ public class Pawn : Piece
     {
         var moveSet = colour == Plane.White ? MoveSet.PawnToBlack : MoveSet.PawnToWhite;
 
-        var moves = Moves[Kind.Pawn][moveSet][position] & ~game[opponentColour] & ~game[colour];
+        var moves = Moves[moveSet][position] & ~game[opponentColour] & ~game[colour];
 
         var rank = Cell.GetRank(position);
 
@@ -35,7 +35,7 @@ public class Pawn : Piece
 
         var attackSet = colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
 
-        moves |= Moves[Kind.Pawn][attackSet][position] & game[opponentColour];
+        moves |= Moves[attackSet][position] & game[opponentColour];
 
         return moves;
     }

@@ -1,6 +1,5 @@
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 using Xunit;
 
 namespace OcpCore.Engine.Tests.Bitboards;
@@ -44,7 +43,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesHorizontalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Queen][MoveSet.Horizontal][cell];
+        var attack = _moves[MoveSet.Horizontal][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -84,7 +83,7 @@ public class MovesTests
                     "10000000")]
     public void GeneratesVerticalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Queen][MoveSet.Vertical][cell];
+        var attack = _moves[MoveSet.Vertical][cell];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -164,7 +163,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesDiagonalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Queen][MoveSet.Diagonal][cell];
+        var attack = _moves[MoveSet.Diagonal][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -244,7 +243,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesAntiDiagonalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Queen][MoveSet.AntiDiagonal][cell];
+        var attack = _moves[MoveSet.AntiDiagonal][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -292,7 +291,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesKnightMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Knight][MoveSet.Specific][cell];
+        var attack = _moves[MoveSet.Knight][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -340,7 +339,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesKingMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.King][MoveSet.Specific][cell];
+        var attack = _moves[MoveSet.King][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -412,7 +411,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesWhitePawnAttacksCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Pawn][MoveSet.PawnBlackAttack][cell];
+        var attack = _moves[MoveSet.PawnBlackAttack][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -468,7 +467,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesBlackPawnAttacksCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Pawn][MoveSet.PawnWhiteAttack][cell];
+        var attack = _moves[MoveSet.PawnWhiteAttack][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -556,7 +555,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesWhitePawnMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Pawn][MoveSet.PawnToBlack][cell];
+        var attack = _moves[MoveSet.PawnToBlack][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -644,7 +643,7 @@ public class MovesTests
                     "10000000")]
     public void GeneratesBlackPawnMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[Kind.Pawn][MoveSet.PawnToWhite][cell];
+        var attack = _moves[MoveSet.PawnToWhite][cell];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
