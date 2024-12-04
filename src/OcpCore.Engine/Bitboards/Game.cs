@@ -150,7 +150,15 @@ public class Game
         {
             return true;
         }
+
+        attacks = Piece.GetHorizontalSlidingMoves(this, plane, opponentPlane, position)
+                  | Piece.GetVerticalSlidingMoves(this, plane, opponentPlane, position);
         
+        if ((attacks & (this[Plane.Rook] | this[Plane.Queen])) > 0)
+        {
+            return true;
+        }
+
         attacks = Moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
         if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
