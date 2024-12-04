@@ -1,5 +1,6 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
@@ -56,29 +57,22 @@ public sealed class Core : IDisposable
         var position = move[..2].FromStandardNotation();
     
         var target = move[2..].FromStandardNotation();
-    
-        // // var moves = new List<Move>();
-        // //
-        // // var piece = PieceCache.Get(_board[position]);
-        //
-        // //piece.GetMoves(_board, position, _board.State.Player, moves);
-        //
-        // var found = false;
-        //
-        // for (var i = 0; i < moves.Count; i++)
-        // {
-        //     if (moves[i].Target == target)
-        //     {
-        //         found = true;
-        //         
-        //         break;
-        //     }
-        // }
-        //
-        // if (! found)
-        // {
-        //     throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
-        // }
+
+        var positionBit = 1ul << position;
+
+        if ((_game[(Plane) _game.State.Player] & positionBit) == 0)
+        {
+            throw new InvalidMoveException($"No piece at {move[..2]}.");
+        }
+
+        var kind = _game.GetKind(position);
+        
+        var moves = PieceCache.Get(kind).GetMoves(_game, position);
+
+        if ((moves & positionBit) == 0)
+        {
+            throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
+        }
     
         _game.MakeMove(position, target);
     }
@@ -153,7 +147,7 @@ public sealed class Core : IDisposable
         {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -214,7 +208,7 @@ public sealed class Core : IDisposable
         {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 

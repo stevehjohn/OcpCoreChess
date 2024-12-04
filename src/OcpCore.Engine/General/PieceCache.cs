@@ -22,5 +22,5 @@ public static class PieceCache
         ];
     }
 
-    public static Piece Get(Plane kind) => Pieces[(int) kind];
+    public static Piece Get(Kind kind) => Pieces[(int) kind];
 }
