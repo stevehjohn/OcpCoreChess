@@ -136,11 +136,6 @@ public class Game
         return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) == 0;
     }
 
-    public bool IsColour(Plane colour, int cell)
-    {
-        return (this[colour] & (1ul << cell)) > 0;
-    }
-
     public Kind GetKind(int cell)
     {
         return (Kind) GetKindInternal(1ul << cell);
@@ -326,6 +321,12 @@ public class Game
         State = new State(player, castleAvailability, enPassantTarget, 0, 0, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool IsColour(Plane colour, int cell)
+    {
+        return (this[colour] & (1ul << cell)) > 0;
+    }
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void UpdateEnPassantState(Plane kind, int position, int target)
     {
