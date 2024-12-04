@@ -140,9 +140,9 @@ public class Game
         return (this[colour] & (1ul << cell)) > 0;
     }
 
-    public Plane GetKind(int cell)
+    public Kind GetKind(int cell)
     {
-        return GetKindInternal(1ul << cell);
+        return (Kind) GetKindInternal(1ul << cell);
     }
 
     public bool IsKingInCheck(Plane colour, int probePosition = -1)

@@ -160,7 +160,7 @@ public sealed class Core : IDisposable
 
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -223,7 +223,7 @@ public sealed class Core : IDisposable
             
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
