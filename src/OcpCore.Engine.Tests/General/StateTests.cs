@@ -1,3 +1,4 @@
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
@@ -136,7 +137,7 @@ public class StateTests
         switch (methodToInvoke)
         {
             case nameof(State.InvertPlayer):
-                Assert.Equal(player == Colour.White ? Colour.Black : Colour.White, state.Player);
+                Assert.Equal(player.Invert(), state.Player);
 
                 Assert.Equal(castleStatus, state.CastleStatus);
 
