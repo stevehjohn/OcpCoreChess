@@ -84,7 +84,7 @@ public class Game
             }
         }
 
-        if (IsColour(player == Plane.White ? Plane.Black : Plane.White, to))
+        if (IsColour(player.InvertColour(), to))
         {
             outcome |= MoveOutcome.Capture;
         }
