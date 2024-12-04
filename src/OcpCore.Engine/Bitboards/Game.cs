@@ -71,6 +71,16 @@ public class Game
             if (Math.Abs(from - to) == 2)
             {
                 outcome |= MoveOutcome.Castle;
+
+                // TODO: Test
+                if (from - to < 0)
+                {
+                    UpdateBitboards(Kind.Rook, player, fromBit << 4, fromBit << 2);
+                }
+                else
+                {
+                    UpdateBitboards(Kind.Rook, player, fromBit >> 3, fromBit >> 1);
+                }
             }
         }
 
@@ -92,7 +102,7 @@ public class Game
 
             this[Plane.Pawn] &= ~target;
         }
-
+        
         UpdateBitboards(kind, player, fromBit, toBit);
 
         UpdateEnPassantState(kind, from, to);
@@ -262,7 +272,6 @@ public class Game
                         blackKingCell = cellIndex;
                     }
                 }
-
 
                 file++;
             }
