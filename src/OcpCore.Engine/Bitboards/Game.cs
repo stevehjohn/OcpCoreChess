@@ -127,16 +127,7 @@ public class Game
 
     public bool IsKind(Kind kind, int cell)
     {
-        return kind switch
-        {
-            Kind.Pawn => (this[Plane.Pawn] & (1ul << cell)) > 0,
-            Kind.Rook => (this[Plane.Rook] & (1ul << cell)) > 0,
-            Kind.Knight => (this[Plane.Knight] & (1ul << cell)) > 0,
-            Kind.Bishop => (this[Plane.Bishop] & (1ul << cell)) > 0,
-            Kind.Queen => (this[Plane.Queen] & (1ul << cell)) > 0,
-            Kind.King => (this[Plane.King] & (1ul << cell)) > 0,
-            _ => false
-        };
+        return (this[(Plane) kind] & (1ul << cell)) > 0;
     }
 
     public bool IsEmpty(int cell)
