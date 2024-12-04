@@ -356,6 +356,7 @@ public class Game
         State.SetEnPassantTarget(null);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void UpdateCastleState(Kind kind, Colour colour, int position)
     {
         if (kind is not (Kind.Rook or Kind.King))
