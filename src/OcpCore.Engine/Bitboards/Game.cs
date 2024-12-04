@@ -150,10 +150,10 @@ public class Game
         {
             return true;
         }
-
-        var direction = colour == Colour.White ? 2 : -2;
-
-        if ((this[Plane.Pawn] & this[opponentPlane] & (1ul << (position + Constants.Files * direction))) > 0)
+        
+        attacks = Moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
+        
+        if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
         {
             return true;
         }
