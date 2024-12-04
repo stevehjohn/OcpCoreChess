@@ -154,18 +154,16 @@ public class Game
         return GetKindInternal(1ul << cell);
     }
 
-    public bool IsKingInCheck(Colour colour, int probePosition = -1)
+    public bool IsKingInCheck(Plane colour, int probePosition = -1)
     {
-        var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
+        var position = colour == Plane.White ? State.WhiteKingCell : State.BlackKingCell;
 
         if (probePosition > -1)
         {
             position = probePosition;
         }
 
-        var plane = colour == Colour.White ? Plane.White : Plane.Black;
-        
-        var opponentPlane = colour == Colour.White ? Plane.Black : Plane.White;
+        var opponentPlane = colour.InvertColour();
     
         var attacks = Moves[MoveSet.Knight][position];
         
@@ -174,23 +172,23 @@ public class Game
             return true;
         }
 
-        attacks = Piece.GetDiagonalSlidingMoves(this, plane, opponentPlane, position)
-                  | Piece.GetAntiDiagonalSlidingMoves(this, plane, opponentPlane, position);
+        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentPlane, position)
+                  | Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentPlane, position);
         
         if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
         {
             return true;
         }
 
-        attacks = Piece.GetHorizontalSlidingMoves(this, plane, opponentPlane, position)
-                  | Piece.GetVerticalSlidingMoves(this, plane, opponentPlane, position);
+        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentPlane, position)
+                  | Piece.GetVerticalSlidingMoves(this, colour, opponentPlane, position);
         
         if ((attacks & (this[Plane.Rook] | this[Plane.Queen])) > 0)
         {
             return true;
         }
 
-        attacks = Moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
+        attacks = Moves[colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
         if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
         {

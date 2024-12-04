@@ -170,7 +170,7 @@ public sealed class Core : IDisposable
 
                 var outcome = copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck(player))
+                if (copy.IsKingInCheck(player == Colour.White ? Plane.White : Plane.Black))
                 {
                     move = Piece.PopNextMove(ref moves);
 
@@ -179,7 +179,7 @@ public sealed class Core : IDisposable
                 
                 _depthCounts[ply]++;
 
-                if (copy.IsKingInCheck(player.Invert()))
+                if (copy.IsKingInCheck(player == Colour.White ? Plane.Black : Plane.White))
                 {
                     outcome |= MoveOutcome.Check;
 
@@ -233,7 +233,7 @@ public sealed class Core : IDisposable
 
                 copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck(colour))
+                if (copy.IsKingInCheck(colour == Colour.White ? Plane.White : Plane.Black))
                 {
                     move = Piece.PopNextMove(ref moves);
                 

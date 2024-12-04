@@ -29,9 +29,7 @@ public class King : Piece
 
     private static bool CheckCanCastleKingSide(Game game, Plane colour, int position)
     {
-        var kingColour = colour == Plane.White ? Colour.White : Colour.Black;
-
-        if (kingColour == Colour.White)
+        if (colour == Plane.White)
         {
             if ((game.State.CastleStatus & Castle.White) == 0)
             {
@@ -46,19 +44,19 @@ public class King : Piece
             }
         }
 
-        if (game.IsKingInCheck(kingColour))
+        if (game.IsKingInCheck(colour))
         {
             return false;
         }
 
         if (game.IsEmpty(position + 1) && game.IsEmpty(position + 2))
         {
-            if (game.IsKingInCheck(kingColour, position + 1))
+            if (game.IsKingInCheck(colour, position + 1))
             {
                 return false;
             }
 
-            if (game.IsKingInCheck(kingColour, position + 2))
+            if (game.IsKingInCheck(colour, position + 2))
             {
                 return false;
             }
@@ -71,9 +69,7 @@ public class King : Piece
     
     private static bool CheckCanCastleQueenSide(Game game, Plane colour, int position)
     {
-        var kingColour = colour == Plane.White ? Colour.White : Colour.Black;
-
-        if (kingColour == Colour.White)
+        if (colour == Plane.White)
         {
             if ((game.State.CastleStatus & Castle.White) == 0)
             {
@@ -88,24 +84,24 @@ public class King : Piece
             }
         }
 
-        if (game.IsKingInCheck(kingColour))
+        if (game.IsKingInCheck(colour))
         {
             return false;
         }
 
         if (game.IsEmpty(position - 1) && game.IsEmpty(position - 2) && game.IsEmpty(position - 3))
         {
-            if (game.IsKingInCheck(kingColour, position - 1))
+            if (game.IsKingInCheck(colour, position - 1))
             {
                 return false;
             }
 
-            if (game.IsKingInCheck(kingColour, position - 2))
+            if (game.IsKingInCheck(colour, position - 2))
             {
                 return false;
             }
 
-            if (game.IsKingInCheck(kingColour, position - 3))
+            if (game.IsKingInCheck(colour, position - 3))
             {
                 return false;
             }
