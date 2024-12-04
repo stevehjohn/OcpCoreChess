@@ -55,6 +55,8 @@ public class Game
 
         var kind = GetKindInternal(fromBit);
 
+        var outcome = MoveOutcome.Move;
+
         if (kind == Kind.King)
         {
             if (player == Colour.White)
@@ -65,9 +67,12 @@ public class Game
             {
                 State.SetBlackKingCell(to);
             }
-        }
 
-        var outcome = MoveOutcome.Move;
+            if (Math.Abs(from - to) == 2)
+            {
+                outcome |= MoveOutcome.Castle;
+            }
+        }
 
         if (IsColour(player.Invert(), to))
         {
@@ -128,10 +133,15 @@ public class Game
         return GetKindInternal(1ul << cell);
     }
 
-    public bool IsKingInCheck(Colour colour)
+    public bool IsKingInCheck(Colour colour, int probePosition = -1)
     {
         var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
-        
+
+        if (probePosition > -1)
+        {
+            position = probePosition;
+        }
+
         var plane = colour == Colour.White ? Plane.White : Plane.Black;
         
         var opponentPlane = colour == Colour.White ? Plane.Black : Plane.White;
