@@ -3,7 +3,6 @@ using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;

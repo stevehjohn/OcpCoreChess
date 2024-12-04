@@ -4,7 +4,6 @@ using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.Bitboards;
 
