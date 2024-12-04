@@ -97,12 +97,13 @@ public class Game
 
                 var target = 1ul << (State.EnPassantTarget.Value + (player == Plane.White ? -Constants.Files : Constants.Files));
 
-                // TODO: Test
-                this[Plane.White] &= ~target;
+                var clearMask = ~target;
+                
+                this[Plane.White] &= clearMask;
 
-                this[Plane.Black] &= ~target;
+                this[Plane.Black] &= clearMask;
 
-                this[Plane.Pawn] &= ~target;
+                this[Plane.Pawn] &= clearMask;
             }
 
             if (Cell.GetRank(to) is 0 or 7)

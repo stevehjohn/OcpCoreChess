@@ -16,18 +16,17 @@ public class Pawn : Piece
 
         var rank = Cell.GetRank(position);
 
-        // TODO: Magic numbers
         switch (rank)
         {
             case Ranks.WhitePawnRank:
-                moves &= ~((game[colour] & (Masks.ByteMask << 16)) << 8);
+                moves &= ~((game[colour] & (Masks.ByteMask << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
 
-                moves &= ~((game[opponentColour] & (Masks.ByteMask << 16)) << 8);
+                moves &= ~((game[opponentColour] & (Masks.ByteMask << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
                 break;
             case Ranks.BlackPawnRank:
-                moves &= ~((game[colour] & (Masks.ByteMask << 40)) >> 8);
+                moves &= ~((game[colour] & (Masks.ByteMask << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
 
-                moves &= ~((game[opponentColour] & (Masks.ByteMask << 40)) >> 8);
+                moves &= ~((game[opponentColour] & (Masks.ByteMask << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
                 break;
         }
 
