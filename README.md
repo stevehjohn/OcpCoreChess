@@ -35,7 +35,7 @@
 
 ## Developer Notes
 
-- Attack bitboards are indexed `[piece][cell][direction]`.
+- Attack bitboards are indexed `[moveSet][cell]`.
 - Diagonal: `(0, 0), (1, 1), (2, 2)...`. i.e. `/`. Anti-diagonal `(0, 7), (1, 6), (2, 5)...`. i.e. `\`.
 - `WhiteScore - BlackScore` will be positive if white has more material.
 
