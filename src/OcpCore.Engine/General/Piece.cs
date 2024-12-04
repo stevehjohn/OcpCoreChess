@@ -3,7 +3,7 @@ using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Extensions;
 using Plane = OcpCore.Engine.Bitboards.Plane;
 
-namespace OcpCore.Engine.Pieces;
+namespace OcpCore.Engine.General;
 
 public abstract class Piece
 {
