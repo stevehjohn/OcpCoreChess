@@ -216,7 +216,7 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            if (! game.IsColour(colour == Colour.White ? Plane.White : Plane.Black, cell))
+            if (! game.IsColour((Plane) colour, cell))
             {
                 continue;
             }
@@ -233,7 +233,7 @@ public sealed class Core : IDisposable
 
                 copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck(colour == Colour.White ? Plane.White : Plane.Black))
+                if (copy.IsKingInCheck((Plane) colour))
                 {
                     move = Piece.PopNextMove(ref moves);
                 
