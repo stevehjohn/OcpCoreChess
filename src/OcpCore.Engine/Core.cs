@@ -146,18 +146,12 @@ public sealed class Core : IDisposable
                
         var ply = maxDepth - depth + 1;
 
-        for (var cell = 0; cell < Constants.Cells; cell++)
+        var pieces = game[(Plane) player];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
         {
-            if (game.IsEmpty(cell))
-            {
-                continue;
-            }
-
-            if (! game.IsColour((Plane) player, cell))
-            {
-                continue;
-            }
-
             var kind = game.GetKind(cell);
 
             var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
@@ -204,23 +198,20 @@ public sealed class Core : IDisposable
 
                 move = Piece.PopNextMove(ref moves);
             }
+            
+            cell = PopPiecePosition(ref pieces);
         }
     }
-
+    
     private static bool CanMove(Game game, Colour colour)
     {
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            if (game.IsEmpty(cell))
-            {
-                continue;
-            }
 
-            if (! game.IsColour((Plane) colour, cell))
-            {
-                continue;
-            }
-            
+        var pieces = game[(Plane) colour];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
+        {
             var kind = game.GetKind(cell);
 
             var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
@@ -242,9 +233,25 @@ public sealed class Core : IDisposable
 
                 return true;
             }
+
+            cell = PopPiecePosition(ref pieces);
         }
 
         return false;
+    }
+    
+    private static int PopPiecePosition(ref ulong pieces)
+    {
+        var emptyMoves = BitOperations.TrailingZeroCount(pieces);
+
+        if (emptyMoves == 64)
+        {
+            return -1;
+        }
+
+        pieces ^= 1ul << emptyMoves;
+
+        return emptyMoves;
     }
     
     public void Dispose()
