@@ -4,6 +4,7 @@ using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
+using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
 
@@ -152,7 +153,7 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            if (! game.IsColour(player, cell))
+            if (! game.IsColour(player == Colour.White ? Plane.White : Plane.Black, cell))
             {
                 continue;
             }
@@ -215,7 +216,7 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            if (! game.IsColour(colour, cell))
+            if (! game.IsColour(colour == Colour.White ? Plane.White : Plane.Black, cell))
             {
                 continue;
             }
