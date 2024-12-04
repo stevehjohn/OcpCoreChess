@@ -1,4 +1,3 @@
-using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;

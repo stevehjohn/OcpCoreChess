@@ -101,14 +101,36 @@ public sealed class Core : IDisposable
         return _getMoveTask;
     }
     
-    // public List<Move> GetAllowedMoves()
-    // {
-    //     var moves = new List<Move>();
-    //
-    //     GetAllMoves(_game, moves);
-    //
-    //     return moves;
-    // }
+    public List<string> GetAllowedMoves()
+    {
+        var allowedMoves = new List<string>();
+    
+        var player = _game.State.Player;
+               
+        var pieces = _game[(Plane) player];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
+        {
+            var kind = _game.GetKind(cell);
+
+            var moves = PieceCache.Get(kind).GetMoves(_game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
+
+            while (move > -1)
+            {
+                allowedMoves.Add($"{cell.ToStandardNotation()}{move.ToStandardNotation()}");
+
+                move = Piece.PopNextMove(ref moves);
+            }
+
+            cell = PopPiecePosition(ref pieces);
+        }
+
+        return allowedMoves;
+    }
     
     private void GetMoveInternal(int depth, Action callback = null)
     {
