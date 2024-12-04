@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.General;
 using OcpCore.Engine.Pieces;
 using Xunit;
 
