@@ -1,6 +1,6 @@
 using OcpCore.Engine.Bitboards;
 
-namespace OcpCore.Engine.Pieces;
+namespace OcpCore.Engine.General;
 
 public enum Colour
 {

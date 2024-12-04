@@ -1,9 +1,9 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
@@ -61,29 +61,22 @@ public sealed class Core : IDisposable
         var position = move[..2].FromStandardNotation();
     
         var target = move[2..].FromStandardNotation();
-    
-        // // var moves = new List<Move>();
-        // //
-        // // var piece = PieceCache.Get(_board[position]);
-        //
-        // //piece.GetMoves(_board, position, _board.State.Player, moves);
-        //
-        // var found = false;
-        //
-        // for (var i = 0; i < moves.Count; i++)
-        // {
-        //     if (moves[i].Target == target)
-        //     {
-        //         found = true;
-        //         
-        //         break;
-        //     }
-        // }
-        //
-        // if (! found)
-        // {
-        //     throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
-        // }
+
+        var positionBit = 1ul << position;
+
+        if ((_game[(Plane) _game.State.Player] & positionBit) == 0)
+        {
+            throw new InvalidMoveException($"No piece at {move[..2]}.");
+        }
+
+        var kind = _game.GetKind(position);
+        
+        var moves = PieceCache.Get(kind).GetMoves(_game, position);
+
+        if ((moves & positionBit) == 0)
+        {
+            throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
+        }
     
         _game.MakeMove(position, target);
     }
@@ -112,14 +105,36 @@ public sealed class Core : IDisposable
         return _getMoveTask;
     }
     
-    // public List<Move> GetAllowedMoves()
-    // {
-    //     var moves = new List<Move>();
-    //
-    //     GetAllMoves(_game, moves);
-    //
-    //     return moves;
-    // }
+    public List<string> GetAllowedMoves()
+    {
+        var allowedMoves = new List<string>();
+    
+        var player = _game.State.Player;
+               
+        var pieces = _game[(Plane) player];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
+        {
+            var kind = _game.GetKind(cell);
+
+            var moves = PieceCache.Get(kind).GetMoves(_game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
+
+            while (move > -1)
+            {
+                allowedMoves.Add($"{cell.ToStandardNotation()}{move.ToStandardNotation()}");
+
+                move = Piece.PopNextMove(ref moves);
+            }
+
+            cell = PopPiecePosition(ref pieces);
+        }
+
+        return allowedMoves;
+    }
     
     private void GetMoveInternal(int depth, Action callback = null)
     {
@@ -152,21 +167,15 @@ public sealed class Core : IDisposable
                
         var ply = maxDepth - depth + 1;
 
-        for (var cell = 0; cell < Constants.Cells; cell++)
+        var pieces = game[(Plane) player];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
         {
-            if (game.IsEmpty(cell))
-            {
-                continue;
-            }
-
-            if (! game.IsColour((Plane) player, cell))
-            {
-                continue;
-            }
-
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -174,7 +183,7 @@ public sealed class Core : IDisposable
             {
                 var copy = new Game(game);
 
-                var outcome = copy.MakeMove(cell, move);
+                var outcomes = copy.MakeMove(cell, move);
 
                 if (copy.IsKingInCheck((Plane) player))
                 {
@@ -187,20 +196,21 @@ public sealed class Core : IDisposable
 
                 if (copy.IsKingInCheck((Plane) player.Invert()))
                 {
-                    outcome |= MoveOutcome.Check;
+                    outcomes |= MoveOutcome.Check;
 
                     if (! CanMove(copy, player.Invert()))
                     {
-                        outcome |= MoveOutcome.CheckMate;
+                        outcomes |= MoveOutcome.CheckMate;
                     }
                 }
 
-                for (var j = 0; j <= Constants.MoveOutcomes; j++)
+                while (outcomes > 0)
                 {
-                    if (((byte) outcome & (1 << j)) > 0)
-                    {
-                        _outcomes[ply][j + 1]++;
-                    }
+                    var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+                    
+                    _outcomes[ply][outcome + 1]++;
+
+                    outcomes ^= (MoveOutcome) (1 << outcome);
                 }
                 
                 if (perftNode == null)
@@ -228,26 +238,23 @@ public sealed class Core : IDisposable
                 
                 move = Piece.PopNextMove(ref moves);
             }
+            
+            cell = PopPiecePosition(ref pieces);
         }
     }
-
+    
     private static bool CanMove(Game game, Colour colour)
     {
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            if (game.IsEmpty(cell))
-            {
-                continue;
-            }
 
-            if (! game.IsColour((Plane) colour, cell))
-            {
-                continue;
-            }
-            
+        var pieces = game[(Plane) colour];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
+        {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -266,9 +273,25 @@ public sealed class Core : IDisposable
 
                 return true;
             }
+
+            cell = PopPiecePosition(ref pieces);
         }
 
         return false;
+    }
+    
+    private static int PopPiecePosition(ref ulong pieces)
+    {
+        var emptyMoves = BitOperations.TrailingZeroCount(pieces);
+
+        if (emptyMoves == 64)
+        {
+            return -1;
+        }
+
+        pieces ^= 1ul << emptyMoves;
+
+        return emptyMoves;
     }
     
     public void Dispose()

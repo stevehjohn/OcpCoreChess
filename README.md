@@ -12,10 +12,7 @@
 
 ## Code Cleanup TODOs
 
-- Horizontal move generation seems to work, but could really do with a clean up.
-- Rename `Game` to `Board` once current `Board` can be replaced.
 - One instance of `Moves` class.
-- Rethink `Moves` implementation.
 
 ## Current Best Timings
 
@@ -29,7 +26,7 @@
  5   | < 1 s
  6   | ~ 10.5 s
  7   | ~ 5 m
- 8   | ~ 2.5 h
+ 8   | ~ 2.25 h
  9   | ~ 2.5 d
 ```
 

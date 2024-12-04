@@ -1,5 +1,5 @@
 using System.Runtime.CompilerServices;
-using OcpCore.Engine.Pieces;
+using OcpCore.Engine.General;
 
 namespace OcpCore.Engine.Extensions;
 

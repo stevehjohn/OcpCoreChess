@@ -1,7 +1,6 @@
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 using OcpCore.Engine.Tests.Infrastructure;
 using Xunit;
 

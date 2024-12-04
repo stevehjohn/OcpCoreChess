@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using OcpCore.Engine.General;
-using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.PerfTest;
 
@@ -104,6 +103,10 @@ public static class EntryPoint
         for (var maxDepth = 1; maxDepth <= depth; maxDepth++)
         {
             using var core = new Core(Colour.White);
+            
+            Console.WriteLine($"  Created engine {Core.Name} by {Core.Author}");
+
+            Console.WriteLine();
 
             Console.WriteLine($"  {DateTime.Now:HH:mm:ss} Starting depth {maxDepth}");
 
