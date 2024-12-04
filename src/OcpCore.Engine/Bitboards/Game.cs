@@ -86,6 +86,11 @@ public class Game
         if (IsColour(player.InvertColour(), to))
         {
             outcome |= MoveOutcome.Capture;
+
+            if ((this[Plane.Rook] & toBit) > 0)
+            {
+                State.RemoveCastleRights(player == Plane.White ? Castle.Black : Castle.White);
+            }
         }
 
         if (kind == Plane.Pawn)
