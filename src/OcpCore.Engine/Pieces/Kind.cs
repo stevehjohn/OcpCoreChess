@@ -1,11 +1,13 @@
+using OcpCore.Engine.Bitboards;
+
 namespace OcpCore.Engine.Pieces;
 
-public enum Kind : byte
+public enum Kind
 {
-    Pawn   = 1,
-    Rook   = 2,
-    Knight = 3,
-    Bishop = 4,
-    Queen  = 5,
-    King   = 6
+    Pawn   = Plane.Pawn,
+    Rook   = Plane.Rook,
+    Knight = Plane.Knight,
+    Bishop = Plane.Bishop,
+    Queen  = Plane.Queen,
+    King   = Plane.King
 }
