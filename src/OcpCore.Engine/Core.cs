@@ -161,7 +161,7 @@ public sealed class Core : IDisposable
             {
                 var copy = new Game(game);
 
-                var outcome = copy.MakeMove(cell, move);
+                var outcomes = copy.MakeMove(cell, move);
 
                 if (copy.IsKingInCheck((Plane) player))
                 {
@@ -174,20 +174,21 @@ public sealed class Core : IDisposable
 
                 if (copy.IsKingInCheck((Plane) player.Invert()))
                 {
-                    outcome |= MoveOutcome.Check;
+                    outcomes |= MoveOutcome.Check;
 
                     if (! CanMove(copy, player.Invert()))
                     {
-                        outcome |= MoveOutcome.CheckMate;
+                        outcomes |= MoveOutcome.CheckMate;
                     }
                 }
 
-                for (var j = 0; j <= Constants.MoveOutcomes; j++)
+                while (outcomes > 0)
                 {
-                    if (((byte) outcome & (1 << j)) > 0)
-                    {
-                        _outcomes[ply][j + 1]++;
-                    }
+                    var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+                    
+                    _outcomes[ply][outcome + 1]++;
+
+                    outcomes ^= (MoveOutcome) (1 << outcome);
                 }
 
                 if (depth > 1)

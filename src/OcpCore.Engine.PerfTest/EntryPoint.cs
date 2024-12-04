@@ -106,6 +106,8 @@ public static class EntryPoint
             
             Console.WriteLine($"  Created engine {Core.Name} by {Core.Author}");
 
+            Console.WriteLine();
+
             Console.WriteLine($"  {DateTime.Now:HH:mm:ss} Starting depth {maxDepth}");
 
             Console.WriteLine();
