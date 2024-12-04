@@ -89,18 +89,29 @@ public class Game
             outcome |= MoveOutcome.Capture;
         }
 
-        if (kind == Kind.Pawn && to == State.EnPassantTarget)
+        if (kind == Kind.Pawn)
         {
-            outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+            if (to == State.EnPassantTarget)
+            {
+                outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
 
-            var target = 1ul << (State.EnPassantTarget.Value + (player == Colour.White ? -Constants.Files : Constants.Files));
+                var target = 1ul << (State.EnPassantTarget.Value + (player == Colour.White ? -Constants.Files : Constants.Files));
 
-            // TODO: Test
-            this[Plane.White] &= ~target;
+                // TODO: Test
+                this[Plane.White] &= ~target;
 
-            this[Plane.Black] &= ~target;
+                this[Plane.Black] &= ~target;
 
-            this[Plane.Pawn] &= ~target;
+                this[Plane.Pawn] &= ~target;
+            }
+
+            if (Cell.GetRank(to) is 0 or 7)
+            {
+                outcome |= MoveOutcome.Promotion;
+
+                // TODO: Knight sometimes?
+                kind = Kind.Queen;
+            }
         }
         
         UpdateBitboards(kind, player, fromBit, toBit);
@@ -406,11 +417,8 @@ public class Game
 
     private void UpdateBitboards(Kind kind, Colour colour, ulong fromBit, ulong toBit)
     {
-        this[Plane.White] &= ~fromBit;
-        this[Plane.Black] &= ~fromBit;
-
-        this[Plane.White] &= ~toBit;
-        this[Plane.Black] &= ~toBit;
+        this[Plane.White] &= ~fromBit & ~toBit;
+        this[Plane.Black] &= ~fromBit & ~toBit;
 
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (colour)
@@ -424,19 +432,12 @@ public class Game
                 break;
         }
 
-        this[Plane.Pawn] &= ~fromBit;
-        this[Plane.Rook] &= ~fromBit;
-        this[Plane.Knight] &= ~fromBit;
-        this[Plane.Bishop] &= ~fromBit;
-        this[Plane.Queen] &= ~fromBit;
-        this[Plane.King] &= ~fromBit;
-
-        this[Plane.Pawn] &= ~toBit;
-        this[Plane.Rook] &= ~toBit;
-        this[Plane.Knight] &= ~toBit;
-        this[Plane.Bishop] &= ~toBit;
-        this[Plane.Queen] &= ~toBit;
-        this[Plane.King] &= ~toBit;
+        this[Plane.Pawn] &= ~fromBit & ~toBit;
+        this[Plane.Rook] &= ~fromBit & ~toBit;
+        this[Plane.Knight] &= ~fromBit & ~toBit;
+        this[Plane.Bishop] &= ~fromBit & ~toBit;
+        this[Plane.Queen] &= ~fromBit & ~toBit;
+        this[Plane.King] &= ~fromBit & ~toBit;
 
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (kind)
