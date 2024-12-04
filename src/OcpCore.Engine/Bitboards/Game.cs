@@ -361,61 +361,62 @@ public class Game
 
     private void UpdateBitboards(Kind kind, Colour colour, ulong fromBit, ulong toBit)
     {
+        this[Plane.White] &= ~fromBit;
+        this[Plane.Black] &= ~fromBit;
+
+        this[Plane.White] &= ~toBit;
+        this[Plane.Black] &= ~toBit;
+
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (colour)
         {
             case Colour.White:
-                this[Plane.White] &= ~fromBit;
                 this[Plane.White] |= toBit;
-                
-                this[Plane.Black] &= ~toBit;
                 break;
 
             case Colour.Black:
-                this[Plane.Black] &= ~fromBit;
                 this[Plane.Black] |= toBit;
-                
-                this[Plane.White] &= ~toBit;
                 break;
         }
+
+        this[Plane.Pawn] &= ~fromBit;
+        this[Plane.Rook] &= ~fromBit;
+        this[Plane.Knight] &= ~fromBit;
+        this[Plane.Bishop] &= ~fromBit;
+        this[Plane.Queen] &= ~fromBit;
+        this[Plane.King] &= ~fromBit;
 
         this[Plane.Pawn] &= ~toBit;
         this[Plane.Rook] &= ~toBit;
         this[Plane.Knight] &= ~toBit;
         this[Plane.Bishop] &= ~toBit;
-        this[Plane.Rook] &= ~toBit;
-        this[Plane.Rook] &= ~toBit;
+        this[Plane.Queen] &= ~toBit;
+        this[Plane.King] &= ~toBit;
 
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (kind)
         {
             case Kind.Pawn:
-                this[Plane.Pawn] &= ~fromBit;
                 this[Plane.Pawn] |= toBit;
                 break;
 
             case Kind.Rook:
-                this[Plane.Rook] &= ~fromBit;
                 this[Plane.Rook] |= toBit;
                 break;
 
             case Kind.Knight:
-                this[Plane.Knight] &= ~fromBit;
                 this[Plane.Knight] |= toBit;
                 break;
 
             case Kind.Bishop:
-                this[Plane.Bishop] &= ~fromBit;
                 this[Plane.Bishop] |= toBit;
                 break;
 
             case Kind.Queen:
-                this[Plane.Queen] &= ~fromBit;
                 this[Plane.Queen] |= toBit;
                 break;
 
             case Kind.King:
-                this[Plane.King] &= ~fromBit;
                 this[Plane.King] |= toBit;
                 break;
         }
