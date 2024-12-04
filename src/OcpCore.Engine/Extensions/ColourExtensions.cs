@@ -8,6 +8,6 @@ public static class ColourExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Colour Invert(this Colour colour)
     {
-        return colour == Colour.Black ? Colour.White : Colour.Black;
+        return 1 - colour;
     }
 }

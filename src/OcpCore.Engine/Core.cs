@@ -153,7 +153,7 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            if (! game.IsColour(player == Colour.White ? Plane.White : Plane.Black, cell))
+            if (! game.IsColour((Plane) player, cell))
             {
                 continue;
             }
@@ -170,7 +170,7 @@ public sealed class Core : IDisposable
 
                 var outcome = copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck(player == Colour.White ? Plane.White : Plane.Black))
+                if (copy.IsKingInCheck((Plane) player))
                 {
                     move = Piece.PopNextMove(ref moves);
 
@@ -179,7 +179,7 @@ public sealed class Core : IDisposable
                 
                 _depthCounts[ply]++;
 
-                if (copy.IsKingInCheck(player == Colour.White ? Plane.Black : Plane.White))
+                if (copy.IsKingInCheck((Plane) player.Invert()))
                 {
                     outcome |= MoveOutcome.Check;
 
