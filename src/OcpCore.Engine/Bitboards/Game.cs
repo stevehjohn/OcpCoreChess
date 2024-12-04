@@ -51,13 +51,15 @@ public class Game
             throw new InvalidMoveException($"No piece at {from.ToStandardNotation()}.");
         }
 
-        var player = (this[Plane.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
+        var player = (this[Plane.White] & fromBit) == fromBit ? Plane.White : Plane.Black;
 
         var kind = GetKindInternal(fromBit);
 
-        if (kind == Kind.King)
+        var outcome = MoveOutcome.Move;
+
+        if (kind == Plane.King)
         {
-            if (player == Colour.White)
+            if (player == Plane.White)
             {
                 State.SetWhiteKingCell(to);
             }
@@ -65,32 +67,59 @@ public class Game
             {
                 State.SetBlackKingCell(to);
             }
+
+            if (Math.Abs(from - to) == 2)
+            {
+                outcome |= MoveOutcome.Castle;
+
+                // TODO: Test
+                if (from - to < 0)
+                {
+                    UpdateBitboards(kind, player, fromBit << 4, fromBit << 2);
+                }
+                else
+                {
+                    UpdateBitboards(kind, player, fromBit >> 3, fromBit >> 1);
+                }
+            }
         }
 
-        var outcome = MoveOutcome.Move;
-
-        if (IsColour(player.Invert(), to))
+        if (IsColour(player.InvertColour(), to))
         {
             outcome |= MoveOutcome.Capture;
         }
 
-        if (kind == Kind.Pawn && to == State.EnPassantTarget)
+        if (kind == Plane.Pawn)
         {
-            outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+            if (to == State.EnPassantTarget)
+            {
+                outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
 
-            var target = 1ul << (State.EnPassantTarget.Value + (player == Colour.White ? -Constants.Files : Constants.Files));
+                var target = 1ul << (State.EnPassantTarget.Value + (player == Plane.White ? -Constants.Files : Constants.Files));
 
-            // TODO: Test
-            this[Plane.White] &= ~target;
+                var clearMask = ~target;
+                
+                this[Plane.White] &= clearMask;
 
-            this[Plane.Black] &= ~target;
+                this[Plane.Black] &= clearMask;
 
-            this[Plane.Pawn] &= ~target;
+                this[Plane.Pawn] &= clearMask;
+            }
+
+            if (Cell.GetRank(to) is 0 or 7)
+            {
+                outcome |= MoveOutcome.Promotion;
+
+                // TODO: Knight sometimes?
+                kind = Plane.Queen;
+            }
         }
-
+        
         UpdateBitboards(kind, player, fromBit, toBit);
 
         UpdateEnPassantState(kind, from, to);
+        
+        UpdateCastleState(kind, player, from);
         
         State.InvertPlayer();
 
@@ -99,16 +128,7 @@ public class Game
 
     public bool IsKind(Kind kind, int cell)
     {
-        return kind switch
-        {
-            Kind.Pawn => (this[Plane.Pawn] & (1ul << cell)) > 0,
-            Kind.Rook => (this[Plane.Rook] & (1ul << cell)) > 0,
-            Kind.Knight => (this[Plane.Knight] & (1ul << cell)) > 0,
-            Kind.Bishop => (this[Plane.Bishop] & (1ul << cell)) > 0,
-            Kind.Queen => (this[Plane.Queen] & (1ul << cell)) > 0,
-            Kind.King => (this[Plane.King] & (1ul << cell)) > 0,
-            _ => false
-        };
+        return (this[(Plane) kind] & (1ul << cell)) > 0;
     }
 
     public bool IsEmpty(int cell)
@@ -116,25 +136,26 @@ public class Game
         return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) == 0;
     }
 
-    public bool IsColour(Colour colour, int cell)
+    public bool IsColour(Plane colour, int cell)
     {
-        return colour == Colour.White 
-            ? (this[Plane.White] & (1ul << cell)) > 0 
-            : (this[Plane.Black] & (1ul << cell)) > 0;
+        return (this[colour] & (1ul << cell)) > 0;
     }
 
     public Kind GetKind(int cell)
     {
-        return GetKindInternal(1ul << cell);
+        return (Kind) GetKindInternal(1ul << cell);
     }
 
-    public bool IsKingInCheck(Colour colour)
+    public bool IsKingInCheck(Plane colour, int probePosition = -1)
     {
-        var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
-        
-        var plane = colour == Colour.White ? Plane.White : Plane.Black;
-        
-        var opponentPlane = colour == Colour.White ? Plane.Black : Plane.White;
+        var position = colour == Plane.White ? State.WhiteKingCell : State.BlackKingCell;
+
+        if (probePosition > -1)
+        {
+            position = probePosition;
+        }
+
+        var opponentPlane = colour.InvertColour();
     
         var attacks = Moves[MoveSet.Knight][position];
         
@@ -143,23 +164,23 @@ public class Game
             return true;
         }
 
-        attacks = Piece.GetDiagonalSlidingMoves(this, plane, opponentPlane, position)
-                  | Piece.GetAntiDiagonalSlidingMoves(this, plane, opponentPlane, position);
+        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentPlane, position)
+                  | Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentPlane, position);
         
         if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
         {
             return true;
         }
 
-        attacks = Piece.GetHorizontalSlidingMoves(this, plane, opponentPlane, position)
-                  | Piece.GetVerticalSlidingMoves(this, plane, opponentPlane, position);
+        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentPlane, position)
+                  | Piece.GetVerticalSlidingMoves(this, colour, opponentPlane, position);
         
         if ((attacks & (this[Plane.Rook] | this[Plane.Queen])) > 0)
         {
             return true;
         }
 
-        attacks = Moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
+        attacks = Moves[colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
         if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
         {
@@ -251,7 +272,6 @@ public class Game
                     }
                 }
 
-
                 file++;
             }
             
@@ -307,9 +327,9 @@ public class Game
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void UpdateEnPassantState(Kind kind, int position, int target)
+    private void UpdateEnPassantState(Plane kind, int position, int target)
     {
-        if (kind == Kind.Pawn)
+        if (kind == Plane.Pawn)
         {
             var delta = position - target;
 
@@ -323,101 +343,83 @@ public class Game
 
         State.SetEnPassantTarget(null);
     }
-    
-    private Kind GetKindInternal(ulong cellBit)
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void UpdateCastleState(Plane kind, Plane colour, int position)
+    {
+        if (kind is not (Plane.Rook or Plane.King))
+        {
+            return;
+        }
+
+        if (kind == Plane.King)
+        {
+            State.RemoveCastleRights(colour == Plane.White ? Castle.White : Castle.Black);
+            
+            return;
+        }
+
+        if (Cell.GetFile(position) == 0)
+        {
+            State.RemoveCastleRights(colour == Plane.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
+            
+            return;
+        }
+
+        State.RemoveCastleRights(colour == Plane.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+    }
+
+    private Plane GetKindInternal(ulong cellBit)
     {
         if ((this[Plane.Pawn] & cellBit) == cellBit)
         {
-            return Kind.Pawn;
+            return Plane.Pawn;
         }
         
         if ((this[Plane.Rook] & cellBit) == cellBit)
         {
-            return Kind.Rook;
+            return Plane.Rook;
         }
         
         if ((this[Plane.Knight] & cellBit) == cellBit)
         {
-            return Kind.Knight;
+            return Plane.Knight;
         }
         
         if ((this[Plane.Bishop] & cellBit) == cellBit)
         {
-            return Kind.Bishop;
+            return Plane.Bishop;
         }
         
         if ((this[Plane.Queen] & cellBit) == cellBit)
         {
-            return Kind.Queen;
+            return Plane.Queen;
         }
         
         if ((this[Plane.King] & cellBit) == cellBit)
         {
-            return Kind.King;
+            return Plane.King;
         }
 
         throw new InvalidMoveException($"No piece at {BitOperations.TrailingZeroCount(cellBit).ToStandardNotation()}.");
     }
 
-    private void UpdateBitboards(Kind kind, Colour colour, ulong fromBit, ulong toBit)
+    private void UpdateBitboards(Plane kind, Plane colour, ulong fromBit, ulong toBit)
     {
-        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-        switch (colour)
-        {
-            case Colour.White:
-                this[Plane.White] &= ~fromBit;
-                this[Plane.White] |= toBit;
-                
-                this[Plane.Black] &= ~toBit;
-                break;
+        var clearMask = ~fromBit & ~toBit;
 
-            case Colour.Black:
-                this[Plane.Black] &= ~fromBit;
-                this[Plane.Black] |= toBit;
-                
-                this[Plane.White] &= ~toBit;
-                break;
-        }
+        this[Plane.White] &= clearMask;
+        this[Plane.Black] &= clearMask;
 
-        this[Plane.Pawn] &= ~toBit;
-        this[Plane.Rook] &= ~toBit;
-        this[Plane.Knight] &= ~toBit;
-        this[Plane.Bishop] &= ~toBit;
-        this[Plane.Rook] &= ~toBit;
-        this[Plane.Rook] &= ~toBit;
+        this[Plane.Pawn] &= clearMask;
+        this[Plane.Rook] &= clearMask;
+        this[Plane.Knight] &= clearMask;
+        this[Plane.Bishop] &= clearMask;
+        this[Plane.Queen] &= clearMask;
+        this[Plane.King] &= clearMask;
 
-        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-        switch (kind)
-        {
-            case Kind.Pawn:
-                this[Plane.Pawn] &= ~fromBit;
-                this[Plane.Pawn] |= toBit;
-                break;
+        this[colour] |= toBit;
 
-            case Kind.Rook:
-                this[Plane.Rook] &= ~fromBit;
-                this[Plane.Rook] |= toBit;
-                break;
-
-            case Kind.Knight:
-                this[Plane.Knight] &= ~fromBit;
-                this[Plane.Knight] |= toBit;
-                break;
-
-            case Kind.Bishop:
-                this[Plane.Bishop] &= ~fromBit;
-                this[Plane.Bishop] |= toBit;
-                break;
-
-            case Kind.Queen:
-                this[Plane.Queen] &= ~fromBit;
-                this[Plane.Queen] |= toBit;
-                break;
-
-            case Kind.King:
-                this[Plane.King] &= ~fromBit;
-                this[Plane.King] |= toBit;
-                break;
-        }
+        this[kind] |= toBit;
     }
 }

@@ -5,8 +5,6 @@ namespace OcpCore.Engine.Pieces;
 
 public class Bishop : Piece
 {
-    public override Kind Kind => Kind.Bishop;
-    
     public override int Value => Scores.Bishop;
 
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)

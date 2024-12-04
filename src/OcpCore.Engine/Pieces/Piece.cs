@@ -9,8 +9,6 @@ public abstract class Piece
 {
     protected static readonly Moves Moves = new();
     
-    public abstract Kind Kind { get; }
-    
     public abstract int Value { get; }
 
     public static int PopNextMove(ref ulong moves)

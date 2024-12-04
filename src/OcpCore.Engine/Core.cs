@@ -4,6 +4,7 @@ using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
+using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
 
@@ -158,14 +159,14 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            if (! game.IsColour(player, cell))
+            if (! game.IsColour((Plane) player, cell))
             {
                 continue;
             }
 
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -175,7 +176,7 @@ public sealed class Core : IDisposable
 
                 var outcome = copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck(player))
+                if (copy.IsKingInCheck((Plane) player))
                 {
                     move = Piece.PopNextMove(ref moves);
 
@@ -184,7 +185,7 @@ public sealed class Core : IDisposable
                 
                 _depthCounts[ply]++;
 
-                if (copy.IsKingInCheck(player.Invert()))
+                if (copy.IsKingInCheck((Plane) player.Invert()))
                 {
                     outcome |= MoveOutcome.Check;
 
@@ -239,14 +240,14 @@ public sealed class Core : IDisposable
                 continue;
             }
 
-            if (! game.IsColour(colour, cell))
+            if (! game.IsColour((Plane) colour, cell))
             {
                 continue;
             }
             
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -256,7 +257,7 @@ public sealed class Core : IDisposable
 
                 copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck(colour))
+                if (copy.IsKingInCheck((Plane) colour))
                 {
                     move = Piece.PopNextMove(ref moves);
                 

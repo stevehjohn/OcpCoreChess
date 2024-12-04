@@ -5,8 +5,6 @@ namespace OcpCore.Engine.Pieces;
 
 public class Knight : Piece
 {
-    public override Kind Kind => Kind.Knight;
-
     public override int Value => Scores.Knight;
     
     protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)

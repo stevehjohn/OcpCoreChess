@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;
 
@@ -27,22 +26,5 @@ public static class Cell
         }
 
         return (rank << Offsets.Rank) | file;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Is(byte piece, Kind kind)
-    {
-        return (piece & Masks.Kind) == (byte) kind;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Colour Colour(byte piece)
-    {
-        return (Colour) (piece & Masks.Colour);
-    }
-
-    public static Kind Kind(byte piece)
-    {
-        return (Kind) (piece & Masks.File);
     }
 }

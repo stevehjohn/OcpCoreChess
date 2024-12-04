@@ -27,15 +27,15 @@
  3   | < 10 ms
  4   | ~ 100 ms
  5   | < 1 s
- 6   | ~ 15 s
- 7   | ~ 7 m
- 8   | ~ 3 h
- 9   | ~ 3.5 d
+ 6   | ~ 10.5 s
+ 7   | ~ 5 m
+ 8   | ~ 2.5 h
+ 9   | ~ 2.5 d
 ```
 
 ## Developer Notes
 
-- Attack bitboards are indexed `[piece][cell][direction]`.
+- Attack bitboards are indexed `[moveSet][cell]`.
 - Diagonal: `(0, 0), (1, 1), (2, 2)...`. i.e. `/`. Anti-diagonal `(0, 7), (1, 6), (2, 5)...`. i.e. `\`.
 - `WhiteScore - BlackScore` will be positive if white has more material.
 
@@ -44,7 +44,7 @@
 ```
          File
          a  b  c  d  e  f  g  h
-       +------------------------~~~~
+       +------------------------
 Rank 8 | 56 57 58 59 60 61 62 63  Black
      7 | 48 49 50 51 52 53 54 55  Black
      6 | 40 41 42 43 44 45 46 47

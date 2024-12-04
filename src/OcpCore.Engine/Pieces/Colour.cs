@@ -1,7 +1,9 @@
+using OcpCore.Engine.Bitboards;
+
 namespace OcpCore.Engine.Pieces;
 
-public enum Colour : byte
+public enum Colour
 {
-    White = 0,
-    Black = 8
+    White = Plane.White,
+    Black = Plane.Black
 }
