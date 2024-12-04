@@ -2,6 +2,7 @@ namespace OcpCore.Engine.General.StaticData;
 
 public static class Scores
 {
+    public const int King = 0;
     public const int Pawn = 1;
     public const int Rook = 5;
     public const int Knight = 3;

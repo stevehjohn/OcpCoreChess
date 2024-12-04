@@ -24,30 +24,15 @@ public class State
     public int Halfmoves => (int) ((_state >> Offsets.Halfmove) & Masks.ByteMask);
 
     public int Fullmoves => (int) ((_state >> Offsets.Fullmove) & Masks.Fullmove);
+
+    public State()
+    {
+        SetState(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0, 0, 1);
+    }
     
     public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, int whiteKingCell, int blackKingCell, int halfmoves, int fullmoves)
     {
-        var state = 0ul;
-
-        state |= player == Colour.White ? 0 : Masks.PlayerTurn;
-
-        state |= enPassantTarget == null ? Masks.EnPassantTarget : ((ulong) enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTarget;
-        
-        state |= (ulong) castleStatus;
-
-        state |= ((ulong) whiteScore & Masks.ByteMask) << Offsets.WhiteScore;
-
-        state |= ((ulong) blackScore & Masks.ByteMask) << Offsets.BlackScore;
-
-        state |= ((ulong) whiteKingCell & Masks.PositionBits) << Offsets.WhiteKing;
-
-        state |= ((ulong) blackKingCell & Masks.PositionBits) << Offsets.BlackKing;
-
-        state |= ((ulong) halfmoves & Masks.ByteMask) << Offsets.Halfmove;
-        
-        state |= ((ulong) fullmoves & Masks.ByteMask) << Offsets.Fullmove;
-
-        _state = state;
+        SetState(player, castleStatus, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
     public State(State state)
@@ -132,5 +117,30 @@ public class State
     public void InvertPlayer()
     {
         _state ^= Masks.PlayerTurn;
+    }
+
+    private void SetState(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, int whiteKingCell, int blackKingCell, int halfmoves, int fullmoves)
+    {
+        var state = 0ul;
+
+        state |= player == Colour.White ? 0 : Masks.PlayerTurn;
+
+        state |= enPassantTarget == null ? Masks.EnPassantTarget : ((ulong) enPassantTarget.Value & Masks.EnPassantBits) << Offsets.EnPassantTarget;
+        
+        state |= (ulong) castleStatus;
+
+        state |= ((ulong) whiteScore & Masks.ByteMask) << Offsets.WhiteScore;
+
+        state |= ((ulong) blackScore & Masks.ByteMask) << Offsets.BlackScore;
+
+        state |= ((ulong) whiteKingCell & Masks.PositionBits) << Offsets.WhiteKing;
+
+        state |= ((ulong) blackKingCell & Masks.PositionBits) << Offsets.BlackKing;
+
+        state |= ((ulong) halfmoves & Masks.ByteMask) << Offsets.Halfmove;
+        
+        state |= ((ulong) fullmoves & Masks.ByteMask) << Offsets.Fullmove;
+
+        _state = state;
     }
 }

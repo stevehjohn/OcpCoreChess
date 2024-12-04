@@ -1,48 +1,18 @@
-using OcpCore.Engine.General;
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Pieces;
 
 public class Knight : Piece
 {
-    public override Kind Kind => Kind.Knight;
+    public override int Value => Scores.Knight;
     
-    public override int Value => 3;
-    
-    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
+    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        var rank = Cell.GetRank(position);
+        var moves = Moves[MoveSet.Knight][position];
 
-        var file = Cell.GetFile(position);
+        moves &= ~game[colour];
         
-        for (var i = 0; i < Constants.KnightMoves.Length; i++)
-        {
-            var direction = Constants.KnightMoves[i];
-
-            var newRank = rank + direction.RankDelta;
-
-            var newFile = file + direction.FileDelta;
-
-            var cell = Cell.GetCell(newRank, newFile);
-
-            if (cell < 0)
-            {
-                continue;
-            }
-
-            var content = board[cell];
-
-            if (content == 0)
-            {
-                moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
-                    
-                continue;
-            }
-
-            if (Cell.Colour(content) != colour)
-            {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
-            }
-        }
+        return moves;
     }
 }

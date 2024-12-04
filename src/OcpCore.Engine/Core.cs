@@ -1,9 +1,10 @@
 using System.Numerics;
-using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Pieces;
+using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
 
@@ -13,7 +14,7 @@ public sealed class Core : IDisposable
 
     public const string Author = "Stevo John";
 
-    private readonly Board _board;
+    private readonly Game _game;
 
     private readonly Colour _engineColour;
 
@@ -36,47 +37,51 @@ public sealed class Core : IDisposable
     public Core(Colour engineColour)
     {
         _engineColour = engineColour;
+
+        _game = new Game();
         
-        _board = new Board(Constants.InitialBoardFen);
+        _game.ParseFen(Constants.InitialBoardFen);
     }
 
     public Core(Colour engineColour, string fen)
     {
         _engineColour = engineColour;
+
+        _game = new Game();
         
-        _board = new Board(fen);
+        _game.ParseFen(fen);
     }
 
     public void MakeMove(string move)
     {
         var position = move[..2].FromStandardNotation();
-
+    
         var target = move[2..].FromStandardNotation();
-
-        var moves = new List<Move>();
-        
-        var piece = PieceCache.Get(_board[position]);
-
-        piece.GetMoves(_board, position, _board.State.Player, moves);
-        
-        var found = false;
-
-        for (var i = 0; i < moves.Count; i++)
-        {
-            if (moves[i].Target == target)
-            {
-                found = true;
-                
-                break;
-            }
-        }
-
-        if (! found)
-        {
-            throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
-        }
-
-        _board.MakeMove(position, target);
+    
+        // // var moves = new List<Move>();
+        // //
+        // // var piece = PieceCache.Get(_board[position]);
+        //
+        // //piece.GetMoves(_board, position, _board.State.Player, moves);
+        //
+        // var found = false;
+        //
+        // for (var i = 0; i < moves.Count; i++)
+        // {
+        //     if (moves[i].Target == target)
+        //     {
+        //         found = true;
+        //         
+        //         break;
+        //     }
+        // }
+        //
+        // if (! found)
+        // {
+        //     throw new InvalidMoveException($"{move} is not a valid move for a {piece.Kind}.");
+        // }
+    
+        _game.MakeMove(position, target);
     }
 
     public void GetMove(int depth)
@@ -103,14 +108,14 @@ public sealed class Core : IDisposable
         return _getMoveTask;
     }
     
-    public List<Move> GetAllowedMoves()
-    {
-        var moves = new List<Move>();
-
-        GetAllMoves(_board, moves);
-
-        return moves;
-    }
+    // public List<Move> GetAllowedMoves()
+    // {
+    //     var moves = new List<Move>();
+    //
+    //     GetAllMoves(_game, moves);
+    //
+    //     return moves;
+    // }
     
     private void GetMoveInternal(int depth, Action callback = null)
     {
@@ -125,125 +130,118 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        ProcessPly(_board, depth, depth);
+        ProcessPly(_game, depth, depth);
 
         callback?.Invoke();
     }
 
-    private void ProcessPly(Board board, int maxDepth, int depth)
+    private void ProcessPly(Game game, int maxDepth, int depth)
     {
         if (_cancellationToken.IsCancellationRequested)
         {
             return;
         }   
         
-        var moves = new List<Move>();
-        
-        GetAllMoves(board, moves);
-        
-        moves.Sort();
-
-        var player = board.State.Player;
+        var player = game.State.Player;
                
         var ply = maxDepth - depth + 1;
-        
-        for (var i = 0; i < moves.Count; i++)
+
+        for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            var move = moves[i];
-
-            var copy = new Board(board);
-
-            var outcome = copy.MakeMove(move.Position, move.Target);
-
-            if (copy.IsKingInCheck(player))
+            if (game.IsEmpty(cell))
             {
                 continue;
             }
 
-            _depthCounts[ply]++;
-
-            if (copy.IsKingInCheck(player.Invert()))
+            if (! game.IsColour((Plane) player, cell))
             {
-                outcome |= MoveOutcome.Check;
+                continue;
+            }
+
+            var kind = game.GetKind(cell);
+
+            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
+
+            while (move > -1)
+            {
+                var copy = new Game(game);
+
+                var outcome = copy.MakeMove(cell, move);
+
+                if (copy.IsKingInCheck((Plane) player))
+                {
+                    move = Piece.PopNextMove(ref moves);
+
+                    continue;
+                }
                 
-                if (! CanMove(copy, player.Invert()))
-                {
-                    outcome |= MoveOutcome.CheckMate;
-                }
-            }
-            
-            for (var j = 0; j <= Constants.MoveOutcomes; j++)
-            {
-                if (((byte) outcome & (1 << j)) > 0)
-                {
-                    _outcomes[ply][j + 1]++;
-                }
-            }
+                _depthCounts[ply]++;
 
-            if (depth > 1)
-            {
-                ProcessPly(copy, maxDepth, depth - 1);
+                if (copy.IsKingInCheck((Plane) player.Invert()))
+                {
+                    outcome |= MoveOutcome.Check;
+
+                    if (! CanMove(copy, player.Invert()))
+                    {
+                        outcome |= MoveOutcome.CheckMate;
+                    }
+                }
+
+                for (var j = 0; j <= Constants.MoveOutcomes; j++)
+                {
+                    if (((byte) outcome & (1 << j)) > 0)
+                    {
+                        _outcomes[ply][j + 1]++;
+                    }
+                }
+
+                if (depth > 1)
+                {
+                    ProcessPly(copy, maxDepth, depth - 1);
+                }
+
+                move = Piece.PopNextMove(ref moves);
             }
         }
     }
 
-    private static void GetAllMoves(Board board, List<Move> moves)
+    private static bool CanMove(Game game, Colour colour)
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            var piece = board[cell];
-
-            if (piece == 0)
+            if (game.IsEmpty(cell))
             {
                 continue;
             }
 
-            if (Cell.Colour(piece) != board.State.Player)
+            if (! game.IsColour((Plane) colour, cell))
             {
                 continue;
             }
             
-            PieceCache.Get(piece).GetMoves(board, cell, board.State.Player, moves);
-        }
-    }
+            var kind = game.GetKind(cell);
 
-    private static bool CanMove(Board board, Colour colour)
-    {
-        var moves = new List<Move>();
-        
-        for (var cell = 0; cell < Constants.Cells; cell++)
-        {
-            var piece = board[cell];
-            
-            if (piece == 0)
+            var moves = PieceCache.Get((Plane) kind).GetMoves(game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
+
+            while (move > -1)
             {
-                continue;
-            }
+                var copy = new Game(game);
 
-            if (Cell.Colour(piece) != colour)
-            {
-                continue;
-            }
+                copy.MakeMove(cell, move);
 
-            PieceCache.Get(piece).GetMoves(board, cell, colour, moves);
-
-            for (var i = 0; i < moves.Count; i++)
-            {
-                var move = moves[i];
-                
-                var copy = new Board(board);
-
-                copy.MakeMove(cell, move.Target);
-
-                if (copy.IsKingInCheck(colour))
+                if (copy.IsKingInCheck((Plane) colour))
                 {
+                    move = Piece.PopNextMove(ref moves);
+                
                     continue;
                 }
 
                 return true;
             }
-            
-            moves.Clear();
         }
 
         return false;

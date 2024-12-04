@@ -1,16 +1,18 @@
-using OcpCore.Engine.General;
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Pieces;
 
 public class Bishop : Piece
 {
-    public override Kind Kind => Kind.Bishop;
-    
-    public override int Value => 3;
-    
-    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
+    public override int Value => Scores.Bishop;
+
+    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        GetDirectionalMoves(board, position, colour, moveList, Constants.DiagonalMoves);
+        var moves = GetDiagonalSlidingMoves(game, colour, opponentColour, position);
+        
+        moves |= GetAntiDiagonalSlidingMoves(game, colour, opponentColour, position);
+
+        return moves;
     }
 }

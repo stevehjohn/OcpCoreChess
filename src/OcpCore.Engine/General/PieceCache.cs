@@ -1,4 +1,4 @@
-using OcpCore.Engine.General.StaticData;
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;
@@ -12,6 +12,7 @@ public static class PieceCache
         Pieces =
         [
             null,
+            null,
             new Pawn(),
             new Rook(),
             new Knight(),
@@ -21,5 +22,5 @@ public static class PieceCache
         ];
     }
 
-    public static Piece Get(byte kind) => Pieces[kind & Masks.Kind];
+    public static Piece Get(Plane kind) => Pieces[(int) kind];
 }

@@ -1,3 +1,4 @@
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 
@@ -5,91 +6,109 @@ namespace OcpCore.Engine.Pieces;
 
 public class King : Piece
 {
-    public override Kind Kind => Kind.King;
-    
-    public override int Value => 0;
-        
-    public override void GetMoves(Board board, int position, Colour colour, List<Move> moveList)
+    public override int Value => Scores.King;
+
+    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
     {
-        CheckForCastlingOpportunities(board, position, colour, moveList);
-        
-        var rank = Cell.GetRank(position);
+        var moves = Moves[MoveSet.King][position];
 
-        var file = Cell.GetFile(position);
-        
-        for (var i = 0; i < Constants.DirectionalMoves.Length; i++)
+        moves &= ~game[colour];
+
+        if (CheckCanCastleKingSide(game, colour, position))
         {
-            var direction = Constants.DirectionalMoves[i];
-
-            var newRank = rank + direction.RankDelta;
-
-            var newFile = file + direction.FileDelta;
-
-            var cell = Cell.GetCell(newRank, newFile);
-
-            if (cell < 0)
-            {
-                continue;
-            }
-
-            var content = board[cell];
-
-            if (content == 0)
-            {
-                moveList.Add(new Move(position, cell, MoveOutcome.Move, 0));
-
-                continue;
-            }
-
-            if (Cell.Colour(content) != colour)
-            {
-                moveList.Add(new Move(position, cell, MoveOutcome.Capture, PieceCache.Get(content).Value * 10 + Value));
-            }
+            moves |= 1ul << (position + 2);
         }
+
+        if (CheckCanCastleQueenSide(game, colour, position))
+        {
+            moves |= 1ul << (position - 2);
+        }
+
+        return moves;
     }
 
-    private static void CheckForCastlingOpportunities(Board board, int position, Colour colour, List<Move> moveList)
+    private static bool CheckCanCastleKingSide(Game game, Plane colour, int position)
     {
-        if (board.IsKingInCheck(colour) || Cell.GetFile(position) != Files.King)
+        if (colour == Plane.White)
         {
-            return;
-        }
-
-        var castleSide = colour == Colour.White ? Castle.White : Castle.Black;
-        
-        if ((board.State.CastleStatus & castleSide) == 0)
-        {
-            return;
-        }
-        
-        var rankStart = colour == Colour.White ? 0 : Constants.BlackRankCellStart;
-
-        if (Cell.Kind(board[rankStart + Files.LeftRook]) == Kind.Rook && Cell.Colour(board[rankStart + Files.LeftRook]) == colour)
-        {
-            if (board[rankStart + Files.LeftKnight] == 0 && board[rankStart + Files.LeftBishop] == 0 && board[rankStart + Files.Queen] == 0)
+            if ((game.State.CastleStatus & Castle.White) == 0)
             {
-                if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide)) > 0)
-                {
-                    if (! board.IsKingInCheck(colour, position - 1))
-                    {
-                        moveList.Add(new Move(position, rankStart + Files.LeftBishop, MoveOutcome.Move, 0));
-                    }
-                }
+                return false;
+            }
+        }
+        else
+        {
+            if ((game.State.CastleStatus & Castle.Black) == 0)
+            {
+                return false;
             }
         }
 
-        if (Cell.Kind(board[rankStart + Files.RightRook]) == Kind.Rook && Cell.Colour(board[rankStart + Files.RightRook]) == colour)
+        if (game.IsKingInCheck(colour))
         {
-            if (board[rankStart + Files.RightBishop] == 0 && board[rankStart + Files.RightKnight] == 0)
+            return false;
+        }
+
+        if (game.IsEmpty(position + 1) && game.IsEmpty(position + 2))
+        {
+            if (game.IsKingInCheck(colour, position + 1))
             {
-                if ((board.State.CastleStatus & (colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide)) > 0)
-                {
-                    if (! board.IsKingInCheck(colour, position + 1))
-                    {
-                        moveList.Add(new Move(position, rankStart + Files.RightKnight, MoveOutcome.Move, 0));
-                    }
-                }
+                return false;
+            }
+
+            if (game.IsKingInCheck(colour, position + 2))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    
+    private static bool CheckCanCastleQueenSide(Game game, Plane colour, int position)
+    {
+        if (colour == Plane.White)
+        {
+            if ((game.State.CastleStatus & Castle.White) == 0)
+            {
+                return false;
             }
         }
+        else
+        {
+            if ((game.State.CastleStatus & Castle.Black) == 0)
+            {
+                return false;
+            }
+        }
+
+        if (game.IsKingInCheck(colour))
+        {
+            return false;
+        }
+
+        if (game.IsEmpty(position - 1) && game.IsEmpty(position - 2) && game.IsEmpty(position - 3))
+        {
+            if (game.IsKingInCheck(colour, position - 1))
+            {
+                return false;
+            }
+
+            if (game.IsKingInCheck(colour, position - 2))
+            {
+                return false;
+            }
+
+            if (game.IsKingInCheck(colour, position - 3))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }
