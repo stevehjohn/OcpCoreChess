@@ -150,6 +150,13 @@ public class Game
         {
             return true;
         }
+        
+        attacks = Moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
+        
+        if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
+        {
+            return true;
+        }
 
         return false;
     }
