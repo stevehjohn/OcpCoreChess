@@ -418,8 +418,17 @@ public class Game
 
     private void UpdateBitboards(Kind kind, Colour colour, ulong fromBit, ulong toBit)
     {
-        this[Plane.White] &= ~fromBit & ~toBit;
-        this[Plane.Black] &= ~fromBit & ~toBit;
+        var clearMask = ~fromBit & ~toBit;
+
+        this[Plane.White] &= clearMask;
+        this[Plane.Black] &= clearMask;
+
+        this[Plane.Pawn] &= clearMask;
+        this[Plane.Rook] &= clearMask;
+        this[Plane.Knight] &= clearMask;
+        this[Plane.Bishop] &= clearMask;
+        this[Plane.Queen] &= clearMask;
+        this[Plane.King] &= clearMask;
 
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (colour)
@@ -432,13 +441,6 @@ public class Game
                 this[Plane.Black] |= toBit;
                 break;
         }
-
-        this[Plane.Pawn] &= ~fromBit & ~toBit;
-        this[Plane.Rook] &= ~fromBit & ~toBit;
-        this[Plane.Knight] &= ~fromBit & ~toBit;
-        this[Plane.Bishop] &= ~fromBit & ~toBit;
-        this[Plane.Queen] &= ~fromBit & ~toBit;
-        this[Plane.King] &= ~fromBit & ~toBit;
 
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (kind)
