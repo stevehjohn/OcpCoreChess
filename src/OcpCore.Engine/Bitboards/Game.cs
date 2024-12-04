@@ -97,6 +97,8 @@ public class Game
 
         UpdateEnPassantState(kind, from, to);
         
+        UpdateCastleState(kind, player, from);
+        
         State.InvertPlayer();
 
         return outcome;
@@ -333,7 +335,31 @@ public class Game
 
         State.SetEnPassantTarget(null);
     }
-    
+
+    private void UpdateCastleState(Kind kind, Colour colour, int position)
+    {
+        if (kind is not (Kind.Rook or Kind.King))
+        {
+            return;
+        }
+
+        if (kind == Kind.King)
+        {
+            State.RemoveCastleRights(colour == Colour.White ? Castle.White : Castle.Black);
+            
+            return;
+        }
+
+        if (Cell.GetFile(position) == 0)
+        {
+            State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
+            
+            return;
+        }
+
+        State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+    }
+
     private Kind GetKindInternal(ulong cellBit)
     {
         if ((this[Plane.Pawn] & cellBit) == cellBit)
