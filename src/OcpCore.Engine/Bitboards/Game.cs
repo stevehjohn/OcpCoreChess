@@ -86,6 +86,20 @@ public class Game
         if (IsColour(player.InvertColour(), to))
         {
             outcome |= MoveOutcome.Capture;
+
+            if ((this[Plane.Rook] & toBit) > 0)
+            {
+                var file = Cell.GetFile(to);
+
+                if (file == 0)
+                {
+                    State.RemoveCastleRights((this[Plane.Black] & toBit) > 0 ? Castle.BlackQueenSide : Castle.WhiteQueenSide);
+                }
+                else
+                {
+                    State.RemoveCastleRights((this[Plane.Black] & toBit) > 0 ? Castle.BlackKingSide : Castle.WhiteKingSide);
+                }
+            }
         }
 
         if (kind == Plane.Pawn)

@@ -56,11 +56,6 @@ public class King : Piece
                 return false;
             }
 
-            if (game.IsKingInCheck(colour, position + 2))
-            {
-                return false;
-            }
-
             return true;
         }
 
@@ -97,11 +92,6 @@ public class King : Piece
             }
 
             if (game.IsKingInCheck(colour, position - 2))
-            {
-                return false;
-            }
-
-            if (game.IsKingInCheck(colour, position - 3))
             {
                 return false;
             }
