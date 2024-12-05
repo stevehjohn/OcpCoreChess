@@ -158,11 +158,16 @@ public sealed class Core : IDisposable
         {
             Task.Run(() =>
             {
-                var counts = ProcessQueue(depth);
+                var result = ProcessQueue(depth);
 
-                for (var j = 1; j <= depth; j++)
+                for (var d = 1; d <= depth; d++)
                 {
-                    Interlocked.Add(ref _depthCounts[j], counts[j]);
+                    Interlocked.Add(ref _depthCounts[d], result.Counts[d]);
+
+                    for (var o = 1; o < 8; o++)
+                    {
+                        Interlocked.Add(ref _outcomes[d][o], result.Outcomes[d][o]);
+                    }
                 }
 
                 countdown.Signal();
@@ -176,7 +181,7 @@ public sealed class Core : IDisposable
 
     private readonly ConcurrentQueue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
     
-    private long[] ProcessQueue(int maxDepth)
+    private (long[] Counts, long[][] Outcomes) ProcessQueue(int maxDepth)
     {
         var wait = 10;
         
@@ -187,18 +192,25 @@ public sealed class Core : IDisposable
             wait--;
         }
 
-        var counts = new long[maxDepth + 1];
+        var localCounts = new long[maxDepth + 1];
+
+        var localOutcomes = new long[maxDepth + 1][];
+        
+        for (var i = 1; i <= maxDepth; i++)
+        {
+            localOutcomes[i] = new long[Constants.MoveOutcomes + 1];
+        }
         
         while (_gameQueue.Count > 0)
         {
             if (_cancellationToken.IsCancellationRequested)
             {
-                return counts;
+                return (localCounts, localOutcomes);
             }
 
             if (! _gameQueue.TryDequeue(out var state))
             {
-                return counts;
+                return (localCounts, localOutcomes);
             }
 
             var (game, _, depth) = state;
@@ -232,13 +244,13 @@ public sealed class Core : IDisposable
                         continue;
                     }
 
-                    counts[ply]++;
+                    localCounts[ply]++;
 
-                    if (counts[ply] > 1_000)
+                    if (localCounts[ply] > 1_000)
                     {
-                        Interlocked.Add(ref _depthCounts[ply], counts[ply]);
+                        Interlocked.Add(ref _depthCounts[ply], localCounts[ply]);
 
-                        counts[ply] = 0;
+                        localCounts[ply] = 0;
                     }
 
                     if (copy.IsKingInCheck((Plane) player.Invert()))
@@ -255,7 +267,7 @@ public sealed class Core : IDisposable
                     {
                         var outcome = BitOperations.TrailingZeroCount((int) outcomes);
 
-                        //Interlocked.Increment(ref _outcomes[ply][outcome + 1]);
+                        localOutcomes[ply][outcome + 1]++;
 
                         outcomes ^= (MoveOutcome) (1 << outcome);
                     }
@@ -272,7 +284,7 @@ public sealed class Core : IDisposable
             }
         }
 
-        return counts;
+        return (localCounts, localOutcomes);
     }
     
     private static bool CanMove(Game game, Colour colour)
