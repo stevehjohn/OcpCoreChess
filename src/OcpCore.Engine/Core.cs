@@ -18,7 +18,7 @@ public sealed class Core : IDisposable
 
     private readonly Colour _engineColour;
 
-    private readonly PriorityQueue<(Game Game, int Depth), int> _gameQueue = new();
+    private readonly PriorityQueue<(Game Game, int Depth, string PerftNode), int> _gameQueue = new();
     
     private long[] _depthCounts;
     
@@ -157,7 +157,7 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        _gameQueue.Enqueue((_game, depth), 0);
+        _gameQueue.Enqueue((_game, depth, null), 0);
 
         var threads = Environment.ProcessorCount - 2;
         
@@ -193,7 +193,7 @@ public sealed class Core : IDisposable
         callback?.Invoke();
     }
 
-    private (long[] Counts, long[][] Outcomes) ProcessQueue(int maxDepth, string perftNode = null)
+    private (long[] Counts, long[][] Outcomes) ProcessQueue(int maxDepth)
     {
         var wait = 10;
         
@@ -220,7 +220,7 @@ public sealed class Core : IDisposable
                 return (localCounts, localOutcomes);
             }
 
-            (Game, int) state;
+            (Game, int, string) state;
             
             lock (_gameQueue)
             {
@@ -230,7 +230,7 @@ public sealed class Core : IDisposable
                 }
             }
 
-            var (game, depth) = state;
+            var (game, depth, perftNode) = state;
 
             var player = game.State.Player;
 
@@ -304,7 +304,7 @@ public sealed class Core : IDisposable
                     {
                         lock (_gameQueue)
                         {
-                            _gameQueue.Enqueue((copy, depth - 1), MoveOutcome.CheckMate - outcomes);
+                            _gameQueue.Enqueue((copy, depth - 1, perftNode), MoveOutcome.CheckMate - outcomes);
 
                             _perftCounts[perftNode]--;
                         }
