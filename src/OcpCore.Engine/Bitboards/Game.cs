@@ -89,7 +89,16 @@ public class Game
 
             if ((this[Plane.Rook] & toBit) > 0)
             {
-                State.RemoveCastleRights(player == Plane.White ? Castle.Black : Castle.White);
+                var file = Cell.GetFile(to);
+
+                if (file == 0)
+                {
+                    State.RemoveCastleRights(player == Plane.White ? Castle.BlackQueenSide : Castle.WhiteQueenSide);
+                }
+                else
+                {
+                    State.RemoveCastleRights(player == Plane.White ? Castle.BlackKingSide : Castle.WhiteKingSide);
+                }
             }
         }
 
