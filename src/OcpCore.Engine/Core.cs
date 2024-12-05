@@ -160,9 +160,9 @@ public sealed class Core : IDisposable
             {
                 var counts = ProcessQueue(depth);
 
-                for (var j = 1; j < depth; j++)
+                for (var j = 1; j <= depth; j++)
                 {
-                    _depthCounts[j] += counts[j];
+                    Interlocked.Add(ref _depthCounts[j], counts[j]);
                 }
 
                 countdown.Signal();
