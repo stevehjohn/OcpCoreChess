@@ -108,7 +108,7 @@ public static class EntryPoint
 
             Console.WriteLine();
 
-            Console.WriteLine($"  {DateTime.Now:HH:mm:ss} Starting depth {maxDepth}");
+            Console.WriteLine($"  {DateTime.Now:HH:mm:ss}: Starting depth {maxDepth}");
 
             Console.WriteLine();
 
@@ -152,11 +152,11 @@ public static class EntryPoint
                         var etr =
                             $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
 
-                        Console.Write($"  {DateTime.Now:HH:mm:ss} {percent:N2}% {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ETR: {etr}     ");
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: {etr}          ");
                     }
                     catch
                     {
-                        Console.Write($"  {DateTime.Now:HH:mm:ss} {percent:N2}% {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ETR: ∞     ");
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: ∞     ");
                     }
 
                     Console.CursorLeft = y;

@@ -37,6 +37,8 @@ public sealed class Core : IDisposable
 
     public bool IsBusy => _cancellationTokenSource != null;
 
+    public int QueueSize { get; private set; }
+
     public Core(Colour engineColour)
     {
         _engineColour = engineColour;
@@ -176,8 +178,13 @@ public sealed class Core : IDisposable
             }, _cancellationToken);
         }
 
-        countdown.Wait(_cancellationToken);
-        
+        while (! countdown.IsSet)
+        {
+            QueueSize = _gameQueue.Count;
+            
+            Thread.Sleep(1_000);
+        }
+
         callback?.Invoke();
     }
 
