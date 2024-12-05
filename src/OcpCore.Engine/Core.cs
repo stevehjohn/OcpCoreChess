@@ -18,6 +18,8 @@ public sealed class Core : IDisposable
 
     private readonly Colour _engineColour;
 
+    private readonly PriorityQueue<(Game Game, int Depth), int> _gameQueue = new();
+    
     private long[] _depthCounts;
     
     private long[][] _outcomes;
@@ -33,6 +35,8 @@ public sealed class Core : IDisposable
     public long GetMoveOutcome(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
     public bool IsBusy => _cancellationTokenSource != null;
+
+    public int QueueSize { get; private set; }
 
     public Core(Colour engineColour)
     {
@@ -138,6 +142,8 @@ public sealed class Core : IDisposable
 
         _outcomes = new long[depth + 1][];
         
+        _gameQueue.Clear();
+
         for (var i = 1; i <= depth; i++)
         {
             _depthCounts[i] = 0;
@@ -145,78 +151,154 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        ProcessPly(_game, depth, depth);
+        _gameQueue.Enqueue((_game, depth), 0);
+
+        var threads = Environment.ProcessorCount - 2;
+        
+        var countdown = new CountdownEvent(threads);
+
+        for (var i = 0; i < threads; i++)
+        {
+            Task.Run(() =>
+            {
+                var result = ProcessQueue(depth);
+
+                for (var d = 1; d <= depth; d++)
+                {
+                    Interlocked.Add(ref _depthCounts[d], result.Counts[d]);
+
+                    for (var o = 1; o < 8; o++)
+                    {
+                        Interlocked.Add(ref _outcomes[d][o], result.Outcomes[d][o]);
+                    }
+                }
+
+                countdown.Signal();
+            }, _cancellationToken);
+        }
+
+        while (! countdown.IsSet)
+        {
+            QueueSize = _gameQueue.Count;
+            
+            Thread.Sleep(1_000);
+        }
 
         callback?.Invoke();
     }
 
-    private void ProcessPly(Game game, int maxDepth, int depth)
+    private (long[] Counts, long[][] Outcomes) ProcessQueue(int maxDepth)
     {
-        if (_cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }   
+        var wait = 10;
         
-        var player = game.State.Player;
-               
-        var ply = maxDepth - depth + 1;
-
-        var pieces = game[(Plane) player];
-
-        var cell = PopPiecePosition(ref pieces);
-
-        while (cell > -1)
+        while (wait > 0 && _gameQueue.Count == 0)
         {
-            var kind = game.GetKind(cell);
+            Thread.Sleep(100);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
-
-            var move = Piece.PopNextMove(ref moves);
-
-            while (move > -1)
-            {
-                var copy = new Game(game);
-
-                var outcomes = copy.MakeMove(cell, move);
-
-                if (copy.IsKingInCheck((Plane) player))
-                {
-                    move = Piece.PopNextMove(ref moves);
-
-                    continue;
-                }
-                
-                _depthCounts[ply]++;
-
-                if (copy.IsKingInCheck((Plane) player.Invert()))
-                {
-                    outcomes |= MoveOutcome.Check;
-
-                    if (! CanMove(copy, player.Invert()))
-                    {
-                        outcomes |= MoveOutcome.CheckMate;
-                    }
-                }
-
-                while (outcomes > 0)
-                {
-                    var outcome = BitOperations.TrailingZeroCount((int) outcomes);
-                    
-                    _outcomes[ply][outcome + 1]++;
-
-                    outcomes ^= (MoveOutcome) (1 << outcome);
-                }
-
-                if (depth > 1)
-                {
-                    ProcessPly(copy, maxDepth, depth - 1);
-                }
-
-                move = Piece.PopNextMove(ref moves);
-            }
-            
-            cell = PopPiecePosition(ref pieces);
+            wait--;
         }
+
+        var localCounts = new long[maxDepth + 1];
+
+        var localOutcomes = new long[maxDepth + 1][];
+        
+        for (var i = 1; i <= maxDepth; i++)
+        {
+            localOutcomes[i] = new long[Constants.MoveOutcomes + 1];
+        }
+        
+        while (_gameQueue.Count > 0)
+        {
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                return (localCounts, localOutcomes);
+            }
+
+            (Game, int) state;
+            
+            lock (_gameQueue)
+            {
+                if (! _gameQueue.TryDequeue(out state, out _))
+                {
+                    return (localCounts, localOutcomes);
+                }
+            }
+
+            var (game, depth) = state;
+
+            var player = game.State.Player;
+
+            var ply = maxDepth - depth + 1;
+
+            var pieces = game[(Plane) player];
+
+            var cell = PopPiecePosition(ref pieces);
+
+            while (cell > -1)
+            {
+                var kind = game.GetKind(cell);
+
+                var moves = PieceCache.Get(kind).GetMoves(game, cell);
+
+                var move = Piece.PopNextMove(ref moves);
+
+                while (move > -1)
+                {
+                    var copy = new Game(game);
+
+                    var outcomes = copy.MakeMove(cell, move);
+
+                    if (copy.IsKingInCheck((Plane) player))
+                    {
+                        move = Piece.PopNextMove(ref moves);
+
+                        continue;
+                    }
+
+                    localCounts[ply]++;
+
+                    if (localCounts[ply] > 1_000)
+                    {
+                        Interlocked.Add(ref _depthCounts[ply], localCounts[ply]);
+
+                        localCounts[ply] = 0;
+                    }
+
+                    if (copy.IsKingInCheck((Plane) player.Invert()))
+                    {
+                        outcomes |= MoveOutcome.Check;
+
+                        if (! CanMove(copy, player.Invert()))
+                        {
+                            outcomes |= MoveOutcome.CheckMate;
+                        }
+                    }
+
+                    while (outcomes > 0)
+                    {
+                        var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+
+                        localOutcomes[ply][outcome + 1]++;
+
+                        outcomes ^= (MoveOutcome) (1 << outcome);
+                    }
+
+                    if (depth > 1)
+                    {
+                        lock (_gameQueue)
+                        {
+                            _gameQueue.Enqueue((copy, depth - 1), MoveOutcome.CheckMate - outcomes);
+                        }
+                    }
+
+                    move = Piece.PopNextMove(ref moves);
+                }
+
+                cell = PopPiecePosition(ref pieces);
+            }
+        }
+
+        return (localCounts, localOutcomes);
     }
     
     private static bool CanMove(Game game, Colour colour)
