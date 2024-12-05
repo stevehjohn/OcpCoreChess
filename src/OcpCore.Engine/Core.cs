@@ -185,7 +185,7 @@ public sealed class Core : IDisposable
     {
         var wait = 10;
         
-        while (wait > 0 && _gameQueue.Count == 0)
+        while (wait > 0 && _gameQueue.IsEmpty)
         {
             Thread.Sleep(100);
 
@@ -201,7 +201,7 @@ public sealed class Core : IDisposable
             localOutcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
         
-        while (_gameQueue.Count > 0)
+        while (!_gameQueue.IsEmpty)
         {
             if (_cancellationToken.IsCancellationRequested)
             {
