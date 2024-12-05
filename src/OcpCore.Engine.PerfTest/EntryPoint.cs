@@ -156,7 +156,7 @@ public static class EntryPoint
                     }
                     catch
                     {
-                        //
+                        Console.Write($"  {DateTime.Now:HH:mm:ss} {percent:N2}% {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ETR: ∞");
                     }
 
                     Console.CursorLeft = y;

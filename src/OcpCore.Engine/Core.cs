@@ -138,6 +138,8 @@ public sealed class Core : IDisposable
 
         _outcomes = new long[depth + 1][];
         
+        _gameQueue.Clear();
+        
         for (var i = 1; i <= depth; i++)
         {
             _depthCounts[i] = 0;
@@ -145,77 +147,86 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        ProcessPly(_game, depth, depth);
+        _gameQueue.Enqueue((_game, depth, depth));
+        
+        ProcessQueue();
 
         callback?.Invoke();
     }
 
-    private void ProcessPly(Game game, int maxDepth, int depth)
+    private readonly Queue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
+    
+    private void ProcessQueue()
     {
-        if (_cancellationToken.IsCancellationRequested)
+        while (_gameQueue.Count > 0)
         {
-            return;
-        }   
-        
-        var player = game.State.Player;
-               
-        var ply = maxDepth - depth + 1;
-
-        var pieces = game[(Plane) player];
-
-        var cell = PopPiecePosition(ref pieces);
-
-        while (cell > -1)
-        {
-            var kind = game.GetKind(cell);
-
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
-
-            var move = Piece.PopNextMove(ref moves);
-
-            while (move > -1)
+            if (_cancellationToken.IsCancellationRequested)
             {
-                var copy = new Game(game);
-
-                var outcomes = copy.MakeMove(cell, move);
-
-                if (copy.IsKingInCheck((Plane) player))
-                {
-                    move = Piece.PopNextMove(ref moves);
-
-                    continue;
-                }
-                
-                _depthCounts[ply]++;
-
-                if (copy.IsKingInCheck((Plane) player.Invert()))
-                {
-                    outcomes |= MoveOutcome.Check;
-
-                    if (! CanMove(copy, player.Invert()))
-                    {
-                        outcomes |= MoveOutcome.CheckMate;
-                    }
-                }
-
-                while (outcomes > 0)
-                {
-                    var outcome = BitOperations.TrailingZeroCount((int) outcomes);
-                    
-                    _outcomes[ply][outcome + 1]++;
-
-                    outcomes ^= (MoveOutcome) (1 << outcome);
-                }
-
-                if (depth > 1)
-                {
-                    ProcessPly(copy, maxDepth, depth - 1);
-                }
-
-                move = Piece.PopNextMove(ref moves);
+                return;
             }
-            
-            cell = PopPiecePosition(ref pieces);
+
+            var (game, maxDepth, depth) = _gameQueue.Dequeue();
+
+            var player = game.State.Player;
+
+            var ply = maxDepth - depth + 1;
+
+            var pieces = game[(Plane) player];
+
+            var cell = PopPiecePosition(ref pieces);
+
+            while (cell > -1)
+            {
+                var kind = game.GetKind(cell);
+
+                var moves = PieceCache.Get(kind).GetMoves(game, cell);
+
+                var move = Piece.PopNextMove(ref moves);
+
+                while (move > -1)
+                {
+                    var copy = new Game(game);
+
+                    var outcomes = copy.MakeMove(cell, move);
+
+                    if (copy.IsKingInCheck((Plane) player))
+                    {
+                        move = Piece.PopNextMove(ref moves);
+
+                        continue;
+                    }
+
+                    _depthCounts[ply]++;
+
+                    if (copy.IsKingInCheck((Plane) player.Invert()))
+                    {
+                        outcomes |= MoveOutcome.Check;
+
+                        if (! CanMove(copy, player.Invert()))
+                        {
+                            outcomes |= MoveOutcome.CheckMate;
+                        }
+                    }
+
+                    while (outcomes > 0)
+                    {
+                        var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+
+                        _outcomes[ply][outcome + 1]++;
+
+                        outcomes ^= (MoveOutcome) (1 << outcome);
+                    }
+
+                    if (depth > 1)
+                    {
+                        _gameQueue.Enqueue((copy, maxDepth, depth - 1));
+                    }
+
+                    move = Piece.PopNextMove(ref moves);
+                }
+
+                cell = PopPiecePosition(ref pieces);
+            }
         }
     }
     
