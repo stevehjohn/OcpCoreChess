@@ -19,6 +19,8 @@ public sealed class Core : IDisposable
 
     private readonly Colour _engineColour;
 
+    private readonly ConcurrentQueue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
+    
     private long[] _depthCounts;
     
     private long[][] _outcomes;
@@ -179,8 +181,6 @@ public sealed class Core : IDisposable
         callback?.Invoke();
     }
 
-    private readonly ConcurrentQueue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
-    
     private (long[] Counts, long[][] Outcomes) ProcessQueue(int maxDepth)
     {
         var wait = 10;
