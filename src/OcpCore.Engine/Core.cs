@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
