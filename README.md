@@ -9,6 +9,7 @@
   - Captures preferred.
   - Lower value taking higher even better.
   - Moves that don't go onto an attacked square.
+  - Could potentially be done buy putting all made moves on a `PriorityQueue` before further depth processing.
 
 ## Code Cleanup TODOs
 
