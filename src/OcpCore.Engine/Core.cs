@@ -150,21 +150,19 @@ public sealed class Core : IDisposable
 
         _gameQueue.Enqueue((_game, depth, depth));
 
-        var countdown = new CountdownEvent(16);
+        var threads = Environment.ProcessorCount - 2;
+        
+        var countdown = new CountdownEvent(threads);
 
-        for (var i = 0; i < 16; i++)
+        for (var i = 0; i < threads; i++)
         {
             Task.Run(() =>
             {
                 ProcessQueue();
 
                 countdown.Signal();
-                
-                Console.WriteLine(countdown.CurrentCount);
             }, _cancellationToken);
         }
-        
-        ProcessQueue();
 
         countdown.Wait(_cancellationToken);
 
