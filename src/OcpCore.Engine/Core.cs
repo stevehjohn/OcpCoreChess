@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
@@ -139,7 +140,7 @@ public sealed class Core : IDisposable
         _outcomes = new long[depth + 1][];
         
         _gameQueue.Clear();
-        
+
         for (var i = 1; i <= depth; i++)
         {
             _depthCounts[i] = 0;
@@ -148,16 +149,41 @@ public sealed class Core : IDisposable
         }
 
         _gameQueue.Enqueue((_game, depth, depth));
+
+        var countdown = new CountdownEvent(16);
+
+        for (var i = 0; i < 16; i++)
+        {
+            Task.Run(() =>
+            {
+                ProcessQueue();
+
+                countdown.Signal();
+                
+                Console.WriteLine(countdown.CurrentCount);
+            }, _cancellationToken);
+        }
         
         ProcessQueue();
+
+        countdown.Wait(_cancellationToken);
 
         callback?.Invoke();
     }
 
-    private readonly Queue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
+    private readonly ConcurrentQueue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
     
     private void ProcessQueue()
     {
+        var wait = 10;
+        
+        while (wait > 0 && _gameQueue.Count == 0)
+        {
+            Thread.Sleep(100);
+
+            wait--;
+        }
+        
         while (_gameQueue.Count > 0)
         {
             if (_cancellationToken.IsCancellationRequested)
@@ -165,7 +191,12 @@ public sealed class Core : IDisposable
                 return;
             }
 
-            var (game, maxDepth, depth) = _gameQueue.Dequeue();
+            if (! _gameQueue.TryDequeue(out var state))
+            {
+                return;
+            }
+
+            var (game, maxDepth, depth) = state;
 
             var player = game.State.Player;
 
@@ -196,7 +227,7 @@ public sealed class Core : IDisposable
                         continue;
                     }
 
-                    _depthCounts[ply]++;
+                    Interlocked.Increment(ref  _depthCounts[ply]);
 
                     if (copy.IsKingInCheck((Plane) player.Invert()))
                     {
@@ -212,7 +243,7 @@ public sealed class Core : IDisposable
                     {
                         var outcome = BitOperations.TrailingZeroCount((int) outcomes);
 
-                        _outcomes[ply][outcome + 1]++;
+                        Interlocked.Increment(ref _outcomes[ply][outcome + 1]);
 
                         outcomes ^= (MoveOutcome) (1 << outcome);
                     }
