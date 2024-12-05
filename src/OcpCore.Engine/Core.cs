@@ -19,7 +19,7 @@ public sealed class Core : IDisposable
 
     private readonly Colour _engineColour;
 
-    private readonly Queue<(Game Game, int Depth)> _gameQueue = new();
+    private readonly PriorityQueue<(Game Game, int Depth), int> _gameQueue = new();
     
     private long[] _depthCounts;
     
@@ -152,7 +152,7 @@ public sealed class Core : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        _gameQueue.Enqueue((_game, depth));
+        _gameQueue.Enqueue((_game, depth), 0);
 
         var threads = Environment.ProcessorCount - 2;
         
@@ -219,7 +219,7 @@ public sealed class Core : IDisposable
             
             lock (_gameQueue)
             {
-                if (! _gameQueue.TryDequeue(out state))
+                if (! _gameQueue.TryDequeue(out state, out _))
                 {
                     return (localCounts, localOutcomes);
                 }
@@ -288,7 +288,7 @@ public sealed class Core : IDisposable
                     {
                         lock (_gameQueue)
                         {
-                            _gameQueue.Enqueue((copy, depth - 1));
+                            _gameQueue.Enqueue((copy, depth - 1), MoveOutcome.CheckMate - outcomes);
                         }
                     }
 
