@@ -19,7 +19,7 @@ public sealed class Core : IDisposable
 
     private readonly Colour _engineColour;
 
-    private readonly ConcurrentQueue<(Game Game, int Depth)> _gameQueue = new();
+    private readonly Queue<(Game Game, int Depth)> _gameQueue = new();
     
     private long[] _depthCounts;
     
@@ -192,7 +192,7 @@ public sealed class Core : IDisposable
     {
         var wait = 10;
         
-        while (wait > 0 && _gameQueue.IsEmpty)
+        while (wait > 0 && _gameQueue.Count == 0)
         {
             Thread.Sleep(100);
 
@@ -208,16 +208,21 @@ public sealed class Core : IDisposable
             localOutcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
         
-        while (!_gameQueue.IsEmpty)
+        while (_gameQueue.Count > 0)
         {
             if (_cancellationToken.IsCancellationRequested)
             {
                 return (localCounts, localOutcomes);
             }
 
-            if (! _gameQueue.TryDequeue(out var state))
+            (Game, int) state;
+            
+            lock (_gameQueue)
             {
-                return (localCounts, localOutcomes);
+                if (! _gameQueue.TryDequeue(out state))
+                {
+                    return (localCounts, localOutcomes);
+                }
             }
 
             var (game, depth) = state;
@@ -281,7 +286,10 @@ public sealed class Core : IDisposable
 
                     if (depth > 1)
                     {
-                        _gameQueue.Enqueue((copy, depth - 1));
+                        lock (_gameQueue)
+                        {
+                            _gameQueue.Enqueue((copy, depth - 1));
+                        }
                     }
 
                     move = Piece.PopNextMove(ref moves);
