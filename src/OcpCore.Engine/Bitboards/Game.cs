@@ -93,11 +93,11 @@ public class Game
 
                 if (file == 0)
                 {
-                    State.RemoveCastleRights(player == Plane.White ? Castle.BlackQueenSide : Castle.WhiteQueenSide);
+                    State.RemoveCastleRights((this[Plane.Black] & toBit) > 0 ? Castle.BlackQueenSide : Castle.WhiteQueenSide);
                 }
                 else
                 {
-                    State.RemoveCastleRights(player == Plane.White ? Castle.BlackKingSide : Castle.WhiteKingSide);
+                    State.RemoveCastleRights((this[Plane.Black] & toBit) > 0 ? Castle.BlackKingSide : Castle.WhiteKingSide);
                 }
             }
         }
