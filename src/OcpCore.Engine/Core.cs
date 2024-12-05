@@ -221,7 +221,6 @@ public sealed class Core : IDisposable
     
     private static bool CanMove(Game game, Colour colour)
     {
-
         var pieces = game[(Plane) colour];
 
         var cell = PopPiecePosition(ref pieces);
