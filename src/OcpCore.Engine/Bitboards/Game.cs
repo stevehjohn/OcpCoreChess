@@ -218,6 +218,10 @@ public class Game
 
         var blackKingCell = 0;
 
+        var whiteScore = 0;
+
+        var blackScore = 0;
+
         for (var rank = 0; rank < Constants.Ranks; rank++)
         {
             var files = ranks[Constants.MaxRank - rank];
@@ -280,6 +284,17 @@ public class Game
                     }
                 }
 
+                var piece = PieceCache.Get((Kind) plane);
+
+                if (colourPlane == Plane.White)
+                {
+                    whiteScore += piece.Value;
+                }
+                else
+                {
+                    blackScore += piece.Value;
+                }
+
                 file++;
             }
             
@@ -330,8 +345,7 @@ public class Game
             throw new FenParseException($"Invalid value for fullmove counter: {parts[5]}.");
         }
 
-        // TODO: Scores
-        State = new State(player, castleAvailability, enPassantTarget, 0, 0, whiteKingCell, blackKingCell, halfmoves, fullmoves);
+        State = new State(player, castleAvailability, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
