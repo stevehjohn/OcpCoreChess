@@ -74,11 +74,11 @@ public class Game
                 // TODO: Test
                 if (from - to < 0)
                 {
-                    UpdateBitboards(kind, player, fromBit << 4, fromBit << 2);
+                    UpdateBitboards(Plane.Rook, player, fromBit << 4, fromBit << 2);
                 }
                 else
                 {
-                    UpdateBitboards(kind, player, fromBit >> 3, fromBit >> 1);
+                    UpdateBitboards(Plane.Rook, player, fromBit >> 3, fromBit >> 1);
                 }
             }
         }
