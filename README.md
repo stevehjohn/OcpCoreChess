@@ -4,11 +4,12 @@
 
 ## Functionality TODOs
 
-- Promote to Knight?
+- Promote to Knight sometimes?
 - Move ordering?
   - Captures preferred.
   - Lower value taking higher even better.
   - Moves that don't go onto an attacked square.
+  - Could potentially be done buy putting all made moves on a `PriorityQueue` before further depth processing.
 
 ## Code Cleanup TODOs
 
@@ -19,14 +20,14 @@
 ```
  Ply | Time
 -----+-----------
- 1   | < 1 ms
+ 1   | ~ 5 ms
  2   | < 1 ms
- 3   | < 10 ms
- 4   | ~ 100 ms
- 5   | < 1 s
- 6   | ~ 10.5 s
- 7   | ~ 5 m
- 8   | ~ 2.2 h
+ 3   | ~ 10 ms
+ 4   | ~ 50 ms
+ 5   | ~ 0.5 s
+ 6   | ~ 5 s
+ 7   | ~ 2 m
+ 8   | ~ 50 m
  9   | ~ 2.5 d
 ```
 
