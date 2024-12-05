@@ -158,20 +158,25 @@ public sealed class Core : IDisposable
         {
             Task.Run(() =>
             {
-                ProcessQueue();
+                var counts = ProcessQueue(depth);
+
+                for (var j = 1; j < depth; j++)
+                {
+                    _depthCounts[j] += counts[j];
+                }
 
                 countdown.Signal();
             }, _cancellationToken);
         }
 
         countdown.Wait(_cancellationToken);
-
+        
         callback?.Invoke();
     }
 
     private readonly ConcurrentQueue<(Game Game, int MaxDepth, int Depth)> _gameQueue = new();
     
-    private void ProcessQueue()
+    private long[] ProcessQueue(int maxDepth)
     {
         var wait = 10;
         
@@ -181,20 +186,22 @@ public sealed class Core : IDisposable
 
             wait--;
         }
+
+        var counts = new long[maxDepth + 1];
         
         while (_gameQueue.Count > 0)
         {
             if (_cancellationToken.IsCancellationRequested)
             {
-                return;
+                return counts;
             }
 
             if (! _gameQueue.TryDequeue(out var state))
             {
-                return;
+                return counts;
             }
 
-            var (game, maxDepth, depth) = state;
+            var (game, _, depth) = state;
 
             var player = game.State.Player;
 
@@ -225,7 +232,14 @@ public sealed class Core : IDisposable
                         continue;
                     }
 
-                    Interlocked.Increment(ref  _depthCounts[ply]);
+                    counts[ply]++;
+
+                    if (counts[ply] > 1_000)
+                    {
+                        Interlocked.Add(ref _depthCounts[ply], counts[ply]);
+
+                        counts[ply] = 0;
+                    }
 
                     if (copy.IsKingInCheck((Plane) player.Invert()))
                     {
@@ -241,7 +255,7 @@ public sealed class Core : IDisposable
                     {
                         var outcome = BitOperations.TrailingZeroCount((int) outcomes);
 
-                        Interlocked.Increment(ref _outcomes[ply][outcome + 1]);
+                        //Interlocked.Increment(ref _outcomes[ply][outcome + 1]);
 
                         outcomes ^= (MoveOutcome) (1 << outcome);
                     }
@@ -257,6 +271,8 @@ public sealed class Core : IDisposable
                 cell = PopPiecePosition(ref pieces);
             }
         }
+
+        return counts;
     }
     
     private static bool CanMove(Game game, Colour colour)
