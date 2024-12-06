@@ -234,14 +234,9 @@ public sealed class Core : IDisposable
                     return (localCounts, localOutcomes);
                 }
 
-                (Game, int) state;
-
-                // lock (_gameQueue)
+                if (! localQueue.TryDequeue(out (Game, int) state, out _))
                 {
-                    if (! localQueue.TryDequeue(out state, out _))
-                    {
-                        return (localCounts, localOutcomes);
-                    }
+                    return (localCounts, localOutcomes);
                 }
 
                 var (game, depth) = state;
