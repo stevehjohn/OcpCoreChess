@@ -91,13 +91,13 @@ public class Game
             {
                 var file = Cell.GetFile(to);
 
-                if (file == 0)
+                if (player == Plane.White)
                 {
-                    State.RemoveCastleRights((this[Plane.Black] & toBit) > 0 ? Castle.BlackQueenSide : Castle.WhiteQueenSide);
+                    State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
                 }
                 else
                 {
-                    State.RemoveCastleRights((this[Plane.Black] & toBit) > 0 ? Castle.BlackKingSide : Castle.WhiteKingSide);
+                    State.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
                 }
             }
         }
