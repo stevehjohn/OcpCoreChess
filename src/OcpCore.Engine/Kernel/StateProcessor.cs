@@ -11,8 +11,6 @@ public class StateProcessor
 {
     private const int CentralPoolMax = 1_000;
     
-    private static readonly int Threads = Environment.ProcessorCount - 2;
-    
     private readonly int _maxDepth;
 
     private readonly PriorityQueue<(Game game, int depth), int> _centralQueue;
@@ -56,7 +54,7 @@ public class StateProcessor
         {
             lock (_centralQueue)
             {
-                for (var i = 0; i < Math.Max(1, _centralQueue.Count / Threads); i++)
+                for (var i = 0; i < Math.Max(1, _centralQueue.Count / Coordinator.Threads); i++)
                 {
                     if (_centralQueue.TryDequeue(out var workItem, out var priority))
                     {
