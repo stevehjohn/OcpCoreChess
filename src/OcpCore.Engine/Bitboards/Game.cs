@@ -83,21 +83,7 @@ public class Game
 
         if (IsColour(player.InvertColour(), to))
         {
-            outcome |= MoveOutcome.Capture;
-
-            if ((this[Plane.Rook] & toBit) > 0)
-            {
-                var file = Cell.GetFile(to);
-
-                if (player == Plane.White)
-                {
-                    State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
-                }
-                else
-                {
-                    State.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
-                }
-            }
+            HandleCapture(to, ref outcome);
         }
 
         if (kind == Plane.Pawn)
@@ -317,6 +303,25 @@ public class Game
         State = new State(player, castleAvailability, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell, halfmoves, fullmoves);
     }
 
+    private void HandleCapture(int to, ref MoveOutcome outcome)
+    {
+        outcome |= MoveOutcome.Capture;
+
+        if ((this[Plane.Rook] & (1ul << to)) > 0)
+        {
+            var file = Cell.GetFile(to);
+
+            if (State.Player == Colour.White)
+            {
+                State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
+            }
+            else
+            {
+                State.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
+            }
+        }
+    }
+
     private void HandlePawnSpecifics(int to, ref MoveOutcome outcome)
     {
         if (to == State.EnPassantTarget)
@@ -343,7 +348,7 @@ public class Game
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void HandleKingSpecifics(int from, int to, ref MoveOutcome outcome)
     {
-        if (State.Player == (Colour) Plane.White)
+        if (State.Player == Colour.White)
         {
             State.SetWhiteKingCell(to);
         }
