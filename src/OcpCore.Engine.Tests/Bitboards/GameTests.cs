@@ -1,5 +1,6 @@
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using Xunit;
 
@@ -161,6 +162,33 @@ public class GameTests
         _game.MakeMove(3, 0);
         
         Assert.Equal(expectedPlane, _game[Plane.Queen]);
+    }
+
+    [Theory]
+    [InlineData("8/8/8/8/8/8/p7/1K6 w - - 0 1", Colour.White)]
+    [InlineData("8/8/8/8/8/8/2p5/1K6 w - - 0 1", Colour.White)]
+    [InlineData("1k6/P7/8/8/8/8/8/8 b - - 0 1", Colour.Black)]
+    [InlineData("1k6/2P5/8/8/8/8/8/8 b - - 0 1", Colour.Black)]
+    [InlineData("1k6/2K5/8/8/8/8/8/8 b - - 0 1", Colour.Black)]
+    [InlineData("k7/8/8/8/8/8/8/7B b - - 0 1", Colour.Black)]
+    [InlineData("k7/1p6/8/8/8/8/8/7B b - - 0 1", Colour.Black, false)]
+    [InlineData("k7/8/2P5/8/8/8/8/7B b - - 0 1", Colour.Black, false)]
+    [InlineData("k7/8/8/8/8/8/8/R7 b - - 0 1", Colour.Black)]
+    [InlineData("k7/8/8/8/p7/8/8/R7 b - - 0 1", Colour.Black, false)]
+    [InlineData("k7/8/8/8/P7/8/8/R7 b - - 0 1", Colour.Black, false)]
+    [InlineData("k7/2N5/8/8/8/8/8/8 b - - 0 1", Colour.Black)]
+    public void ReportsKingInCheckCorrectly(string fen, Colour colour, bool check = true)
+    {
+        _game.ParseFen(fen);
+
+        if (check)
+        {
+            Assert.True(_game.IsKingInCheck((Plane) colour));
+        }
+        else
+        {
+            Assert.False(_game.IsKingInCheck((Plane) colour));
+        }
     }
 
     [Fact]
