@@ -153,35 +153,42 @@ public sealed class Core : IDisposable
 
         _gameQueue.Enqueue((_game, depth), 0);
 
-        var threads = Environment.ProcessorCount - 2;
-        
-        var countdown = new CountdownEvent(threads);
-
-        for (var i = 0; i < threads; i++)
+        if (depth < 6)
         {
-            Task.Run(() =>
-            {
-                var result = ProcessQueue(depth);
-
-                for (var d = 1; d <= depth; d++)
-                {
-                    Interlocked.Add(ref _depthCounts[d], result.Counts[d]);
-
-                    for (var o = 1; o < 8; o++)
-                    {
-                        Interlocked.Add(ref _outcomes[d][o], result.Outcomes[d][o]);
-                    }
-                }
-
-                countdown.Signal();
-            }, _cancellationToken);
+            ProcessQueue(depth);
         }
-
-        while (! countdown.IsSet)
+        else
         {
-            QueueSize = _gameQueue.Count;
-            
-            Thread.Sleep(1_000);
+            var threads =Environment.ProcessorCount - 2;
+
+            var countdown = new CountdownEvent(threads);
+
+            for (var i = 0; i < threads; i++)
+            {
+                Task.Run(() =>
+                {
+                    var result = ProcessQueue(depth);
+
+                    for (var d = 1; d <= depth; d++)
+                    {
+                        Interlocked.Add(ref _depthCounts[d], result.Counts[d]);
+
+                        for (var o = 1; o < 8; o++)
+                        {
+                            Interlocked.Add(ref _outcomes[d][o], result.Outcomes[d][o]);
+                        }
+                    }
+
+                    countdown.Signal();
+                }, _cancellationToken);
+            }
+
+            while (! countdown.IsSet)
+            {
+                QueueSize = _gameQueue.Count;
+
+                Thread.Sleep(1_000);
+            }
         }
 
         callback?.Invoke();
@@ -293,7 +300,7 @@ public sealed class Core : IDisposable
 
                 IncrementOutcomes(outcomeCounts, ply, outcomes);
 
-                if (depth > 1)
+                if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
                 {
                     Enqueue(queue, copy, depth - 1, MoveOutcome.CheckMate - outcomes);
                 }
