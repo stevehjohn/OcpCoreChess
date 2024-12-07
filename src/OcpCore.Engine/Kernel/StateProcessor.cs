@@ -49,6 +49,7 @@ public class StateProcessor
 
     public void StartProcessing()
     {
+        // ReSharper disable once InconsistentlySynchronizedField
         while (_centralQueue.Count > 0)
         {
             lock (_centralQueue)
