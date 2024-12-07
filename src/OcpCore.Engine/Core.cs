@@ -348,7 +348,7 @@ public sealed class Core : IDisposable
 
     private void Enqueue(PriorityQueue<(Game Game, int Depth), int> localQueue, Game game, int depth, int priority)
     {
-        if (_gameQueue.Count < 100)
+        if (_gameQueue.Count < 1_000)
         {
             lock (_gameQueue)
             {
