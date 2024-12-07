@@ -241,89 +241,109 @@ public sealed class Core : IDisposable
 
                 var (game, depth) = state;
 
-                var player = game.State.Player;
-
-                var ply = maxDepth - depth + 1;
-
-                var pieces = game[(Plane) player];
-
-                var cell = PopPiecePosition(ref pieces);
-
-                while (cell > -1)
-                {
-                    var kind = game.GetKind(cell);
-
-                    var moves = PieceCache.Get(kind).GetMoves(game, cell);
-
-                    var move = Piece.PopNextMove(ref moves);
-
-                    while (move > -1)
-                    {
-                        var copy = new Game(game);
-
-                        var outcomes = copy.MakeMove(cell, move);
-
-                        if (copy.IsKingInCheck((Plane) player))
-                        {
-                            move = Piece.PopNextMove(ref moves);
-
-                            continue;
-                        }
-
-                        localCounts[ply]++;
-
-                        if (localCounts[ply] > 1_000)
-                        {
-                            Interlocked.Add(ref _depthCounts[ply], localCounts[ply]);
-
-                            localCounts[ply] = 0;
-                        }
-
-                        if (copy.IsKingInCheck((Plane) player.Invert()))
-                        {
-                            outcomes |= MoveOutcome.Check;
-
-                            if (! CanMove(copy, player.Invert()))
-                            {
-                                outcomes |= MoveOutcome.CheckMate;
-                            }
-                        }
-
-                        while (outcomes > 0)
-                        {
-                            var outcome = BitOperations.TrailingZeroCount((int) outcomes);
-
-                            localOutcomes[ply][outcome + 1]++;
-
-                            outcomes ^= (MoveOutcome) (1 << outcome);
-                        }
-
-                        if (depth > 1)
-                        {
-                            if (_gameQueue.Count < 100)
-                            {
-                                lock (_gameQueue)
-                                {
-                                    _gameQueue.Enqueue((copy, depth - 1), MoveOutcome.CheckMate - outcomes);
-                                }
-                            }
-                            else
-                            {
-                                localQueue.Enqueue((copy, depth - 1), MoveOutcome.CheckMate - outcomes);
-                            }
-                        }
-
-                        move = Piece.PopNextMove(ref moves);
-                    }
-
-                    cell = PopPiecePosition(ref pieces);
-                }
+                ProcessMoves(game, maxDepth, depth, localCounts, localOutcomes, localQueue);
             }
         }
 
         return (localCounts, localOutcomes);
     }
-    
+
+    private void ProcessMoves(Game game, int maxDepth, int depth, long[] counts, long[][] outcomeCounts, PriorityQueue<(Game Game, int Depth), int> queue)
+    {
+        var player = game.State.Player;
+
+        var ply = maxDepth - depth + 1;
+
+        var pieces = game[(Plane) player];
+
+        var cell = PopPiecePosition(ref pieces);
+
+        while (cell > -1)
+        {
+            var kind = game.GetKind(cell);
+
+            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+
+            var move = Piece.PopNextMove(ref moves);
+
+            while (move > -1)
+            {
+                var copy = new Game(game);
+
+                var outcomes = copy.MakeMove(cell, move);
+
+                if (copy.IsKingInCheck((Plane) player))
+                {
+                    move = Piece.PopNextMove(ref moves);
+
+                    continue;
+                }
+
+                IncrementCounts(counts, ply);
+
+                if (copy.IsKingInCheck((Plane) player.Invert()))
+                {
+                    outcomes |= MoveOutcome.Check;
+
+                    if (! CanMove(copy, player.Invert()))
+                    {
+                        outcomes |= MoveOutcome.CheckMate;
+                    }
+                }
+
+                IncrementOutcomes(outcomeCounts, ply, outcomes);
+
+                if (depth > 1)
+                {
+                    Enqueue(queue, copy, depth - 1, MoveOutcome.CheckMate - outcomes);
+                }
+
+                move = Piece.PopNextMove(ref moves);
+            }
+
+            cell = PopPiecePosition(ref pieces);
+        }
+    }
+
+    private void IncrementCounts(long[] counts, int ply)
+    {
+        counts[ply]++;
+
+        if (counts[ply] > 1_000)
+        {
+            Interlocked.Add(ref _depthCounts[ply], counts[ply]);
+
+            counts[ply] = 0;
+        }
+    }
+
+    private void IncrementOutcomes(long[][] outcomeCounts, int ply, MoveOutcome outcomes)
+    {
+        while (outcomes > 0)
+        {
+            var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+
+            outcomeCounts[ply][outcome + 1]++;
+
+            outcomes ^= (MoveOutcome) (1 << outcome);
+        }
+    }
+
+    private void Enqueue(PriorityQueue<(Game Game, int Depth), int> localQueue, Game game, int depth, int priority)
+    {
+        if (_gameQueue.Count < 100)
+        {
+            lock (_gameQueue)
+            {
+                _gameQueue.Enqueue((game, depth), priority);
+            }
+        }
+        else
+        {
+            localQueue.Enqueue((game, depth), priority);
+        }
+    }
+
     private static bool CanMove(Game game, Colour colour)
     {
         var pieces = game[(Plane) colour];
