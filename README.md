@@ -4,7 +4,7 @@
 
 ## Functionality TODOs
 
-- Promote to all possibilities.
+- Promote to all possibilities. Handle in `Core` to split off possibilities.
 - Move ordering?
   - Captures preferred.
   - Lower value taking higher even better.

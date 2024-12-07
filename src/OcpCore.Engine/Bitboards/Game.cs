@@ -39,6 +39,21 @@ public class Game
         State = new State(game.State);
     }
 
+    public bool IsKind(Kind kind, int cell)
+    {
+        return (this[(Plane) kind] & (1ul << cell)) > 0;
+    }
+
+    public bool IsEmpty(int cell)
+    {
+        return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) == 0;
+    }
+
+    public Kind GetKind(int cell)
+    {
+        return (Kind) GetKindInternal(1ul << cell);
+    }
+    
     public MoveOutcome MakeMove(int from, int to)
     {
         var fromBit = 1ul << from;
@@ -122,7 +137,6 @@ public class Game
             {
                 outcome |= MoveOutcome.Promotion;
 
-                // TODO: Knight sometimes?
                 kind = Plane.Queen;
             }
         }
@@ -136,21 +150,6 @@ public class Game
         State.InvertPlayer();
 
         return outcome;
-    }
-
-    public bool IsKind(Kind kind, int cell)
-    {
-        return (this[(Plane) kind] & (1ul << cell)) > 0;
-    }
-
-    public bool IsEmpty(int cell)
-    {
-        return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) == 0;
-    }
-
-    public Kind GetKind(int cell)
-    {
-        return (Kind) GetKindInternal(1ul << cell);
     }
 
     public bool IsKingInCheck(Plane colour, int probePosition = -1)
