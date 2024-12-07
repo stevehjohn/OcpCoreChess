@@ -20,12 +20,12 @@ public class Pawn : Piece
         {
             case Ranks.WhitePawnRank:
                 moves &= ~((game[colour] & (Masks.ByteMask << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
-
+        
                 moves &= ~((game[opponentColour] & (Masks.ByteMask << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
                 break;
             case Ranks.BlackPawnRank:
                 moves &= ~((game[colour] & (Masks.ByteMask << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
-
+        
                 moves &= ~((game[opponentColour] & (Masks.ByteMask << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
                 break;
         }

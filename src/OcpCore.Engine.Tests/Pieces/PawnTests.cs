@@ -66,7 +66,8 @@ public class PawnTests
     }
     
     [Theory]
-    [InlineData("e2e3,a7a5,f1f6,a5a4,g1e2,a4a3,e1g1", 16, 0)]
+    [InlineData("e2e3,a7a5,f1f6,a5a4,g1e2,a4a3,e1g1", 16, 
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0010_0000_0000)]
     public void DoesNotMakeMistakesIdentifiedInPerfTesting(string movesString, int position, ulong expectedMoves)
     {
         var game = new Game();

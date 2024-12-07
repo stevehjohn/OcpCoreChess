@@ -91,11 +91,6 @@ public class King : Piece
                 return false;
             }
 
-            if (game.IsKingInCheck(colour, position - 2))
-            {
-                return false;
-            }
-
             return true;
         }
 
