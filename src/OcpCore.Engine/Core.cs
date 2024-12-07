@@ -14,6 +14,8 @@ public sealed class Core : IDisposable
 
     public const string Author = "Stevo John";
 
+    private static int Threads = Environment.ProcessorCount - 2;
+    
     private readonly Game _game;
 
     private readonly Colour _engineColour;
@@ -169,11 +171,9 @@ public sealed class Core : IDisposable
         }
         else
         {
-            var threads = Environment.ProcessorCount - 2;
+            var countdown = new CountdownEvent(Threads);
 
-            var countdown = new CountdownEvent(threads);
-
-            for (var i = 0; i < threads; i++)
+            for (var i = 0; i < Threads; i++)
             {
                 Task.Run(() =>
                 {
@@ -230,7 +230,7 @@ public sealed class Core : IDisposable
         {
             lock (_gameQueue)
             {
-                for (var i = 0; i < Math.Max(1, _gameQueue.Count / Environment.ProcessorCount); i++)
+                for (var i = 0; i < Math.Max(1, _gameQueue.Count / Threads); i++)
                 {
                     if (_gameQueue.Count == 0)
                     {
@@ -322,45 +322,6 @@ public sealed class Core : IDisposable
         }
     }
 
-    private void IncrementCounts(long[] counts, int ply)
-    {
-        counts[ply]++;
-
-        if (counts[ply] > 1_000)
-        {
-            Interlocked.Add(ref _depthCounts[ply], counts[ply]);
-
-            counts[ply] = 0;
-        }
-    }
-
-    private static void IncrementOutcomes(long[][] outcomeCounts, int ply, MoveOutcome outcomes)
-    {
-        while (outcomes > 0)
-        {
-            var outcome = BitOperations.TrailingZeroCount((int) outcomes);
-
-            outcomeCounts[ply][outcome + 1]++;
-
-            outcomes ^= (MoveOutcome) (1 << outcome);
-        }
-    }
-
-    private void Enqueue(PriorityQueue<(Game Game, int Depth), int> localQueue, Game game, int depth, int priority)
-    {
-        if (_gameQueue.Count < 1_000)
-        {
-            lock (_gameQueue)
-            {
-                _gameQueue.Enqueue((game, depth), priority);
-            }
-        }
-        else
-        {
-            localQueue.Enqueue((game, depth), priority);
-        }
-    }
-
     private static bool CanMove(Game game, Colour colour)
     {
         var pieces = game[(Plane) colour];
@@ -409,6 +370,45 @@ public sealed class Core : IDisposable
         pieces ^= 1ul << emptyMoves;
 
         return emptyMoves;
+    }
+    
+    private void IncrementCounts(long[] counts, int ply)
+    {
+        counts[ply]++;
+
+        if (counts[ply] > 1_000)
+        {
+            Interlocked.Add(ref _depthCounts[ply], counts[ply]);
+
+            counts[ply] = 0;
+        }
+    }
+
+    private static void IncrementOutcomes(long[][] outcomeCounts, int ply, MoveOutcome outcomes)
+    {
+        while (outcomes > 0)
+        {
+            var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+
+            outcomeCounts[ply][outcome + 1]++;
+
+            outcomes ^= (MoveOutcome) (1 << outcome);
+        }
+    }
+
+    private void Enqueue(PriorityQueue<(Game Game, int Depth), int> localQueue, Game game, int depth, int priority)
+    {
+        if (_gameQueue.Count < 1_000)
+        {
+            lock (_gameQueue)
+            {
+                _gameQueue.Enqueue((game, depth), priority);
+            }
+        }
+        else
+        {
+            localQueue.Enqueue((game, depth), priority);
+        }
     }
     
     public void Dispose()
