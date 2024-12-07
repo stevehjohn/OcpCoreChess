@@ -67,6 +67,11 @@ public class Game
 
         var player = (this[Plane.White] & fromBit) == fromBit ? Plane.White : Plane.Black;
 
+        if ((Colour) player != State.Player)
+        {
+            throw new InvalidMoveException($"Not the turn for {player}.");
+        }
+
         var kind = GetKindInternal(fromBit);
 
         var outcome = MoveOutcome.Move;
@@ -118,27 +123,7 @@ public class Game
 
         if (kind == Plane.Pawn)
         {
-            if (to == State.EnPassantTarget)
-            {
-                outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
-
-                var target = 1ul << (State.EnPassantTarget.Value + (player == Plane.White ? -Constants.Files : Constants.Files));
-
-                var clearMask = ~target;
-                
-                this[Plane.White] &= clearMask;
-
-                this[Plane.Black] &= clearMask;
-
-                this[Plane.Pawn] &= clearMask;
-            }
-
-            if (Cell.GetRank(to) is 0 or 7)
-            {
-                outcome |= MoveOutcome.Promotion;
-
-                kind = Plane.Queen;
-            }
+            HandlePawnSpecifics(to, ref outcome);
         }
         
         UpdateBitboards(kind, player, fromBit, toBit);
@@ -351,6 +336,29 @@ public class Game
         }
 
         State = new State(player, castleAvailability, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell, halfmoves, fullmoves);
+    }
+
+    private void HandlePawnSpecifics(int to, ref MoveOutcome outcome)
+    {
+        if (to == State.EnPassantTarget)
+        {
+            outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+
+            var target = 1ul << (State.EnPassantTarget.Value + (State.Player == (Colour) Plane.White ? -Constants.Files : Constants.Files));
+
+            var clearMask = ~target;
+                
+            this[Plane.White] &= clearMask;
+
+            this[Plane.Black] &= clearMask;
+
+            this[Plane.Pawn] &= clearMask;
+        }
+
+        if (Cell.GetRank(to) is 0 or 7)
+        {
+            outcome |= MoveOutcome.Promotion;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
