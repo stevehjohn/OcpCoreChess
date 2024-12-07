@@ -31,14 +31,14 @@ public class King : Piece
     {
         if (colour == Plane.White)
         {
-            if ((game.State.CastleStatus & Castle.White) == 0)
+            if ((game.State.CastleStatus & Castle.WhiteKingSide) == 0)
             {
                 return false;
             }
         }
         else
         {
-            if ((game.State.CastleStatus & Castle.Black) == 0)
+            if ((game.State.CastleStatus & Castle.BlackKingSide) == 0)
             {
                 return false;
             }
@@ -66,14 +66,14 @@ public class King : Piece
     {
         if (colour == Plane.White)
         {
-            if ((game.State.CastleStatus & Castle.White) == 0)
+            if ((game.State.CastleStatus & Castle.WhiteQueenSide) == 0)
             {
                 return false;
             }
         }
         else
         {
-            if ((game.State.CastleStatus & Castle.Black) == 0)
+            if ((game.State.CastleStatus & Castle.BlackQueenSide) == 0)
             {
                 return false;
             }
