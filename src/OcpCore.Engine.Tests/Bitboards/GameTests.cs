@@ -1,5 +1,6 @@
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using Xunit;
@@ -192,7 +193,7 @@ public class GameTests
             Assert.False(_game.IsKingInCheck((Plane) colour));
         }
     }
-    
+
     [Fact]
     public void ThrowsExceptionOnMoveIfNoPieceInFromCell()
     {
