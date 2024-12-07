@@ -71,7 +71,6 @@ public class Game
             {
                 outcome |= MoveOutcome.Castle;
             
-                // TODO: Test
                 if (from < to)
                 {
                     UpdateBitboards(Plane.Rook, player, fromBit << 3, fromBit << 1);

@@ -46,7 +46,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            if (Cell.GetRank(cell) == Ranks.WhitePawnRank)
+            if (Cell.GetRank(cell) == Ranks.WhitePawn)
             {
                 target += 8;
                 
@@ -64,7 +64,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            if (Cell.GetRank(cell) == Ranks.BlackPawnRank)
+            if (Cell.GetRank(cell) == Ranks.BlackPawn)
             {
                 target -= 8;
                 

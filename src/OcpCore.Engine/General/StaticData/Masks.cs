@@ -3,7 +3,7 @@ namespace OcpCore.Engine.General.StaticData;
 public static class Masks
 {
     public const byte File = 0b0000_0111;
-    public const ulong ByteMask = 0b1111_1111;
+    public const ulong Byte = 0b1111_1111;
     public const ulong CastleStatus = 0b0000_1111;
     public const ulong EnPassantTarget = 0b0000_1111_1110_0000;
     public const ulong EnPassantBits = 0b0111_1111;

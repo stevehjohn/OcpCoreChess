@@ -12,15 +12,15 @@ public class State
 
     public int? EnPassantTarget => (_state & Masks.EnPassantTarget) == Masks.EnPassantTarget ? null : (int?) ((_state & Masks.EnPassantTarget) >> Offsets.EnPassantTarget);
 
-    public int WhiteScore => (int) ((_state >> Offsets.WhiteScore) & Masks.ByteMask);
+    public int WhiteScore => (int) ((_state >> Offsets.WhiteScore) & Masks.Byte);
 
-    public int BlackScore => (int) ((_state >> Offsets.BlackScore) & Masks.ByteMask);
+    public int BlackScore => (int) ((_state >> Offsets.BlackScore) & Masks.Byte);
 
     public int WhiteKingCell => (int) ((_state >> Offsets.WhiteKing) & Masks.PositionBits);
 
     public int BlackKingCell => (int) ((_state >> Offsets.BlackKing) & Masks.PositionBits);
 
-    public int Halfmoves => (int) ((_state >> Offsets.Halfmove) & Masks.ByteMask);
+    public int Halfmoves => (int) ((_state >> Offsets.Halfmove) & Masks.Byte);
 
     public int Fullmoves => (int) ((_state >> Offsets.Fullmove) & Masks.Fullmove);
 
@@ -62,18 +62,18 @@ public class State
     {
         var score = WhiteScore;
         
-        _state &= ~(Masks.ByteMask << Offsets.WhiteScore);
+        _state &= ~(Masks.Byte << Offsets.WhiteScore);
 
-        _state |= ((ulong) (score + delta) & Masks.ByteMask) << Offsets.WhiteScore;
+        _state |= ((ulong) (score + delta) & Masks.Byte) << Offsets.WhiteScore;
     }
     
     public void UpdateBlackScore(int delta)
     {
         var score = BlackScore;
         
-        _state &= ~(Masks.ByteMask << Offsets.BlackScore);
+        _state &= ~(Masks.Byte << Offsets.BlackScore);
 
-        _state |= ((ulong) (score + delta) & Masks.ByteMask) << Offsets.BlackScore;
+        _state |= ((ulong) (score + delta) & Masks.Byte) << Offsets.BlackScore;
     }
 
     public void SetWhiteKingCell(int cell)
@@ -94,21 +94,21 @@ public class State
     {
         var halfmoves = Halfmoves;
         
-        _state &= ~(Masks.ByteMask << Offsets.Halfmove);
+        _state &= ~(Masks.Byte << Offsets.Halfmove);
         
-        _state |= (((ulong) halfmoves + 1) & Masks.ByteMask) << Offsets.Halfmove;
+        _state |= (((ulong) halfmoves + 1) & Masks.Byte) << Offsets.Halfmove;
     }
     
     public void ResetHalfmoves()
     {
-        _state &= ~(Masks.ByteMask << Offsets.Halfmove);
+        _state &= ~(Masks.Byte << Offsets.Halfmove);
     }
 
     public void IncrementFullmoves()
     {
         var fullmoves = Fullmoves;
         
-        _state &= ~(Masks.ByteMask << Offsets.Fullmove);
+        _state &= ~(Masks.Byte << Offsets.Fullmove);
         
         _state |= (((ulong) fullmoves + 1) & Masks.Fullmove) << Offsets.Fullmove;
     }
@@ -128,17 +128,17 @@ public class State
         
         state |= (ulong) castleStatus;
 
-        state |= ((ulong) whiteScore & Masks.ByteMask) << Offsets.WhiteScore;
+        state |= ((ulong) whiteScore & Masks.Byte) << Offsets.WhiteScore;
 
-        state |= ((ulong) blackScore & Masks.ByteMask) << Offsets.BlackScore;
+        state |= ((ulong) blackScore & Masks.Byte) << Offsets.BlackScore;
 
         state |= ((ulong) whiteKingCell & Masks.PositionBits) << Offsets.WhiteKing;
 
         state |= ((ulong) blackKingCell & Masks.PositionBits) << Offsets.BlackKing;
 
-        state |= ((ulong) halfmoves & Masks.ByteMask) << Offsets.Halfmove;
+        state |= ((ulong) halfmoves & Masks.Byte) << Offsets.Halfmove;
         
-        state |= ((ulong) fullmoves & Masks.ByteMask) << Offsets.Fullmove;
+        state |= ((ulong) fullmoves & Masks.Byte) << Offsets.Fullmove;
 
         _state = state;
     }

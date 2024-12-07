@@ -18,15 +18,15 @@ public class Pawn : Piece
 
         switch (rank)
         {
-            case Ranks.WhitePawnRank:
-                moves &= ~((game[colour] & (Masks.ByteMask << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
+            case Ranks.WhitePawn:
+                moves &= ~((game[colour] & (Masks.Byte << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
         
-                moves &= ~((game[opponentColour] & (Masks.ByteMask << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
+                moves &= ~((game[opponentColour] & (Masks.Byte << Constants.BlackEnPassantTargetRankStart)) << Constants.Files);
                 break;
-            case Ranks.BlackPawnRank:
-                moves &= ~((game[colour] & (Masks.ByteMask << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
+            case Ranks.BlackPawn:
+                moves &= ~((game[colour] & (Masks.Byte << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
         
-                moves &= ~((game[opponentColour] & (Masks.ByteMask << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
+                moves &= ~((game[opponentColour] & (Masks.Byte << Constants.WhiteEnPassantTargetRankStart)) >> Constants.Files);
                 break;
         }
 
@@ -38,12 +38,11 @@ public class Pawn : Piece
         {
             var target = game.State.EnPassantTarget.Value;
             
-            // TODO: Magic numbers
-            if (Cell.GetRank(position) == 4 && Cell.GetRank(target) == 5 && Math.Abs(position - target) is 7 or 9)
+            if (Cell.GetRank(position) == Ranks.WhiteEnPassantTarget - 1 && Cell.GetRank(target) == Ranks.WhiteEnPassantTarget && Math.Abs(position - target) is 7 or 9)
             {
                 moves |= 1ul << target;
             } 
-            else if (Cell.GetRank(position) == 3 && Cell.GetRank(target) == 2 && Math.Abs(position - target) is 7 or 9)
+            else if (Cell.GetRank(position) == Ranks.BlackEnPassantTarget + 1 && Cell.GetRank(target) == Ranks.BlackEnPassantTarget && Math.Abs(position - target) is 7 or 9)
             {
                 moves |= 1ul << target;
             }
