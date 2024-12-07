@@ -14,6 +14,8 @@
 ## Code Cleanup TODOs
 
 - One instance of `Moves` class.
+- Separate out queueing logic from `Core`.
+- Find a nice way to integrate PerfTree.
 
 ## Current Best Timings
 
