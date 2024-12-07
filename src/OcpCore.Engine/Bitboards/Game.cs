@@ -78,7 +78,7 @@ public class Game
                 }
                 else
                 {
-                    UpdateBitboards(Plane.Rook, player, fromBit << 3, fromBit >>> 1);
+                    UpdateBitboards(Plane.Rook, player, fromBit << 3, fromBit >> 1);
                 }
             }
         }
