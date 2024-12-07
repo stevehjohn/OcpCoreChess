@@ -4,7 +4,7 @@
 
 ## Functionality TODOs
 
-- Promote to Knight sometimes?
+- Promote to all possibilities.
 - Move ordering?
   - Captures preferred.
   - Lower value taking higher even better.
