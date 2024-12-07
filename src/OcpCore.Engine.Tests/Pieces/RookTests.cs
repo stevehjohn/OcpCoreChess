@@ -72,8 +72,4 @@ public class RookTests
         
         Assert.Equal(expectedMoves, moves);
     }
-    
-    // [InlineData("8/8/8/P7/8/8/8/r7 b - - 0 1", 0, true, 32)]
-    // [InlineData("8/8/8/p7/8/8/8/r7 b - - 0 1", 0, false, 0)]
-    // public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
 }

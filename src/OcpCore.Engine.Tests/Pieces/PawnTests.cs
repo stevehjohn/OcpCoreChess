@@ -131,10 +131,4 @@ public class PawnTests
     // [InlineData("8/8/8/8/5pP1/8/8/8 b KQkq - 0 1", 29, Colour.Black, "21")]
     // [InlineData("8/8/8/8/4Pp2/8/8/8 b KQkq - 0 1", 29, Colour.Black, "21")]
     // public void DetectsEnPassantOpportunity(string fen, int position, Colour colour, string expectedMoves)
-
-    // [InlineData("8/8/8/8/8/p7/1P6/8 w - - 0 1", 9, true, 16)]
-    // [InlineData("8/8/8/8/8/2p5/1P6/8 w - - 0 1", 9, true, 18)]
-    // [InlineData("8/8/8/8/8/1p6/1P6/8 w - - 0 1", 9, false, 0)]
-    // public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
-    // {
 }

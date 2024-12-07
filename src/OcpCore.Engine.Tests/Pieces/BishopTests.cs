@@ -62,27 +62,4 @@ public class BishopTests
     //     
     //     AssertExpectedMoves(expectedMoves, moves);
     // }
-    //
-    // [Theory]
-    // [InlineData("8/8/8/8/8/2P5/8/b7 b - - 0 1", 0, true, 18)]
-    // [InlineData("8/8/8/8/8/2p5/8/b7 b - - 0 1", 0, false, 0)]
-    // public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
-    // {
-    //     var board = new Board(fen);
-    //
-    //     AssertPieceIsWhereExpected(board, position, Colour.Black);
-    //
-    //     var moves = new List<Move>();
-    //     
-    //     Piece.GetMoves(board, position, Colour.Black, moves);
-    //
-    //     if (captureExpected)
-    //     {
-    //         Assert.Single(moves, m => m.Outcome == MoveOutcome.Capture && m.Target == captureCell);
-    //     }
-    //     else
-    //     {
-    //         Assert.DoesNotContain(moves, m => m.Outcome == MoveOutcome.Capture);
-    //     }
-    // }
 }

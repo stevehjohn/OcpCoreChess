@@ -62,8 +62,4 @@ public class KnightTests
         
         Assert.Equal(expectedMoves, moves);
     }
-
-    // [InlineData("8/8/8/8/8/1P6/8/n7 b - - 0 1", 0, true, 17)]
-    // [InlineData("8/8/8/8/8/1p6/8/n7 b - - 0 1", 0, false, 0)]
-    // public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
 }

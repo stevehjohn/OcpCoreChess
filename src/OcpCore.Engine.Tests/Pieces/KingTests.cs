@@ -66,29 +66,6 @@ public class KingTests
     // }
     //
     // [Theory]
-    // [InlineData("8/8/8/8/8/8/1P6/k7 b - - 0 1", 0, true, 9)]
-    // [InlineData("8/8/8/8/8/8/1p6/k7 b - - 0 1", 0, false, 0)]
-    // public void ReportsCapturesCorrectly(string fen, int position, bool captureExpected, int captureCell)
-    // {
-    //     var board = new Board(fen);
-    //
-    //     AssertPieceIsWhereExpected(board, position, Colour.Black);
-    //
-    //     var moves = new List<Move>();
-    //     
-    //     Piece.GetMoves(board, position, Colour.Black, moves);
-    //
-    //     if (captureExpected)
-    //     {
-    //         Assert.Single(moves, m => m.Outcome == MoveOutcome.Capture && m.Target == captureCell);
-    //     }
-    //     else
-    //     {
-    //         Assert.DoesNotContain(moves, m => m.Outcome == MoveOutcome.Capture);
-    //     }
-    // }
-    //
-    // [Theory]
     // [InlineData("r3kbnr/ppp1pppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, Colour.Black, "58,59,51")]
     // [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, Colour.Black, "58,59,51,61,62")]
     // [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQq - 0 1", 60, Colour.Black, "58,59,51,61")]
