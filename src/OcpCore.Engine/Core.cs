@@ -14,7 +14,7 @@ public sealed class Core : IDisposable
 
     public const string Author = "Stevo John";
 
-    private static int Threads = Environment.ProcessorCount - 2;
+    private static readonly int Threads = Environment.ProcessorCount - 2;
     
     private readonly Game _game;
 
