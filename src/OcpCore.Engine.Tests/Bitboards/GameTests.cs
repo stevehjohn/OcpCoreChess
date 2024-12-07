@@ -163,6 +163,24 @@ public class GameTests
         _game.MakeMove(3, 0);
         
         Assert.Equal(expectedPlane, _game[Plane.Queen]);
+    }    
+    
+    [Theory]
+    [InlineData("rnbqkbnr/p1p3pp/1p1pp3/5p2/3P1B2/2NQ4/PPP1PPPP/R3KBNR w KQkq - 0 5", "e1c1", Colour.White,
+        0b00000000_00000000_00000000_00000000_00101000_00001100_11110111_11101100)]
+    [InlineData("rnbqkbnr/ppp3pp/3p1p2/4p3/8/5NPB/PPPPPP1P/RNBQK2R w KQkq - 0 4", "e1g1", Colour.White,
+        0b00000000_00000000_00000000_00000000_00000000_11100000_10111111_01101111)]
+    [InlineData("rnbqk2r/pppp1ppp/3bp2n/8/8/2PP1P1P/PP2P1P1/RNBQKBNR b KQkq - 0 4", "e8g8", Colour.Black,
+        0b01101111_11101111_10011000_00000000_00000000_00000000_00000000_00000000)]
+    [InlineData("r3kbnr/pppqpppp/2npb3/8/8/3PPPPP/PPP5/RNBQKBNR b KQkq - 0 5", "e8c8", Colour.Black,
+        0b11101100_11111111_00011100_00000000_00000000_00000000_00000000_00000000)]
+    public void PerformsCastleCorrectly(string fen, string move, Colour colour, ulong expectedPlane)
+    {
+        _game.ParseFen(fen);
+        
+        _game.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
+        
+        Assert.Equal(expectedPlane, _game[(Plane) colour]);
     }
     
     [Theory]
