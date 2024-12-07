@@ -302,15 +302,18 @@ public sealed class Core : IDisposable
                             outcomes ^= (MoveOutcome) (1 << outcome);
                         }
 
-                        if (perftNode == null)
+                        lock (_perftCounts)
                         {
-                            perftNode = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
+                            if (perftNode == null)
+                            {
+                                perftNode = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
 
-                            _perftCounts.Add(perftNode, 1);
-                        }
-                        else
-                        {
-                            _perftCounts[perftNode]++;
+                                _perftCounts.Add(perftNode, 1);
+                            }
+                            else
+                            {
+                                _perftCounts[perftNode]++;
+                            }
                         }
 
                         if (depth > 1)
@@ -321,20 +324,29 @@ public sealed class Core : IDisposable
                                 {
                                     _gameQueue.Enqueue((copy, depth - 1, perftNode), MoveOutcome.CheckMate - outcomes);
 
-                                    _perftCounts[perftNode]--;
+                                    lock (_perftCounts)
+                                    {
+                                        _perftCounts[perftNode]--;
+                                    }
                                 }
                             }
                             else
                             {
                                 localQueue.Enqueue((copy, depth - 1, perftNode), MoveOutcome.CheckMate - outcomes);
 
-                                _perftCounts[perftNode]--;
+                                lock (_perftCounts)
+                                {
+                                    _perftCounts[perftNode]--;
+                                }
                             }
                         }
                     
                         if (depth == maxDepth)
                         {
-                            perftNode = null;
+                            lock (_perftCounts)
+                            {
+                                perftNode = null;
+                            }
                         }
 
                         move = Piece.PopNextMove(ref moves);
