@@ -316,7 +316,7 @@ public sealed class Core : IDisposable
                             }
                         }
 
-                        if (depth > 1)
+                        if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
                         {
                             if (_gameQueue.Count < 100)
                             {
