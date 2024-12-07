@@ -402,6 +402,7 @@ public class Game
         State.RemoveCastleRights(colour == Plane.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Plane GetKindInternal(ulong cellBit)
     {
         if ((this[Plane.Pawn] & cellBit) == cellBit)
