@@ -155,11 +155,21 @@ public sealed class Core : IDisposable
 
         if (depth < 6)
         {
-            ProcessQueue(depth);
+            var result = ProcessQueue(depth);
+
+            for (var d = 1; d <= depth; d++)
+            {
+                _depthCounts[d] += result.Counts[d];
+
+                for (var o = 1; o < 8; o++)
+                {
+                    _outcomes[d][o] += result.Outcomes[d][o];
+                }
+            }
         }
         else
         {
-            var threads =Environment.ProcessorCount - 2;
+            var threads = Environment.ProcessorCount - 2;
 
             var countdown = new CountdownEvent(threads);
 
@@ -324,7 +334,7 @@ public sealed class Core : IDisposable
         }
     }
 
-    private void IncrementOutcomes(long[][] outcomeCounts, int ply, MoveOutcome outcomes)
+    private static void IncrementOutcomes(long[][] outcomeCounts, int ply, MoveOutcome outcomes)
     {
         while (outcomes > 0)
         {
