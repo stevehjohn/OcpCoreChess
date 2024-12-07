@@ -1,5 +1,6 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
@@ -65,21 +66,21 @@ public sealed class Core : IDisposable
     
         var target = move[2..].FromStandardNotation();
 
-        // var positionBit = 1ul << position;
-        //
-        // if ((_game[(Plane) _game.State.Player] & positionBit) == 0)
-        // {
-        //     throw new InvalidMoveException($"No piece at {move[..2]}.");
-        // }
-        //
-        // var kind = _game.GetKind(position);
-        //
-        // var moves = PieceCache.Get(kind).GetMoves(_game, position);
-        //
-        // if ((moves & positionBit) == 0)
-        // {
-        //     throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
-        // }
+        var positionBit = 1ul << position;
+
+        if ((_game[(Plane) _game.State.Player] & positionBit) == 0)
+        {
+            throw new InvalidMoveException($"No piece at {move[..2]}.");
+        }
+
+        var kind = _game.GetKind(position);
+        
+        var moves = PieceCache.Get(kind).GetMoves(_game, position);
+
+        if ((moves & positionBit) == 0)
+        {
+            throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
+        }
     
         _game.MakeMove(position, target);
     }
@@ -144,8 +145,6 @@ public sealed class Core : IDisposable
         _depthCounts = new long[depth + 1];
 
         _outcomes = new long[depth + 1][];
-                
-        _perftCounts.Clear();
         
         _gameQueue.Clear();
 
@@ -211,113 +210,138 @@ public sealed class Core : IDisposable
         {
             localOutcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
-        
+
+        var localQueue = new PriorityQueue<(Game Game, int Depth, string PerftNode), int>();
+
         while (_gameQueue.Count > 0)
         {
-            if (_cancellationToken.IsCancellationRequested)
-            {
-                return (localCounts, localOutcomes);
-            }
-
-            (Game, int, string) state;
-            
             lock (_gameQueue)
             {
-                if (! _gameQueue.TryDequeue(out state, out _))
+                for (var i = 0; i < Math.Max(1, _gameQueue.Count / Environment.ProcessorCount); i++)
+                {
+                    if (_gameQueue.Count == 0)
+                    {
+                        break;
+                    }
+
+                    if (_gameQueue.TryDequeue(out var item, out var priority))
+                    {
+                        localQueue.Enqueue(item, priority);
+                    }
+                }
+            }
+
+            while (localQueue.Count > 0)
+            {
+                if (_cancellationToken.IsCancellationRequested)
                 {
                     return (localCounts, localOutcomes);
                 }
-            }
 
-            var (game, depth, perftNode) = state;
-
-            var player = game.State.Player;
-
-            var ply = maxDepth - depth + 1;
-
-            var pieces = game[(Plane) player];
-
-            var cell = PopPiecePosition(ref pieces);
-
-            while (cell > -1)
-            {
-                var kind = game.GetKind(cell);
-
-                var moves = PieceCache.Get(kind).GetMoves(game, cell);
-
-                var move = Piece.PopNextMove(ref moves);
-
-                while (move > -1)
+                if (! localQueue.TryDequeue(out (Game, int, string) state, out _))
                 {
-                    var copy = new Game(game);
-
-                    var outcomes = copy.MakeMove(cell, move);
-
-                    if (copy.IsKingInCheck((Plane) player))
-                    {
-                        move = Piece.PopNextMove(ref moves);
-
-                        continue;
-                    }
-
-                    localCounts[ply]++;
-
-                    if (localCounts[ply] > 1_000)
-                    {
-                        Interlocked.Add(ref _depthCounts[ply], localCounts[ply]);
-
-                        localCounts[ply] = 0;
-                    }
-
-                    if (copy.IsKingInCheck((Plane) player.Invert()))
-                    {
-                        outcomes |= MoveOutcome.Check;
-
-                        if (! CanMove(copy, player.Invert()))
-                        {
-                            outcomes |= MoveOutcome.CheckMate;
-                        }
-                    }
-
-                    while (outcomes > 0)
-                    {
-                        var outcome = BitOperations.TrailingZeroCount((int) outcomes);
-
-                        localOutcomes[ply][outcome + 1]++;
-
-                        outcomes ^= (MoveOutcome) (1 << outcome);
-                    }
-                    
-                    if (perftNode == null)
-                    {
-                        perftNode = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
-
-                        _perftCounts.Add(perftNode, 1);
-                    }
-                    else
-                    {
-                        _perftCounts[perftNode]++;
-                    }
-
-                    if (depth > 1)
-                    {
-                        lock (_gameQueue)
-                        {
-                            _gameQueue.Enqueue((copy, depth - 1, perftNode), MoveOutcome.CheckMate - outcomes);
-
-                            _perftCounts[perftNode]--;
-                        }
-                    }
-                    
-                    if (depth == maxDepth)
-                    {
-                        perftNode = null;
-                    }
-
-                    move = Piece.PopNextMove(ref moves);
+                    return (localCounts, localOutcomes);
                 }
 
-                cell = PopPiecePosition(ref pieces);
+                var (game, depth, perftNode) = state;
+
+                var player = game.State.Player;
+
+                var ply = maxDepth - depth + 1;
+
+                var pieces = game[(Plane) player];
+
+                var cell = PopPiecePosition(ref pieces);
+
+                while (cell > -1)
+                {
+                    var kind = game.GetKind(cell);
+
+                    var moves = PieceCache.Get(kind).GetMoves(game, cell);
+
+                    var move = Piece.PopNextMove(ref moves);
+
+                    while (move > -1)
+                    {
+                        var copy = new Game(game);
+
+                        var outcomes = copy.MakeMove(cell, move);
+
+                        if (copy.IsKingInCheck((Plane) player))
+                        {
+                            move = Piece.PopNextMove(ref moves);
+
+                            continue;
+                        }
+
+                        localCounts[ply]++;
+
+                        if (localCounts[ply] > 1_000)
+                        {
+                            Interlocked.Add(ref _depthCounts[ply], localCounts[ply]);
+
+                            localCounts[ply] = 0;
+                        }
+
+                        if (copy.IsKingInCheck((Plane) player.Invert()))
+                        {
+                            outcomes |= MoveOutcome.Check;
+
+                            if (! CanMove(copy, player.Invert()))
+                            {
+                                outcomes |= MoveOutcome.CheckMate;
+                            }
+                        }
+
+                        while (outcomes > 0)
+                        {
+                            var outcome = BitOperations.TrailingZeroCount((int) outcomes);
+
+                            localOutcomes[ply][outcome + 1]++;
+
+                            outcomes ^= (MoveOutcome) (1 << outcome);
+                        }
+
+                        if (perftNode == null)
+                        {
+                            perftNode = $"{cell.ToStandardNotation()}{move.ToStandardNotation()}";
+
+                            _perftCounts.Add(perftNode, 1);
+                        }
+                        else
+                        {
+                            _perftCounts[perftNode]++;
+                        }
+
+                        if (depth > 1)
+                        {
+                            if (_gameQueue.Count < 100)
+                            {
+                                lock (_gameQueue)
+                                {
+                                    _gameQueue.Enqueue((copy, depth - 1, perftNode), MoveOutcome.CheckMate - outcomes);
+
+                                    _perftCounts[perftNode]--;
+                                }
+                            }
+                            else
+                            {
+                                localQueue.Enqueue((copy, depth - 1, perftNode), MoveOutcome.CheckMate - outcomes);
+
+                                _perftCounts[perftNode]--;
+                            }
+                        }
+                    
+                        if (depth == maxDepth)
+                        {
+                            perftNode = null;
+                        }
+
+                        move = Piece.PopNextMove(ref moves);
+                    }
+
+                    cell = PopPiecePosition(ref pieces);
+                }
             }
         }
 
