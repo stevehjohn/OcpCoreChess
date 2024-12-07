@@ -158,6 +158,7 @@ public class Game
         State = FenInterface.ParseFen(fen, _planes);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void HandleCapture(int to, ref MoveOutcome outcome)
     {
         outcome |= MoveOutcome.Capture;
@@ -177,6 +178,7 @@ public class Game
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private void HandlePawnSpecifics(int to, ref MoveOutcome outcome)
     {
         if (to == State.EnPassantTarget)
