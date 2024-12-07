@@ -71,14 +71,14 @@ public sealed class Core : IDisposable
             throw new InvalidMoveException($"No piece at {move[..2]}.");
         }
 
-        var kind = _game.GetKind(position);
-        
-        var moves = PieceCache.Get(kind).GetMoves(_game, position);
-
-        if ((moves & positionBit) == 0)
-        {
-            throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
-        }
+        // var kind = _game.GetKind(position);
+        //
+        // var moves = PieceCache.Get(kind).GetMoves(_game, position);
+        //
+        // if ((moves & positionBit) == 0)
+        // {
+        //     throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
+        // }
     
         _game.MakeMove(position, target);
     }

@@ -196,7 +196,7 @@ public class Game
         }
 
         attacks = Moves[MoveSet.King][position];
-                
+
         if ((attacks & this[opponentPlane] & this[Plane.King]) > 0)
         {
             return true;
