@@ -16,6 +16,7 @@
 - One instance of `Moves` class.
 - Separate out queueing logic from `Core`.
 - Find a nice way to integrate PerfTree.
+- Standardise uses of `Plane`, `Colour` and `Kind`.
 
 ## Current Best Timings
 
@@ -29,7 +30,7 @@
  5   | ~ 700 ms
  6   | ~ 5 s
  7   | ~ 2 m
- 8   | ~ 35 m
+ 8   | ~ 45 m
  9   | ~ 2.5 d
 ```
 
