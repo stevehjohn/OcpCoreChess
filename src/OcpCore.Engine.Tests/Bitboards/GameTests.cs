@@ -96,7 +96,7 @@ public class GameTests
         0b11111111_11111110_00000001_00000000_00000000_00000000_00000000_00000000)]
     public void UpdatesOnBlackMoveCorrectly(ulong whitePlane, ulong blackPlane)
     {
-        _game.ParseFen(Constants.InitialBoardFen);
+        _game.ParseFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1");
         
         _game.MakeMove(48, 40);
         

@@ -78,28 +78,7 @@ public class Game
 
         if (kind == Plane.King)
         {
-            if (player == Plane.White)
-            {
-                State.SetWhiteKingCell(to);
-            }
-            else
-            {
-                State.SetBlackKingCell(to);
-            }
-
-            if (Math.Abs(from - to) == 2)
-            {
-                outcome |= MoveOutcome.Castle;
-            
-                if (from < to)
-                {
-                    UpdateBitboards(Plane.Rook, player, fromBit << 3, fromBit << 1);
-                }
-                else
-                {
-                    UpdateBitboards(Plane.Rook, player, fromBit >> 4, fromBit >> 1);
-                }
-            }
+            HandleKingSpecifics(from, to, ref outcome);
         }
 
         if (IsColour(player.InvertColour(), to))
@@ -358,6 +337,33 @@ public class Game
         if (Cell.GetRank(to) is 0 or 7)
         {
             outcome |= MoveOutcome.Promotion;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void HandleKingSpecifics(int from, int to, ref MoveOutcome outcome)
+    {
+        if (State.Player == (Colour) Plane.White)
+        {
+            State.SetWhiteKingCell(to);
+        }
+        else
+        {
+            State.SetBlackKingCell(to);
+        }
+
+        if (Math.Abs(from - to) == 2)
+        {
+            outcome |= MoveOutcome.Castle;
+            
+            if (from < to)
+            {
+                UpdateBitboards(Plane.Rook, (Plane) State.Player, 1ul << from << 3, 1ul << from << 1);
+            }
+            else
+            {
+                UpdateBitboards(Plane.Rook, (Plane) State.Player, 1ul << from >> 4, 1ul << from >> 1);
+            }
         }
     }
 
