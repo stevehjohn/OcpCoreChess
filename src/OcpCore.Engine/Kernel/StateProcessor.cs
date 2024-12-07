@@ -9,6 +9,8 @@ namespace OcpCore.Engine.Kernel;
 
 public class StateProcessor
 {
+    private const int CentralPoolMax = 1_000;
+    
     private static readonly int Threads = Environment.ProcessorCount - 2;
     
     private readonly int _maxDepth;
@@ -215,7 +217,7 @@ public class StateProcessor
     private void Enqueue(Game game, int depth, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
-        if (_centralQueue.Count < 1_000)
+        if (_centralQueue.Count < CentralPoolMax)
         {
             lock (_centralQueue)
             {
