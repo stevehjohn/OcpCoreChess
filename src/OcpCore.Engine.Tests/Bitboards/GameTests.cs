@@ -227,6 +227,25 @@ public class GameTests
         Assert.Equal(expectedCount, _game.CountCellAttackers(cell, attackerColour));
     }
 
+    [Theory]
+    [InlineData("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1", "b7b8", true)]
+    [InlineData("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1", "e1f1", false)]
+    public void DetectsPromotion(string fen, string move, bool promotionExpected)
+    {
+        _game.ParseFen(fen);
+
+        var outcome = _game.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
+
+        if (promotionExpected)
+        {
+            Assert.True((outcome & MoveOutcome.Promotion) > 0);
+        }
+        else
+        {
+            Assert.False((outcome & MoveOutcome.Promotion) > 0);
+        }
+    }
+
     [Fact]
     public void ThrowsExceptionOnMoveIfNoPieceInFromCell()
     {

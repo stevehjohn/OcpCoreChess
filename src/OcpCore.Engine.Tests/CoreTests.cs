@@ -13,7 +13,6 @@ public class CoreTests
     [InlineData(3, 8_902, 34, 0, 0, 0, 12, 0)]
     [InlineData(4, 197_281, 1_576, 0, 0, 0, 469, 8)]
     [InlineData(5, 4_865_609, 82_719, 258, 0, 0, 27_351, 347)]
-    // [InlineData(6, 119_060_324, 2_812_008, 5_248, 0, 0, 809_099, 10_828)]
     public void ReturnsExpectedCountAtPly(int ply, int count, int capture, int enPassant, int castle, int promotion, int check, int mate)
     {
         using var core = new Core(Colour.White);
