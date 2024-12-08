@@ -22,4 +22,12 @@ public class CoordinatorTests
         
         Assert.Equal(expectParallelisation, coordinator.IsParallel);
     }
+
+    [Fact]
+    public void ReportsEmptyQueueSize()
+    {
+        var coordinator = new Coordinator();
+        
+        Assert.Equal(0, coordinator.QueueSize);
+    }
 }
