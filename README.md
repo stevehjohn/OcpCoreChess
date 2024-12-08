@@ -17,7 +17,7 @@
 ## Code Cleanup TODOs
 
 - Find a nice way to integrate PerfTree.
-- Finish `Piece` subclass tests.
+- Finish `Piece` subclass tests. Specifically: Pawn, Bishop, Queen and King.
 
 ## Current Best Timings
 
