@@ -265,4 +265,14 @@ public class GameTests
         
         Assert.Equal("Not the turn for Black.", exception.Message);
     }
+    
+    [Fact]
+    public void ThrowsExceptionIfNoPieceAtCell()
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+
+        var exception = Assert.Throws<InvalidMoveException>(() => _game.GetKind(16));
+        
+        Assert.Equal("No piece at a3.", exception.Message);
+    }
 }
