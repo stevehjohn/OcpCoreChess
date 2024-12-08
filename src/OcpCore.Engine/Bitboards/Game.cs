@@ -4,7 +4,6 @@ using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.Bitboards;
 
@@ -162,8 +161,13 @@ public class Game
 
     public int CountCellAttackers(int cell, Colour attackerColour)
     {
-        // Just knights as experiment on speed.
-        var mask = _moves[MoveSet.Knight][cell] & this[attackerColour] & this[Kind.Knight];
+        var mask = _moves[MoveSet.Knight][cell] & this[Kind.Knight];
+
+        mask |= _moves[MoveSet.King][cell] & this[Kind.King];
+        
+        mask |= _moves[attackerColour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][cell];
+
+        mask &= this[attackerColour];
         
         return BitOperations.PopCount(mask);
     }
