@@ -56,7 +56,23 @@ public class CoreTests
     }
 
     [Fact]
-    private void GetMoveFiresCallbackIfActionProvided()
+    public void ReportsWhenNotBusy()
+    {
+        using var core = new Core(Colour.White);
+        
+        Assert.False(core.IsBusy);
+    }
+
+    [Fact]
+    public void ReportsQueueSize()
+    {
+        using var core = new Core(Colour.White);
+        
+        Assert.Equal(0, core.QueueSize);
+    }
+
+    [Fact]
+    public void GetMoveFiresCallbackIfActionProvided()
     {
         using var core = new Core(Colour.White, Constants.InitialBoardFen);
 
