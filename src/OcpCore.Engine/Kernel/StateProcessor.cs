@@ -96,7 +96,7 @@ public class StateProcessor
         {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+            var moves = PieceCache.Instance[kind].GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 
@@ -163,7 +163,7 @@ public class StateProcessor
         {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Get(kind).GetMoves(game, cell);
+            var moves = PieceCache.Instance[kind].GetMoves(game, cell);
 
             var move = Piece.PopNextMove(ref moves);
 

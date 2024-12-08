@@ -2,13 +2,19 @@ using OcpCore.Engine.Pieces;
 
 namespace OcpCore.Engine.General;
 
-public static class PieceCache
+public class PieceCache
 {
-    private static readonly Piece[] Pieces;
+    private static readonly Lazy<PieceCache> Instantiator = new(Instantiate);
     
-    static PieceCache()
+    public static PieceCache Instance => Instantiator.Value;
+
+    private readonly Piece[] _pieces;
+
+    public Piece this[Kind kind] => _pieces[(int) kind];
+    
+    private PieceCache()
     {
-        Pieces =
+        _pieces =
         [
             null,
             null,
@@ -21,5 +27,8 @@ public static class PieceCache
         ];
     }
 
-    public static Piece Get(Kind kind) => Pieces[(int) kind];
+    private static PieceCache Instantiate()
+    {
+        return new PieceCache();
+    }
 }

@@ -1,4 +1,3 @@
-using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General.StaticData;
@@ -57,16 +56,16 @@ public static class FenInterface
                     continue;
                 }
 
-                var colourPlane = char.IsUpper(cell) ? Plane.White : Plane.Black;
+                var colour = char.IsUpper(cell) ? Colour.White : Colour.Black;
                 
-                var plane = char.ToUpper(cell) switch
+                var kind = char.ToUpper(cell) switch
                 {
-                    'P' => Plane.Pawn,
-                    'R' => Plane.Rook,
-                    'N' => Plane.Knight,
-                    'B' => Plane.Bishop,
-                    'Q' => Plane.Queen,
-                    'K' => Plane.King,
+                    'P' => Kind.Pawn,
+                    'R' => Kind.Rook,
+                    'N' => Kind.Knight,
+                    'B' => Kind.Bishop,
+                    'Q' => Kind.Queen,
+                    'K' => Kind.King,
                     _ => throw new FenParseException($"Invalid piece token in rank {rank + 1}: {cell}.")
                 };
 
@@ -77,13 +76,13 @@ public static class FenInterface
                     throw new FenParseException($"Too many files in rank {rank + 1}: {files}.");
                 }
 
-                planes[(int) colourPlane] |= 1ul << cellIndex;
+                planes[(int) colour] |= 1ul << cellIndex;
 
-                planes[(int) plane] |= 1ul << cellIndex;
+                planes[(int) kind] |= 1ul << cellIndex;
                 
-                if (plane == Plane.King)
+                if (kind == Kind.King)
                 {
-                    if (colourPlane == Plane.White)
+                    if (colour == Colour.White)
                     {
                         whiteKingCell = cellIndex;
                     }
@@ -93,9 +92,9 @@ public static class FenInterface
                     }
                 }
 
-                var piece = PieceCache.Get((Kind) plane);
+                var piece = PieceCache.Instance[kind];
 
-                if (colourPlane == Plane.White)
+                if (colour == Colour.White)
                 {
                     whiteScore += piece.Value;
                 }
