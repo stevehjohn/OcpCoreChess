@@ -143,25 +143,27 @@ public class StateProcessor
 
     private static int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
     {
-        var priority = (MoveOutcome.CheckMate - outcome) * 10_000;
+        var priority = (MoveOutcome.CheckMate - outcome) * 1_000_000;
 
         if ((outcome & MoveOutcome.Capture) > 0)
         {
             if ((outcome & MoveOutcome.EnPassant) > 0)
             {
-                priority += 100 - Scores.Pawn * 10;
+                priority += (10 - Scores.Pawn) * 1_000;
             }
             else
             {
                 var capturedPiece = game.GetKind(target);
 
-                priority += 100 - PieceCache.Instance[capturedPiece].Value * 10;
+                priority += (10 - PieceCache.Instance[capturedPiece].Value) * 1_000;
             }
 
-            priority += PieceCache.Instance[player].Value;
+            priority += PieceCache.Instance[player].Value * 100;
         }
 
         // priority += game.CountCellAttackers(target, opponent) * 100;
+
+        // priority += Random.Shared.Next(Constants.Pieces);
 
         return priority;
     }

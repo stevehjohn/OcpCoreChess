@@ -45,11 +45,12 @@ From an initial board state.
   - `(MoveOutcome.CheckMate - outcomes) * 10,000` (CheckMate == 0, Nothing but a simple move = 100).
   - `+ 100 - capturedPieceValue * 10` (higher captured piece values will yield lower scores).
   - `+ movedPieceValue` (lower moved piece value is good).
-  - This leave space for an attacker count at digits 2 ans 3, i.e. `OOAACP` where:
+  - This leave space for an attacker count at digits 2 ans 3, i.e. `OOAACPRR` where:
     - OO is outcome value.
     - AA is number of attackers value.
     - C is captured piece value inverted.
     - P is player piece value.
+    - R is randomness to break ties.
 
 ### Cell Arrangement
 

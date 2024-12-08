@@ -10,6 +10,8 @@ public static class Constants
     public const int MaxRank = 7;
     public const int MaxFile = 7;
 
+    public const int Pieces = 32;
+
     public const int MoveOutcomes = 7;
 
     public const int WhiteEnPassantTargetRankStart = 40;
