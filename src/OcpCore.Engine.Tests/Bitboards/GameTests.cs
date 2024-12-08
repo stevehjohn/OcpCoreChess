@@ -212,6 +212,15 @@ public class GameTests
         }
     }
 
+    [Theory]
+    [InlineData("8/8/8/6n1/4P3/6n1/3n4/8 w - - 0 1", 28, Colour.Black, 3)]
+    public void CountsAttackingKnightsCorrectly(string fen, int cell, Colour attackerColour, int expectedCount)
+    {
+        _game.ParseFen(fen);
+        
+        Assert.Equal(expectedCount, _game.CountCellAttackers(cell, attackerColour));
+    }
+
     [Fact]
     public void ThrowsExceptionOnMoveIfNoPieceInFromCell()
     {

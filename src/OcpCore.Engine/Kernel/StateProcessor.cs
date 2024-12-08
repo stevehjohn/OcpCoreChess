@@ -115,11 +115,13 @@ public class StateProcessor
 
                 IncrementCounts(ply);
 
-                if (copy.IsKingInCheck(player.Invert()))
+                var opponent = player.Invert();
+
+                if (copy.IsKingInCheck(opponent))
                 {
                     outcomes |= MoveOutcome.Check;
 
-                    if (! CanMove(copy, player.Invert()))
+                    if (! CanMove(copy, opponent))
                     {
                         outcomes |= MoveOutcome.CheckMate;
                     }
@@ -129,7 +131,7 @@ public class StateProcessor
 
                 if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
                 {
-                    Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind));
+                    Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
                 }
 
                 move = Piece.PopNextMove(ref moves);
@@ -139,7 +141,7 @@ public class StateProcessor
         }
     }
 
-    private static int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player)
+    private static int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
     {
         var priority = (MoveOutcome.CheckMate - outcome) * 10_000;
 
@@ -158,6 +160,8 @@ public class StateProcessor
 
             priority += PieceCache.Instance[player].Value;
         }
+
+        var x = game.CountCellAttackers(target, opponent) * 100;
 
         return priority;
     }
