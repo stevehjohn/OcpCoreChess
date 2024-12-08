@@ -32,7 +32,7 @@ public sealed class Core : IDisposable
 
     public bool IsBusy => _cancellationTokenSource != null;
 
-    public int QueueSize => _coordinator.QueueSize;
+    public int QueueSize => _coordinator?.QueueSize ?? 0;
 
     public Core(Colour engineColour)
     {
