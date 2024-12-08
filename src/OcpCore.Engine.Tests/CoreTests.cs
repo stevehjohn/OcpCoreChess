@@ -41,7 +41,7 @@ public class CoreTests
     [InlineData(Constants.InitialBoardFen, "b1b3", false, Kind.Knight)]
     public void ChecksMoveValidity(string fen, string move, bool isValid, Kind kind)
     {
-        var core = new Core(Colour.White, fen);
+        using var core = new Core(Colour.White, fen);
 
         if (isValid)
         {
@@ -58,7 +58,7 @@ public class CoreTests
     [Fact]
     private void GetMoveFiresCallbackIfActionProvided()
     {
-        var core = new Core(Colour.White, Constants.InitialBoardFen);
+        using var core = new Core(Colour.White, Constants.InitialBoardFen);
 
         var called = false;
 
