@@ -22,8 +22,6 @@ public class Coordinator
     private CancellationToken _cancellationToken;
 
     private CountdownEvent _countdownEvent;
-
-    private Task[] _tasks;
     
     public int QueueSize { get; private set; }
 
@@ -42,18 +40,11 @@ public class Coordinator
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        _tasks = new Task[Threads];
-
         _processors = new StateProcessor[Threads];
 
         for (var i = 0; i < Threads; i++)
         {
-            var processorIndex = i;
-
-            _tasks[i] = new Task(() =>
-            {
-                _processors[processorIndex] = new StateProcessor(maxDepth, _queue, _depthCounts);
-            });
+            _processors[i] = new StateProcessor(maxDepth, _queue, _depthCounts);
         }
     }
 
@@ -67,7 +58,9 @@ public class Coordinator
 
         for (var i = 0; i < Threads; i++)
         {
-            _processors[i].StartProcessing(CoalesceResults, _cancellationToken);
+            var index = i;
+            
+            Task.Factory.StartNew(() => _processors[index].StartProcessing(CoalesceResults, _cancellationToken), _cancellationToken);
         }
 
         while (! _countdownEvent.IsSet)
