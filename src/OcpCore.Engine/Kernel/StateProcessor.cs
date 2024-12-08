@@ -11,37 +11,37 @@ public class StateProcessor
 {
     private const int CentralPoolMax = 1_000;
     
-    private readonly int _maxDepth;
-
     private readonly PriorityQueue<(Game game, int depth), int> _centralQueue;
     
     private readonly PriorityQueue<(Game game, int depth), int> _localQueue = new();
 
-    private readonly long[] _centralDepthCounts;
+    private int _maxDepth;
 
-    private readonly long[] _depthCounts;
+    private long[] _depthCounts;
 
-    private readonly long[][] _outcomes;
+    private long[][] _outcomes;
+
+    private Action<StateProcessor, bool> _callback;
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][(int) outcome];
 
-    public StateProcessor(int maxDepth, PriorityQueue<(Game game, int depth), int> centralQueue, long[] centralDepthCounts)
+    public StateProcessor(PriorityQueue<(Game game, int depth), int> centralQueue)
+    {
+        _centralQueue = centralQueue;
+    }
+
+    public void StartProcessing(int maxDepth, Action<StateProcessor, bool> callback, CancellationToken cancellationToken)
     {
         _maxDepth = maxDepth;
 
-        _centralQueue = centralQueue;
-
-        _centralDepthCounts = centralDepthCounts;
+        _callback = callback;
         
         _depthCounts = new long[maxDepth + 1];
 
         _outcomes = new long[maxDepth + 1][];
-    }
 
-    public void StartProcessing(Action<StateProcessor> completionCallback, CancellationToken cancellationToken)
-    {
         for (var i = 1; i <= _maxDepth; i++)
         {
             _depthCounts[i] = 0;
@@ -80,7 +80,7 @@ public class StateProcessor
             }
         }
 
-        completionCallback(this);
+        callback(this, true);
     }
 
     private void ProcessWorkItem(Game game, int depth)
@@ -196,7 +196,7 @@ public class StateProcessor
 
         if (_depthCounts[ply] > 1_000)
         {
-            Interlocked.Add(ref _centralDepthCounts[ply], _depthCounts[ply]);
+            _callback(this, false);
         
             _depthCounts[ply] = 0;
         }

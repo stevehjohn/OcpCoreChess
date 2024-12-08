@@ -4,19 +4,19 @@ using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Kernel;
 
-public class Coordinator
+public sealed class Coordinator : IDisposable
 {
     public static readonly int Threads = Environment.ProcessorCount - 2;
 
     private readonly PriorityQueue<(Game game, int depth), int> _queue = new();
 
-    private readonly int _maxDepth;
-    
-    private readonly long[] _depthCounts;
-    
-    private readonly long[][] _outcomes;
-
     private readonly StateProcessor[] _processors;
+
+    private int _maxDepth;
+    
+    private long[] _depthCounts;
+    
+    private long[][] _outcomes;
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -32,7 +32,17 @@ public class Coordinator
 
     public bool IsBusy => _cancellationTokenSource != null;
 
-    public Coordinator(int maxDepth)
+    public Coordinator()
+    {
+        _processors = new StateProcessor[Threads];
+
+        for (var i = 0; i < Threads; i++)
+        {
+            _processors[i] = new StateProcessor(_queue);
+        }
+    }
+
+    public void StartProcessing(Game game, int maxDepth)
     {
         _maxDepth = maxDepth;
         
@@ -47,16 +57,6 @@ public class Coordinator
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
-        _processors = new StateProcessor[Threads];
-
-        for (var i = 0; i < Threads; i++)
-        {
-            _processors[i] = new StateProcessor(maxDepth, _queue, _depthCounts);
-        }
-    }
-
-    public void StartProcessing(Game game)
-    {
         _cancellationTokenSource = new CancellationTokenSource();
 
         _cancellationToken = _cancellationTokenSource.Token;
@@ -69,7 +69,7 @@ public class Coordinator
         {
             var index = i;
             
-            Task.Factory.StartNew(() => _processors[index].StartProcessing(CoalesceResults, _cancellationToken), _cancellationToken);
+            Task.Factory.StartNew(() => _processors[index].StartProcessing(maxDepth, CoalesceResults, _cancellationToken), _cancellationToken);
         }
 
         while (! _countdownEvent.IsSet)
@@ -84,7 +84,7 @@ public class Coordinator
         _cancellationTokenSource = null;
     }
 
-    private void CoalesceResults(StateProcessor processor)
+    private void CoalesceResults(StateProcessor processor, bool isComplete)
     {
         for (var depth = 1; depth <= _maxDepth; depth++)
         {
@@ -96,6 +96,20 @@ public class Coordinator
             }
         }
 
-        _countdownEvent.Signal();
+        if (isComplete)
+        {
+            _countdownEvent.Signal();
+        }
+    }
+
+    public void Dispose()
+    {
+        _cancellationTokenSource?.Dispose();
+
+        _cancellationTokenSource = null;
+        
+        _countdownEvent?.Dispose();
+
+        _countdownEvent = null;
     }
 }
