@@ -84,6 +84,8 @@ public class PawnTests
     [Theory]
     [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq b6 0 1", 34,
         0b0000_0000_0000_0000_0000_0110_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
+    [InlineData("rnbqkbnr/p1pppppp/8/8/1pP5/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 1", 25,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0110_0000_0000_0000_0000)]
     public void DetectsEnPassantOpportunity(string fen, int position, ulong expectedMoves)
     {
         var game = new Game();
