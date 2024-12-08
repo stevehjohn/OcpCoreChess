@@ -129,7 +129,7 @@ public class StateProcessor
 
                 if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
                 {
-                    Enqueue(copy, depth - 1, CalculatePriority(outcomes));
+                    Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move));
                 }
 
                 move = Piece.PopNextMove(ref moves);
@@ -139,9 +139,23 @@ public class StateProcessor
         }
     }
 
-    private static int CalculatePriority(MoveOutcome outcome)
+    private static int CalculatePriority(Game game, MoveOutcome outcome, int target)
     {
         var priority = (MoveOutcome.CheckMate - outcome) * 100;
+
+        if ((outcome & MoveOutcome.Capture) > 0)
+        {
+            if ((outcome & MoveOutcome.EnPassant) > 0)
+            {
+                priority += Scores.Pawn * 10;
+            }
+            else
+            {
+                var capturedPiece = game.GetKind(target);
+
+                priority += PieceCache.Instance[capturedPiece].Value * 10;
+            }
+        }
 
         return priority;
     }
