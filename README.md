@@ -8,10 +8,10 @@
 - Move ordering:
   - Done:
     - Captures preferred.
+    - Lower value taking higher is better.
     - Utilise `PriorityQueue` before further depth processing.
   - TODO:
-    - Lower value taking higher even better.
-    - Moves that don't go onto an attacked square.
+    - Moves that don't go onto an attacked square?
 
 ## Code Cleanup TODOs
 
