@@ -21,7 +21,11 @@ public class Coordinator
 
     private CancellationToken _cancellationToken;
 
+    private CountdownEvent _countdownEvent;
+
     private Task[] _tasks;
+    
+    public int QueueSize { get; private set; }
 
     public Coordinator(int maxDepth)
     {
@@ -59,9 +63,18 @@ public class Coordinator
 
         _cancellationToken = _cancellationTokenSource.Token;
 
+        _countdownEvent = new CountdownEvent(Threads);
+
         for (var i = 0; i < Threads; i++)
         {
             _processors[i].StartProcessing(CoalesceResults, _cancellationToken);
+        }
+
+        while (! _countdownEvent.IsSet)
+        {
+            QueueSize = _queue.Count;
+            
+            Thread.Sleep(500);
         }
     }
 
@@ -76,5 +89,7 @@ public class Coordinator
                 Interlocked.Add(ref _outcomes[depth][outcome], processor.Outcomes[depth][outcome]);
             }
         }
+
+        _countdownEvent.Signal();
     }
 }
