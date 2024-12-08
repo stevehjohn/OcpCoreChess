@@ -76,27 +76,32 @@ public class KingTests
             Assert.False(move[..2] == excludedMove[..2] && move[2..] == excludedMove[2..]);
         }
     }
+    
+    [Theory]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 4,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/8/PPPPPPPP/RNBQK2R w KQkq - 0 1", 4,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0110_0000)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/8/PPPPPPPP/RNBQK2R w Qkq - 0 1", 4,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0010_0000)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/8/PPPPPPPP/R3KBNR w KQkq - 0 1", 4,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1100)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/8/8/PPPPPPPP/R3KBNR w Kkq - 0 1", 4,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1000)]
+    [InlineData("r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60,
+        0b0000_1100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
+    [InlineData("r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQk - 0 1", 60,
+        0b0000_1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
+    public void DetectsCastlingOpportunity(string fen, int position, ulong expectedMoves)
+    {
+        var game = new Game();
+        
+        game.ParseFen(fen);
 
-    // [Theory]
-    // [InlineData("r3kbnr/ppp1pppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, Colour.Black, "58,59,51")]
-    // [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1", 60, Colour.Black, "58,59,51,61,62")]
-    // [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQq - 0 1", 60, Colour.Black, "58,59,51,61")]
-    // [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQk - 0 1", 60, Colour.Black, "59,51,61,62")]
-    // [InlineData("r3k2r/ppp1pp1p/8/8/8/8/PPPPPPPP/RNBQKBNR b KQ - 0 1", 60, Colour.Black, "59,51,61")]
-    // [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/RNBQK2R w KQkq - 0 1", 4, Colour.White, "5,6,12")]
-    // [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/R3K2R w KQkq - 0 1", 4, Colour.White, "5,6,12,3,2")]
-    // [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/RNBQK2R w Qkq - 0 1", 4, Colour.White, "5,12")]
-    // [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/R3K2R w Kkq - 0 1", 4, Colour.White, "3,5,6,12")]
-    // public void DetectsCastlingOpportunity(string fen, int position, Colour colour, string expectedMoves)
-    // {
-    //     var board = new Board(fen);
-    //
-    //     AssertPieceIsWhereExpected(board, position, colour);
-    //
-    //     var moves = new List<Move>();
-    //     
-    //     Piece.GetMoves(board, position, colour, moves);
-    //     
-    //     AssertExpectedMoves(expectedMoves, moves);
-    // }
+        Assert.True(game.IsKind(Kind.King, position));
+
+        var moves = _king.GetMoves(game, position);
+        
+        Assert.Equal(expectedMoves, moves);
+    }    
 }
