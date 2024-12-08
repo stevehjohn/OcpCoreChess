@@ -154,17 +154,15 @@ public class StateProcessor
             else
             {
                 var capturedPiece = game.GetKind(target);
-
+        
                 priority += (10 - PieceCache.Instance[capturedPiece].Value) * 1_000;
             }
-
+        
             priority += PieceCache.Instance[player].Value * 100;
         }
-
-        // priority += game.CountCellAttackers(target, opponent) * 100;
-
-        // priority += Random.Shared.Next(Constants.Pieces);
-
+        
+        // priority += game.CountCellAttackers(target, opponent);
+        
         return priority;
     }
 
