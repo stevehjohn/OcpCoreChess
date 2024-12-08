@@ -16,7 +16,6 @@
 ## Code Cleanup TODOs
 
 - Find a nice way to integrate PerfTree.
-- Standardise uses of `Plane`, `Colour` and `Kind`.
 
 ## Current Best Timings
 

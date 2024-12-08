@@ -191,7 +191,7 @@ public class Game
         {
             outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
 
-            var target = 1ul << (State.EnPassantTarget.Value + (State.Player == (Colour) Plane.White ? -Constants.Files : Constants.Files));
+            var target = 1ul << (State.EnPassantTarget.Value + (State.Player == Colour.White ? -Constants.Files : Constants.Files));
 
             var clearMask = ~target;
                 
