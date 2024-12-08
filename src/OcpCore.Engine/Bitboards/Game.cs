@@ -165,13 +165,13 @@ public class Game
 
         mask |= _moves[MoveSet.King][cell] & this[Kind.King];
 
-        mask |= _moves[opponentColour == Colour.White ? MoveSet.PawnBlackAttack : MoveSet.PawnWhiteAttack][cell] & this[Kind.Pawn];
+        var player = opponentColour.Invert();
+
+        mask |= _moves[player == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][cell] & this[Kind.Pawn];
 
         mask &= this[opponentColour];
 
         var count = BitOperations.PopCount(mask);
-
-        var player = opponentColour.Invert();
 
         var attacks = Piece.GetDiagonalSlidingMoves(this, player, opponentColour, cell)
                       | Piece.GetAntiDiagonalSlidingMoves(this, player, opponentColour, cell);
