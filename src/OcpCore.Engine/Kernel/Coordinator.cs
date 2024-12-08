@@ -13,6 +13,8 @@ public sealed class Coordinator : IDisposable
 
     private readonly StateProcessor[] _processors;
 
+    private readonly int _parallelDepthThreshold;
+
     private int _maxDepth;
     
     private long[] _depthCounts;
@@ -31,8 +33,10 @@ public sealed class Coordinator : IDisposable
     
     public int QueueSize { get; private set; }
 
-    public Coordinator()
+    public Coordinator(int parallelDepthThreshold = 6)
     {
+        _parallelDepthThreshold = parallelDepthThreshold;
+        
         _processors = new StateProcessor[Threads];
 
         for (var i = 0; i < Threads; i++)
@@ -64,7 +68,7 @@ public sealed class Coordinator : IDisposable
 
         _cancellationToken = _cancellationTokenSource.Token;
 
-        if (maxDepth < 6)
+        if (maxDepth < _parallelDepthThreshold)
         {
             _processors[0].StartProcessing(maxDepth, CoalesceResults, _cancellationToken);
         }
