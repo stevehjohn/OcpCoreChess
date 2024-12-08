@@ -158,7 +158,7 @@ public sealed class Core : IDisposable
 
         _getMoveTask = null;
         
-        _coordinator.Dispose();
+        _coordinator?.Dispose();
 
         _coordinator = null;
     }
