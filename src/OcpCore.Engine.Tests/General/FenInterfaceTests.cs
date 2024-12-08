@@ -1,0 +1,33 @@
+using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.General;
+using Xunit;
+
+namespace OcpCore.Engine.Tests.General;
+
+public class FenInterfaceTests
+{
+    private readonly ulong[] _planes = new ulong[Enum.GetValues<Plane>().Length];
+
+    [Theory]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null)]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0", "Invalid number of parts")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "Invalid number of ranks")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPPP/RNBQKBNR w KQkq - 0 1", "Too many files")]
+    [InlineData("rnbqkbnr/pppXpppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "Invalid piece token")]
+    [InlineData("rnbqkbnr/ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "Not enough files")]
+    [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR X KQkq - 0 1", "Invalid turn indicator")]
+    public void ThrowsExpectedException(string fen, string expectedMessage)
+    {
+        if (expectedMessage == null)
+        {
+            FenInterface.ParseFen(fen, _planes);
+        }
+        else
+        {
+            var exception = Assert.Throws<FenParseException>(() => FenInterface.ParseFen(fen, _planes));
+
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+    }
+}

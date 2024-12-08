@@ -19,7 +19,7 @@ public static class FenInterface
 
         if (ranks.Length != Constants.Ranks)
         {
-            throw new FenParseException($"Incorrect number of ranks in FEN string: {ranks.Length}.");
+            throw new FenParseException($"Invalid number of ranks in FEN string: {ranks.Length}.");
         }
 
         var whiteKingCell = 0;
