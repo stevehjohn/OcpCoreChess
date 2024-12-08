@@ -59,21 +59,14 @@ public sealed class Core : IDisposable
     
         var target = move[2..].FromStandardNotation();
 
-        var positionBit = 1ul << position;
-
-        if ((_game[(Plane) _game.State.Player] & positionBit) == 0)
+        var kind = _game.GetKind(position);
+        
+        var moves = PieceCache.Get(kind).GetMoves(_game, position);
+        
+        if ((moves & (1ul << target)) == 0)
         {
-            throw new InvalidMoveException($"No piece at {move[..2]}.");
+            throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
         }
-
-        // var kind = _game.GetKind(position);
-        //
-        // var moves = PieceCache.Get(kind).GetMoves(_game, position);
-        //
-        // if ((moves & positionBit) == 0)
-        // {
-        //     throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
-        // }
     
         _game.MakeMove(position, target);
     }
