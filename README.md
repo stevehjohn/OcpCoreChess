@@ -39,6 +39,10 @@
 - Attack bitboards are indexed `[moveSet][cell]`.
 - Diagonal: `(0, 0), (1, 1), (2, 2)...`. i.e. `/`. Anti-diagonal `(0, 7), (1, 6), (2, 5)...`. i.e. `\`.
 - `WhiteScore - BlackScore` will be positive if white has more material.
+- Move score is currently (remember `PriorityQueue` prefers lower values):
+  - `(MoveOutcome.CheckMate - outcomes) * 100` (CheckMate == 0, Nothing but a simple move = 100).
+  - `+ 100 - capturedPieceValue * 10` (higher captured piece values will yield lower scores).
+  - `+ movedPieceValue` (lower moved piece value is good).
 
 ### Cell Arrangement
 
