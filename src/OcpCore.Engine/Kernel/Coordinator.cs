@@ -58,26 +58,35 @@ public sealed class Coordinator : IDisposable
             _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
 
+        _queue.Clear();
+        
+        _queue.Enqueue((game, _maxDepth), 0);
+
         _cancellationTokenSource = new CancellationTokenSource();
 
         _cancellationToken = _cancellationTokenSource.Token;
 
-        _countdownEvent = new CountdownEvent(Threads);
-        
-        _queue.Enqueue((game, _maxDepth), 0);
-
-        for (var i = 0; i < Threads; i++)
+        if (maxDepth < 6)
         {
-            var index = i;
-            
-            Task.Factory.StartNew(() => _processors[index].StartProcessing(maxDepth, CoalesceResults, _cancellationToken), _cancellationToken);
+            _processors[0].StartProcessing(maxDepth, CoalesceResults, _cancellationToken);
         }
-
-        while (! _countdownEvent.IsSet)
+        else
         {
-            QueueSize = _queue.Count;
+            _countdownEvent = new CountdownEvent(Threads);
+
+            for (var i = 0; i < Threads; i++)
+            {
+                var index = i;
             
-            Thread.Sleep(500);
+                Task.Factory.StartNew(() => _processors[index].StartProcessing(maxDepth, CoalesceResults, _cancellationToken), _cancellationToken);
+            }
+
+            while (! _countdownEvent.IsSet)
+            {
+                QueueSize = _queue.Count;
+            
+                Thread.Sleep(500);
+            }
         }
         
         _cancellationTokenSource.Dispose();
@@ -99,7 +108,7 @@ public sealed class Coordinator : IDisposable
         
         if (isComplete)
         {
-            _countdownEvent.Signal();
+            _countdownEvent?.Signal();
         }
     }
 
