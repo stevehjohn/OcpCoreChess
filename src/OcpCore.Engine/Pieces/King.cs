@@ -8,7 +8,7 @@ public class King : Piece
 {
     public override int Value => Scores.King;
 
-    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected override ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var moves = Moves[MoveSet.King][position];
 
@@ -27,9 +27,9 @@ public class King : Piece
         return moves;
     }
 
-    private static bool CheckCanCastleKingSide(Game game, Plane colour, int position)
+    private static bool CheckCanCastleKingSide(Game game, Colour colour, int position)
     {
-        if (colour == Plane.White)
+        if (colour == Colour.White)
         {
             if ((game.State.CastleStatus & Castle.WhiteKingSide) == 0)
             {
@@ -62,9 +62,9 @@ public class King : Piece
         return false;
     }
     
-    private static bool CheckCanCastleQueenSide(Game game, Plane colour, int position)
+    private static bool CheckCanCastleQueenSide(Game game, Colour colour, int position)
     {
-        if (colour == Plane.White)
+        if (colour == Colour.White)
         {
             if ((game.State.CastleStatus & Castle.WhiteQueenSide) == 0)
             {

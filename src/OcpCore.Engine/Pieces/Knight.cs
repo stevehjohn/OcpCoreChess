@@ -8,7 +8,7 @@ public class Knight : Piece
 {
     public override int Value => Scores.Knight;
     
-    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected override ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var moves = Moves[MoveSet.Knight][position];
 

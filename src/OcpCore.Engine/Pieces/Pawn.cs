@@ -8,9 +8,9 @@ public class Pawn : Piece
 {
     public override int Value => Scores.Pawn;
     
-    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected override ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
-        var moveSet = colour == Plane.White ? MoveSet.PawnToBlack : MoveSet.PawnToWhite;
+        var moveSet = colour == Colour.White ? MoveSet.PawnToBlack : MoveSet.PawnToWhite;
 
         var moves = Moves[moveSet][position] & ~game[opponentColour] & ~game[colour];
 
@@ -30,7 +30,7 @@ public class Pawn : Piece
                 break;
         }
 
-        var attackSet = colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
+        var attackSet = colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
 
         moves |= Moves[attackSet][position] & game[opponentColour];
 

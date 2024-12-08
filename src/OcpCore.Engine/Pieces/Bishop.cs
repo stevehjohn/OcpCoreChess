@@ -8,7 +8,7 @@ public class Bishop : Piece
 {
     public override int Value => Scores.Bishop;
 
-    protected override ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position)
+    protected override ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var moves = GetDiagonalSlidingMoves(game, colour, opponentColour, position);
         

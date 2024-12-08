@@ -15,10 +15,16 @@ public class Game
     
     public State State { get; private set; } 
 
-    public ulong this[Plane plane]
+    public ulong this[Colour colour]
     {
-        get => _planes[(int) plane];
-        private set => _planes[(int) plane] = value;
+        get => _planes[(int) colour];
+        private set => _planes[(int) colour] = value;
+    }
+
+    public ulong this[Kind kind]
+    {
+        get => _planes[(int) kind];
+        private set => _planes[(int) kind] = value;
     }
     
     public Game()
@@ -41,17 +47,17 @@ public class Game
 
     public bool IsKind(Kind kind, int cell)
     {
-        return (this[(Plane) kind] & (1ul << cell)) > 0;
+        return (this[kind] & (1ul << cell)) > 0;
     }
 
     public bool IsEmpty(int cell)
     {
-        return ((this[Plane.White] | this[Plane.Black]) & (1ul << cell)) == 0;
+        return ((this[Colour.White] | this[Colour.Black]) & (1ul << cell)) == 0;
     }
 
     public Kind GetKind(int cell)
     {
-        return (Kind) GetKindInternal(1ul << cell);
+        return GetKindInternal(1ul << cell);
     }
     
     public MoveOutcome MakeMove(int from, int to)
@@ -60,14 +66,14 @@ public class Game
 
         var toBit = 1ul << to;
         
-        if (((this[Plane.White] | this[Plane.Black]) & fromBit) == 0)
+        if (((this[Colour.White] | this[Colour.Black]) & fromBit) == 0)
         {
             throw new InvalidMoveException($"No piece at {from.ToStandardNotation()}.");
         }
 
-        var player = (this[Plane.White] & fromBit) == fromBit ? Plane.White : Plane.Black;
+        var player = (this[Colour.White] & fromBit) == fromBit ? Colour.White : Colour.Black;
 
-        if ((Colour) player != State.Player)
+        if (player != State.Player)
         {
             throw new InvalidMoveException($"Not the turn for {player}.");
         }
@@ -76,17 +82,17 @@ public class Game
 
         var outcome = MoveOutcome.Move;
 
-        if (kind == Plane.King)
+        if (kind == Kind.King)
         {
             HandleKingSpecifics(from, to, ref outcome);
         }
 
-        if (IsColour(player.InvertColour(), to))
+        if (IsColour(player.Invert(), to))
         {
             HandleCapture(to, ref outcome);
         }
 
-        if (kind == Plane.Pawn)
+        if (kind == Kind.Pawn)
         {
             HandlePawnSpecifics(to, ref outcome);
         }
@@ -102,20 +108,20 @@ public class Game
         return outcome;
     }
 
-    public bool IsKingInCheck(Plane colour, int probePosition = -1)
+    public bool IsKingInCheck(Colour colour, int probePosition = -1)
     {
-        var position = colour == Plane.White ? State.WhiteKingCell : State.BlackKingCell;
+        var position = colour == Colour.White ? State.WhiteKingCell : State.BlackKingCell;
 
         if (probePosition > -1)
         {
             position = probePosition;
         }
 
-        var opponentPlane = colour.InvertColour();
+        var opponentPlane = colour.Invert();
     
         var attacks = _moves[MoveSet.Knight][position];
         
-        if ((attacks & this[opponentPlane] & this[Plane.Knight]) > 0)
+        if ((attacks & this[opponentPlane] & this[Kind.Knight]) > 0)
         {
             return true;
         }
@@ -123,7 +129,7 @@ public class Game
         attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentPlane, position)
                   | Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentPlane, position);
         
-        if ((attacks & (this[Plane.Bishop] | this[Plane.Queen])) > 0)
+        if ((attacks & (this[Kind.Bishop] | this[Kind.Queen])) > 0)
         {
             return true;
         }
@@ -131,21 +137,21 @@ public class Game
         attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentPlane, position)
                   | Piece.GetVerticalSlidingMoves(this, colour, opponentPlane, position);
         
-        if ((attacks & (this[Plane.Rook] | this[Plane.Queen])) > 0)
+        if ((attacks & (this[Kind.Rook] | this[Kind.Queen])) > 0)
         {
             return true;
         }
 
-        attacks = _moves[colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
+        attacks = _moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
-        if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
+        if ((this[Kind.Pawn] & this[opponentPlane] & attacks) > 0)
         {
             return true;
         }
 
         attacks = _moves[MoveSet.King][position];
 
-        if ((attacks & this[opponentPlane] & this[Plane.King]) > 0)
+        if ((attacks & this[opponentPlane] & this[Kind.King]) > 0)
         {
             return true;
         }
@@ -163,7 +169,7 @@ public class Game
     {
         outcome |= MoveOutcome.Capture;
 
-        if ((this[Plane.Rook] & (1ul << to)) > 0)
+        if ((this[Kind.Rook] & (1ul << to)) > 0)
         {
             var file = Cell.GetFile(to);
 
@@ -189,11 +195,11 @@ public class Game
 
             var clearMask = ~target;
                 
-            this[Plane.White] &= clearMask;
+            this[Colour.White] &= clearMask;
 
-            this[Plane.Black] &= clearMask;
+            this[Colour.Black] &= clearMask;
 
-            this[Plane.Pawn] &= clearMask;
+            this[Kind.Pawn] &= clearMask;
         }
 
         if (Cell.GetRank(to) is 0 or 7)
@@ -220,25 +226,25 @@ public class Game
             
             if (from < to)
             {
-                UpdateBitboards(Plane.Rook, (Plane) State.Player, 1ul << from << 3, 1ul << from << 1);
+                UpdateBitboards(Kind.Rook, State.Player, 1ul << from << 3, 1ul << from << 1);
             }
             else
             {
-                UpdateBitboards(Plane.Rook, (Plane) State.Player, 1ul << from >> 4, 1ul << from >> 1);
+                UpdateBitboards(Kind.Rook, State.Player, 1ul << from >> 4, 1ul << from >> 1);
             }
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private bool IsColour(Plane colour, int cell)
+    private bool IsColour(Colour colour, int cell)
     {
         return (this[colour] & (1ul << cell)) > 0;
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void UpdateEnPassantState(Plane kind, int position, int target)
+    private void UpdateEnPassantState(Kind kind, int position, int target)
     {
-        if (kind == Plane.Pawn)
+        if (kind == Kind.Pawn)
         {
             var delta = position - target;
 
@@ -254,79 +260,79 @@ public class Game
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void UpdateCastleState(Plane kind, Plane colour, int position)
+    private void UpdateCastleState(Kind kind, Colour colour, int position)
     {
-        if (kind is not (Plane.Rook or Plane.King))
+        if (kind is not (Kind.Rook or Kind.King))
         {
             return;
         }
 
-        if (kind == Plane.King)
+        if (kind == Kind.King)
         {
-            State.RemoveCastleRights(colour == Plane.White ? Castle.White : Castle.Black);
+            State.RemoveCastleRights(colour == Colour.White ? Castle.White : Castle.Black);
             
             return;
         }
 
         if (Cell.GetFile(position) == 0)
         {
-            State.RemoveCastleRights(colour == Plane.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
+            State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
             
             return;
         }
 
-        State.RemoveCastleRights(colour == Plane.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+        State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private Plane GetKindInternal(ulong cellBit)
+    private Kind GetKindInternal(ulong cellBit)
     {
-        if ((this[Plane.Pawn] & cellBit) == cellBit)
+        if ((this[Kind.Pawn] & cellBit) == cellBit)
         {
-            return Plane.Pawn;
+            return Kind.Pawn;
         }
         
-        if ((this[Plane.Rook] & cellBit) == cellBit)
+        if ((this[Kind.Rook] & cellBit) == cellBit)
         {
-            return Plane.Rook;
+            return Kind.Rook;
         }
         
-        if ((this[Plane.Knight] & cellBit) == cellBit)
+        if ((this[Kind.Knight] & cellBit) == cellBit)
         {
-            return Plane.Knight;
+            return Kind.Knight;
         }
         
-        if ((this[Plane.Bishop] & cellBit) == cellBit)
+        if ((this[Kind.Bishop] & cellBit) == cellBit)
         {
-            return Plane.Bishop;
+            return Kind.Bishop;
         }
         
-        if ((this[Plane.Queen] & cellBit) == cellBit)
+        if ((this[Kind.Queen] & cellBit) == cellBit)
         {
-            return Plane.Queen;
+            return Kind.Queen;
         }
         
-        if ((this[Plane.King] & cellBit) == cellBit)
+        if ((this[Kind.King] & cellBit) == cellBit)
         {
-            return Plane.King;
+            return Kind.King;
         }
 
         throw new InvalidMoveException($"No piece at {BitOperations.TrailingZeroCount(cellBit).ToStandardNotation()}.");
     }
 
-    private void UpdateBitboards(Plane kind, Plane colour, ulong fromBit, ulong toBit)
+    private void UpdateBitboards(Kind kind, Colour colour, ulong fromBit, ulong toBit)
     {
         var clearMask = ~fromBit & ~toBit;
 
-        this[Plane.White] &= clearMask;
-        this[Plane.Black] &= clearMask;
+        this[Colour.White] &= clearMask;
+        this[Colour.Black] &= clearMask;
 
-        this[Plane.Pawn] &= clearMask;
-        this[Plane.Rook] &= clearMask;
-        this[Plane.Knight] &= clearMask;
-        this[Plane.Bishop] &= clearMask;
-        this[Plane.Queen] &= clearMask;
-        this[Plane.King] &= clearMask;
+        this[Kind.Pawn] &= clearMask;
+        this[Kind.Rook] &= clearMask;
+        this[Kind.Knight] &= clearMask;
+        this[Kind.Bishop] &= clearMask;
+        this[Kind.Queen] &= clearMask;
+        this[Kind.King] &= clearMask;
 
         this[colour] |= toBit;
 

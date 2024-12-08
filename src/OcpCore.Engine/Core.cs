@@ -101,7 +101,7 @@ public sealed class Core : IDisposable
     
         var player = _game.State.Player;
                
-        var pieces = _game[(Plane) player];
+        var pieces = _game[player];
 
         var cell = PopPiecePosition(ref pieces);
 

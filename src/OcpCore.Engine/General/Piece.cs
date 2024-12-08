@@ -1,7 +1,6 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Extensions;
-using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine.General;
 
@@ -29,14 +28,14 @@ public abstract class Piece
     {
         var positionBit = 1ul << position;
 
-        var colour = (game[Plane.White] & positionBit) == positionBit ? Plane.White : Plane.Black;
+        var colour = (game[Colour.White] & positionBit) == positionBit ? Colour.White : Colour.Black;
 
-        return GetMoves(game, colour, colour.InvertColour(), position) & ~positionBit;
+        return GetMoves(game, colour, colour.Invert(), position) & ~positionBit;
     }
 
-    protected abstract ulong GetMoves(Game game, Plane colour, Plane opponentColour, int position);
+    protected abstract ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position);
 
-    public static ulong GetHorizontalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    public static ulong GetHorizontalSlidingMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
@@ -65,7 +64,7 @@ public abstract class Piece
         return leftMask & rightMask & mask;
     }
 
-    public static ulong GetVerticalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    public static ulong GetVerticalSlidingMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
@@ -94,7 +93,7 @@ public abstract class Piece
         return upMask & downMask & mask;
     }
     
-    public static ulong GetDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    public static ulong GetDiagonalSlidingMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var positionBit = 1ul << position;
 
@@ -123,7 +122,7 @@ public abstract class Piece
         return topRightMask & bottomLeftMask & mask;
     }
     
-    public static ulong GetAntiDiagonalSlidingMoves(Game game, Plane colour, Plane opponentColour, int position)
+    public static ulong GetAntiDiagonalSlidingMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
         var positionBit = 1ul << position;
 

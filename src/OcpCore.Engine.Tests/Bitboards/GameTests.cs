@@ -25,21 +25,21 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
 
-        Assert.Equal(whitePlane, _game[Plane.White]);
+        Assert.Equal(whitePlane, _game[Colour.White]);
 
-        Assert.Equal(blackPlane, _game[Plane.Black]);
+        Assert.Equal(blackPlane, _game[Colour.Black]);
 
-        Assert.Equal(pawnPlane, _game[Plane.Pawn]);
+        Assert.Equal(pawnPlane, _game[Kind.Pawn]);
 
-        Assert.Equal(rookPlane, _game[Plane.Rook]);
+        Assert.Equal(rookPlane, _game[Kind.Rook]);
 
-        Assert.Equal(knightPlane, _game[Plane.Knight]);
+        Assert.Equal(knightPlane, _game[Kind.Knight]);
 
-        Assert.Equal(bishopPlane, _game[Plane.Bishop]);
+        Assert.Equal(bishopPlane, _game[Kind.Bishop]);
 
-        Assert.Equal(queenPlane, _game[Plane.Queen]);
+        Assert.Equal(queenPlane, _game[Kind.Queen]);
 
-        Assert.Equal(kingPlane, _game[Plane.King]);
+        Assert.Equal(kingPlane, _game[Kind.King]);
     }
 
     [Theory]
@@ -58,21 +58,21 @@ public class GameTests
 
         var copy = new Game(_game);
 
-        Assert.Equal(whitePlane, copy[Plane.White]);
+        Assert.Equal(whitePlane, copy[Colour.White]);
 
-        Assert.Equal(blackPlane, copy[Plane.Black]);
+        Assert.Equal(blackPlane, copy[Colour.Black]);
 
-        Assert.Equal(pawnPlane, copy[Plane.Pawn]);
+        Assert.Equal(pawnPlane, copy[Kind.Pawn]);
 
-        Assert.Equal(rookPlane, copy[Plane.Rook]);
+        Assert.Equal(rookPlane, copy[Kind.Rook]);
 
-        Assert.Equal(knightPlane, copy[Plane.Knight]);
+        Assert.Equal(knightPlane, copy[Kind.Knight]);
 
-        Assert.Equal(bishopPlane, copy[Plane.Bishop]);
+        Assert.Equal(bishopPlane, copy[Kind.Bishop]);
 
-        Assert.Equal(queenPlane, copy[Plane.Queen]);
+        Assert.Equal(queenPlane, copy[Kind.Queen]);
 
-        Assert.Equal(kingPlane, copy[Plane.King]);
+        Assert.Equal(kingPlane, copy[Kind.King]);
     }
     
     [Theory]
@@ -85,9 +85,9 @@ public class GameTests
         
         _game.MakeMove(8, 16);
         
-        Assert.Equal(whitePlane, _game[Plane.White]);
+        Assert.Equal(whitePlane, _game[Colour.White]);
         
-        Assert.Equal(blackPlane, _game[Plane.Black]);
+        Assert.Equal(blackPlane, _game[Colour.Black]);
     }
     
     [Theory]
@@ -100,9 +100,9 @@ public class GameTests
         
         _game.MakeMove(48, 40);
         
-        Assert.Equal(whitePlane, _game[Plane.White]);
+        Assert.Equal(whitePlane, _game[Colour.White]);
         
-        Assert.Equal(blackPlane, _game[Plane.Black]);
+        Assert.Equal(blackPlane, _game[Colour.Black]);
     }
 
     [Theory]
@@ -114,7 +114,7 @@ public class GameTests
         
         _game.MakeMove(8, 16);
         
-        Assert.Equal(expectedPlane, _game[Plane.Pawn]);
+        Assert.Equal(expectedPlane, _game[Kind.Pawn]);
     }
     
     [Theory]
@@ -126,7 +126,7 @@ public class GameTests
         
         _game.MakeMove(0, 8);
         
-        Assert.Equal(expectedPlane, _game[Plane.Rook]);
+        Assert.Equal(expectedPlane, _game[Kind.Rook]);
     }
     
     [Theory]
@@ -138,7 +138,7 @@ public class GameTests
         
         _game.MakeMove(1, 11);
         
-        Assert.Equal(expectedPlane, _game[Plane.Knight]);
+        Assert.Equal(expectedPlane, _game[Kind.Knight]);
     }
     
     [Theory]
@@ -150,7 +150,7 @@ public class GameTests
         
         _game.MakeMove(2, 9);
         
-        Assert.Equal(expectedPlane, _game[Plane.Bishop]);
+        Assert.Equal(expectedPlane, _game[Kind.Bishop]);
     }
     
     [Theory]
@@ -162,7 +162,7 @@ public class GameTests
         
         _game.MakeMove(3, 0);
         
-        Assert.Equal(expectedPlane, _game[Plane.Queen]);
+        Assert.Equal(expectedPlane, _game[Kind.Queen]);
     }    
     
     [Theory]
@@ -180,7 +180,7 @@ public class GameTests
         
         _game.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
         
-        Assert.Equal(expectedPlane, _game[(Plane) colour]);
+        Assert.Equal(expectedPlane, _game[colour]);
     }
     
     [Theory]
@@ -204,11 +204,11 @@ public class GameTests
 
         if (check)
         {
-            Assert.True(_game.IsKingInCheck((Plane) colour));
+            Assert.True(_game.IsKingInCheck(colour));
         }
         else
         {
-            Assert.False(_game.IsKingInCheck((Plane) colour));
+            Assert.False(_game.IsKingInCheck(colour));
         }
     }
 

@@ -3,7 +3,6 @@ using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
-using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine.Kernel;
 
@@ -89,7 +88,7 @@ public class StateProcessor
 
         var ply = _maxDepth - depth + 1;
 
-        var pieces = game[(Plane) player];
+        var pieces = game[player];
 
         var cell = PopPiecePosition(ref pieces);
 
@@ -107,7 +106,7 @@ public class StateProcessor
 
                 var outcomes = copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck((Plane) player))
+                if (copy.IsKingInCheck(player))
                 {
                     move = Piece.PopNextMove(ref moves);
 
@@ -116,7 +115,7 @@ public class StateProcessor
 
                 IncrementCounts(ply);
 
-                if (copy.IsKingInCheck((Plane) player.Invert()))
+                if (copy.IsKingInCheck(player.Invert()))
                 {
                     outcomes |= MoveOutcome.Check;
 
@@ -156,7 +155,7 @@ public class StateProcessor
 
     private static bool CanMove(Game game, Colour colour)
     {
-        var pieces = game[(Plane) colour];
+        var pieces = game[colour];
 
         var cell = PopPiecePosition(ref pieces);
 
@@ -174,7 +173,7 @@ public class StateProcessor
 
                 copy.MakeMove(cell, move);
 
-                if (copy.IsKingInCheck((Plane) colour))
+                if (copy.IsKingInCheck(colour))
                 {
                     move = Piece.PopNextMove(ref moves);
                 
