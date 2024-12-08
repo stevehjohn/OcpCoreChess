@@ -31,8 +31,6 @@ public sealed class Coordinator : IDisposable
     
     public int QueueSize { get; private set; }
 
-    public bool IsBusy => _cancellationTokenSource != null;
-
     public Coordinator()
     {
         _processors = new StateProcessor[Threads];
