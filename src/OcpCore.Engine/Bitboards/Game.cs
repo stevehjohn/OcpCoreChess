@@ -11,7 +11,7 @@ public class Game
 {
     private readonly ulong[] _planes;
 
-    private static readonly Moves Moves = new();
+    private readonly Moves _moves = Moves.Instance;
     
     public State State { get; private set; } 
 
@@ -113,7 +113,7 @@ public class Game
 
         var opponentPlane = colour.InvertColour();
     
-        var attacks = Moves[MoveSet.Knight][position];
+        var attacks = _moves[MoveSet.Knight][position];
         
         if ((attacks & this[opponentPlane] & this[Plane.Knight]) > 0)
         {
@@ -136,14 +136,14 @@ public class Game
             return true;
         }
 
-        attacks = Moves[colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
+        attacks = _moves[colour == Plane.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
         if ((this[Plane.Pawn] & this[opponentPlane] & attacks) > 0)
         {
             return true;
         }
 
-        attacks = Moves[MoveSet.King][position];
+        attacks = _moves[MoveSet.King][position];
 
         if ((attacks & this[opponentPlane] & this[Plane.King]) > 0)
         {

@@ -7,7 +7,7 @@ namespace OcpCore.Engine.General;
 
 public abstract class Piece
 {
-    protected static readonly Moves Moves = new();
+    protected static readonly Moves Moves = Moves.Instance;
     
     public abstract int Value { get; }
 

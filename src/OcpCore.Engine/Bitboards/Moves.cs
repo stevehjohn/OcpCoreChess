@@ -5,11 +5,15 @@ namespace OcpCore.Engine.Bitboards;
 
 public class Moves
 {
+    private static readonly Lazy<Moves> Instantiator = new(Instantiate);
+    
     private readonly ulong[][] _moveSets;
+
+    public static Moves Instance => Instantiator.Value;
     
     public ulong[] this[MoveSet moveSet] => _moveSets[(int) moveSet];
 
-    public Moves()
+    private Moves()
     {
         var sets = Enum.GetValues<MoveSet>().Length;
 
@@ -31,6 +35,11 @@ public class Moves
         GenerateKnightMoves();
         
         GenerateKingMoves();
+    }
+
+    private static Moves Instantiate()
+    {
+        return new Moves();
     }
 
     private void GeneratePawnMoves()

@@ -6,7 +6,7 @@ namespace OcpCore.Engine.Tests.Bitboards;
 
 public class MovesTests
 {
-    private readonly Moves _moves = new();
+    private readonly Moves _moves = Moves.Instance;
     
     [Theory]
     [InlineData(0, "00000000" +
