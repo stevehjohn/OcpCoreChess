@@ -164,22 +164,30 @@ public class Game
         var mask = _moves[MoveSet.Knight][cell] & this[Kind.Knight];
 
         mask |= _moves[MoveSet.King][cell] & this[Kind.King];
-        
-        mask |= _moves[opponentColour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][cell];
 
-        var player = opponentColour.Invert();
-        
-        mask |= Piece.GetHorizontalSlidingMoves(this, player, opponentColour, cell);
-
-        mask |= Piece.GetVerticalSlidingMoves(this, player, opponentColour, cell);
-
-        mask |= Piece.GetDiagonalSlidingMoves(this, player, opponentColour, cell);
-
-        mask |= Piece.GetAntiDiagonalSlidingMoves(this, player, opponentColour, cell);
+        mask |= _moves[opponentColour == Colour.White ? MoveSet.PawnBlackAttack : MoveSet.PawnWhiteAttack][cell] & this[Kind.Pawn];
 
         mask &= this[opponentColour];
-        
-        return BitOperations.PopCount(mask);
+
+        var count = BitOperations.PopCount(mask);
+
+        var player = opponentColour.Invert();
+
+        var attacks = Piece.GetDiagonalSlidingMoves(this, player, opponentColour, cell)
+                      | Piece.GetAntiDiagonalSlidingMoves(this, player, opponentColour, cell);
+
+        count += BitOperations.PopCount(attacks & this[Kind.Bishop]);
+
+        count += BitOperations.PopCount(attacks & this[Kind.Queen]);
+
+        attacks = Piece.GetHorizontalSlidingMoves(this, player, opponentColour, cell)
+                  | Piece.GetVerticalSlidingMoves(this, player, opponentColour, cell);
+
+        count += BitOperations.PopCount(attacks & this[Kind.Rook]);
+
+        count += BitOperations.PopCount(attacks & this[Kind.Queen]);
+
+        return count;
     }
 
     public void ParseFen(string fen)
