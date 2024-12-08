@@ -4,6 +4,7 @@ using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
+using OcpCore.Engine.Kernel;
 using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
@@ -14,29 +15,19 @@ public sealed class Core : IDisposable
 
     public const string Author = "Stevo John";
 
-    private static readonly int Threads = Environment.ProcessorCount - 2;
-    
     private readonly Game _game;
 
     private readonly Colour _engineColour;
 
-    private readonly PriorityQueue<(Game Game, int Depth), int> _gameQueue = new();
-    
-    private long[] _depthCounts;
-    
-    private long[][] _outcomes;
-
-    private CancellationTokenSource _cancellationTokenSource;
-
-    private CancellationToken _cancellationToken;
+    private Coordinator _coordinator;
 
     private Task _getMoveTask;
 
-    public long GetDepthCount(int ply) => _depthCounts[ply];
+    public long GetDepthCount(int ply) => _coordinator.GetDepthCount(ply);
 
-    public long GetMoveOutcome(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
+    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
 
-    public bool IsBusy => _cancellationTokenSource != null;
+    public bool IsBusy => _coordinator.IsBusy;
 
     public int QueueSize { get; private set; }
 
@@ -140,21 +131,8 @@ public sealed class Core : IDisposable
     
     private void GetMoveInternal(int depth, Action callback = null)
     {
-        _depthCounts = new long[depth + 1];
-
-        _outcomes = new long[depth + 1][];
+        _coordinator.StartProcessing(_game);
         
-        _gameQueue.Clear();
-
-        for (var i = 1; i <= depth; i++)
-        {
-            _depthCounts[i] = 0;
-
-            _outcomes[i] = new long[Constants.MoveOutcomes + 1];
-        }
-
-        _gameQueue.Enqueue((_game, depth), 0);
-
         if (depth < 6)
         {
             var result = ProcessQueue(depth);

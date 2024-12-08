@@ -19,9 +19,13 @@ public class StateProcessor
 
     private readonly long[] _centralDepthCounts;
 
-    public long[] DepthCounts { get; }
+    private readonly long[] _depthCounts;
 
-    public long[][] Outcomes { get; }
+    private readonly long[][] _outcomes;
+
+    public long GetDepthCount(int ply) => _depthCounts[ply];
+
+    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][(int) outcome];
 
     public StateProcessor(int maxDepth, PriorityQueue<(Game game, int depth), int> centralQueue, long[] centralDepthCounts)
     {
@@ -31,18 +35,18 @@ public class StateProcessor
 
         _centralDepthCounts = centralDepthCounts;
         
-        DepthCounts = new long[maxDepth + 1];
+        _depthCounts = new long[maxDepth + 1];
 
-        Outcomes = new long[maxDepth + 1][];
+        _outcomes = new long[maxDepth + 1][];
     }
 
     public void StartProcessing(Action<StateProcessor> completionCallback, CancellationToken cancellationToken)
     {
         for (var i = 1; i <= _maxDepth; i++)
         {
-            DepthCounts[i] = 0;
+            _depthCounts[i] = 0;
 
-            Outcomes[i] = new long[Constants.MoveOutcomes + 1];
+            _outcomes[i] = new long[Constants.MoveOutcomes + 1];
         }
         
         // ReSharper disable once InconsistentlySynchronizedField
@@ -188,13 +192,13 @@ public class StateProcessor
     
     private void IncrementCounts(int ply)
     {
-        DepthCounts[ply]++;
+        _depthCounts[ply]++;
 
-        if (DepthCounts[ply] > 1_000)
+        if (_depthCounts[ply] > 1_000)
         {
-            Interlocked.Add(ref _centralDepthCounts[ply], DepthCounts[ply]);
+            Interlocked.Add(ref _centralDepthCounts[ply], _depthCounts[ply]);
         
-            DepthCounts[ply] = 0;
+            _depthCounts[ply] = 0;
         }
     }
 
@@ -204,7 +208,7 @@ public class StateProcessor
         {
             var outcome = BitOperations.TrailingZeroCount((int) outcomes);
 
-            Outcomes[ply][outcome + 1]++;
+            _outcomes[ply][outcome + 1]++;
 
             outcomes ^= (MoveOutcome) (1 << outcome);
         }

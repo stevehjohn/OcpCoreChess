@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Kernel;
@@ -22,8 +23,14 @@ public class Coordinator
     private CancellationToken _cancellationToken;
 
     private CountdownEvent _countdownEvent;
+
+    public long GetDepthCount(int ply) => _depthCounts[ply];
+
+    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][(int) outcome];
     
     public int QueueSize { get; private set; }
+
+    public bool IsBusy => _cancellationTokenSource != null;
 
     public Coordinator(int maxDepth)
     {
@@ -48,13 +55,15 @@ public class Coordinator
         }
     }
 
-    public void StartProcessing()
+    public void StartProcessing(Game game)
     {
         _cancellationTokenSource = new CancellationTokenSource();
 
         _cancellationToken = _cancellationTokenSource.Token;
 
         _countdownEvent = new CountdownEvent(Threads);
+        
+        _queue.Enqueue((game, _maxDepth), 0);
 
         for (var i = 0; i < Threads; i++)
         {
@@ -69,17 +78,21 @@ public class Coordinator
             
             Thread.Sleep(500);
         }
+        
+        _cancellationTokenSource.Dispose();
+
+        _cancellationTokenSource = null;
     }
 
     private void CoalesceResults(StateProcessor processor)
     {
         for (var depth = 1; depth <= _maxDepth; depth++)
         {
-            Interlocked.Add(ref _depthCounts[depth], processor.DepthCounts[depth]);
+            Interlocked.Add(ref _depthCounts[depth], processor.GetDepthCount(depth));
 
-            for (var outcome = 1; outcome <= Constants.MoveOutcomes; outcome++)
+            for (var outcome = 0; outcome < Constants.MoveOutcomes; outcome++)
             {
-                Interlocked.Add(ref _outcomes[depth][outcome], processor.Outcomes[depth][outcome]);
+                Interlocked.Add(ref _outcomes[depth][outcome], processor.GetOutcomeCount(depth, (MoveOutcome) (1 << outcome)));
             }
         }
 
