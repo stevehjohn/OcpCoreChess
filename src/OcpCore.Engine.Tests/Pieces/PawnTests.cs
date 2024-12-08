@@ -82,6 +82,22 @@ public class PawnTests
     }
     
     [Theory]
+    [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq b6 0 1", 34,
+        0b0000_0000_0000_0000_0000_0110_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
+    public void DetectsEnPassantOpportunity(string fen, int position, ulong expectedMoves)
+    {
+        var game = new Game();
+        
+        game.ParseFen(fen);
+
+        Assert.True(game.IsKind(Kind.Pawn, position));
+
+        var moves = _pawn.GetMoves(game, position);
+        
+        Assert.Equal(expectedMoves, moves);
+    }
+    
+    [Theory]
     [InlineData("e2e3,a7a5,f1f6,a5a4,g1e2,a4a3,e1g1", 16, 
         0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0010_0000_0000)]
     public void DoesNotMakeMistakesIdentifiedInPerfTesting(string movesString, int position, ulong expectedMoves)
@@ -101,14 +117,4 @@ public class PawnTests
         
         Assert.Equal(expectedMoves, pawnMoves);
     }
-
-    // [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq b6 0 1", 34, Colour.White, "41,42")]
-    // [InlineData("8/8/8/2Pp4/8/8/8/8 w KQkq d6 0 1", 34, Colour.White, "42,43")]
-    // [InlineData("8/8/8/8/5pP1/8/8/8 b KQkq g3 0 1", 29, Colour.Black, "21,22")]
-    // [InlineData("8/8/8/8/4Pp2/8/8/8 b KQkq e3 0 1", 29, Colour.Black, "20,21")]
-    // [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq - 0 1", 34, Colour.White, "42")]
-    // [InlineData("8/8/8/2Pp4/8/8/8/8 w KQkq - 0 1", 34, Colour.White, "42")]
-    // [InlineData("8/8/8/8/5pP1/8/8/8 b KQkq - 0 1", 29, Colour.Black, "21")]
-    // [InlineData("8/8/8/8/4Pp2/8/8/8 b KQkq - 0 1", 29, Colour.Black, "21")]
-    // public void DetectsEnPassantOpportunity(string fen, int position, Colour colour, string expectedMoves)
 }
