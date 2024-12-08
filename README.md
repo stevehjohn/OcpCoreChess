@@ -16,6 +16,7 @@
 ## Code Cleanup TODOs
 
 - Find a nice way to integrate PerfTree.
+- Finish `Piece` subclass tests.
 
 ## Current Best Timings
 
