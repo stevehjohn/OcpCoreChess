@@ -29,6 +29,22 @@ public class QueenTests
         Assert.Equal(expectedMoves, moves);
     }
     
+    [Theory]
+    [InlineData("7q/6pp/8/8/4P3/8/8/8 w - - 0 1", 63, 
+        0b0111_1111_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
+    public void IsBlockedByPieceOfOwnColour(string fen, int position, ulong expectedMoves)
+    {
+        var game = new Game();
+        
+        game.ParseFen(fen);
+
+        Assert.True(game.IsKind(Kind.Queen, position));
+
+        var moves = _queen.GetMoves(game, position);
+        
+        Assert.Equal(expectedMoves, moves);
+    }
+    
     // [InlineData("8/8/8/8/8/8/8/q2p4 b - - 0 1", 0, "1,2,8,16,24,32,40,48,56,9,18,27,36,45,54,63")]
     // [InlineData("8/8/8/8/8/2p5/8/q7 b - - 0 1", 0, "1,2,3,4,5,6,7,8,16,24,32,40,48,56,9")]
     // [InlineData("8/p7/8/8/8/8/8/q7 b - - 0 1", 0, "1,2,3,4,5,6,7,8,16,24,32,40,9,18,27,36,45,54,63")]
