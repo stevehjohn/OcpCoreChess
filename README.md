@@ -20,17 +20,19 @@
 
 ## Current Best Timings
 
+From an initial board state.
+
 ```
  Ply | Time
 -----+-----------
- 1   | ~ 5 ms
+ 1   | < 1 ms
  2   | < 1 ms
  3   | ~ 5 ms
  4   | ~ 100 ms
- 5   | ~ 700 ms
+ 5   | ~ 800 ms
  6   | ~ 5 s
- 7   | ~ 1.5 m
- 8   | ~ 45 m
+ 7   | ~ 1m 45s
+ 8   | ~ 50 m
  9   | ~ 1 d
 ```
 
