@@ -31,7 +31,7 @@ public sealed class Core : IDisposable
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
 
-    public bool IsBusy => _coordinator.IsBusy;
+    public bool IsBusy => _cancellationTokenSource != null;
 
     public int QueueSize => _coordinator.QueueSize;
 

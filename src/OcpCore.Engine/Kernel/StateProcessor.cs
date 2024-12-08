@@ -197,8 +197,11 @@ public class StateProcessor
         if (_depthCounts[ply] > 1_000)
         {
             _callback(this, false);
-        
-            _depthCounts[ply] = 0;
+
+            for (var i = 0; i <= _maxDepth; i++)
+            {
+                _depthCounts[i] = 0;
+            }
         }
     }
 
