@@ -66,6 +66,22 @@ public class PawnTests
     }
     
     [Theory]
+    [InlineData("8/8/8/8/8/1p6/P7/8 w - - 0 1", 8,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0000_0011_0000_0000_0000_0000)]
+    public void TakesPieceOfOpposingColour(string fen, int position, ulong expectedMoves)
+    {
+        var game = new Game();
+        
+        game.ParseFen(fen);
+
+        Assert.True(game.IsKind(Kind.Pawn, position));
+
+        var moves = _pawn.GetMoves(game, position);
+        
+        Assert.Equal(expectedMoves, moves);
+    }
+    
+    [Theory]
     [InlineData("e2e3,a7a5,f1f6,a5a4,g1e2,a4a3,e1g1", 16, 
         0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0010_0000_0000)]
     public void DoesNotMakeMistakesIdentifiedInPerfTesting(string movesString, int position, ulong expectedMoves)
@@ -85,12 +101,6 @@ public class PawnTests
         
         Assert.Equal(expectedMoves, pawnMoves);
     }
-
-    // [InlineData("8/8/8/8/8/p7/1P6/8 w - - 0 1", 9, Colour.White, "16,17,25")]
-    // [InlineData("8/8/8/8/8/2p5/1P6/8 w - - 0 1", 9, Colour.White, "18,17,25")]
-    // [InlineData("8/1p6/2P5/8/8/8/8/8 b - - 0 1", 49, Colour.Black, "42,41,33")]
-    // [InlineData("8/1p6/P7/8/8/8/8/8 b - - 0 1", 49, Colour.Black, "40,41,33")]
-    // public void TakesPieceOfOpposingColour(string fen, int position, Colour colour, string expectedMoves)
 
     // [InlineData("8/8/8/1pP5/8/8/8/8 w KQkq b6 0 1", 34, Colour.White, "41,42")]
     // [InlineData("8/8/8/2Pp4/8/8/8/8 w KQkq d6 0 1", 34, Colour.White, "42,43")]
