@@ -117,25 +117,25 @@ public class Game
             position = probePosition;
         }
 
-        var opponentPlane = colour.Invert();
+        var opponentColour = colour.Invert();
     
         var attacks = _moves[MoveSet.Knight][position];
         
-        if ((attacks & this[opponentPlane] & this[Kind.Knight]) > 0)
+        if ((attacks & this[opponentColour] & this[Kind.Knight]) > 0)
         {
             return true;
         }
 
-        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentPlane, position)
-                  | Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentPlane, position);
+        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position)
+                  | Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
         
         if ((attacks & (this[Kind.Bishop] | this[Kind.Queen])) > 0)
         {
             return true;
         }
 
-        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentPlane, position)
-                  | Piece.GetVerticalSlidingMoves(this, colour, opponentPlane, position);
+        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position)
+                  | Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
         
         if ((attacks & (this[Kind.Rook] | this[Kind.Queen])) > 0)
         {
@@ -144,14 +144,14 @@ public class Game
 
         attacks = _moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
-        if ((this[Kind.Pawn] & this[opponentPlane] & attacks) > 0)
+        if ((this[Kind.Pawn] & this[opponentColour] & attacks) > 0)
         {
             return true;
         }
 
         attacks = _moves[MoveSet.King][position];
 
-        if ((attacks & this[opponentPlane] & this[Kind.King]) > 0)
+        if ((attacks & this[opponentColour] & this[Kind.King]) > 0)
         {
             return true;
         }
@@ -159,15 +159,25 @@ public class Game
         return false;
     }
 
-    public int CountCellAttackers(int cell, Colour attackerColour)
+    public int CountCellAttackers(int cell, Colour opponentColour)
     {
         var mask = _moves[MoveSet.Knight][cell] & this[Kind.Knight];
 
         mask |= _moves[MoveSet.King][cell] & this[Kind.King];
         
-        mask |= _moves[attackerColour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][cell];
+        mask |= _moves[opponentColour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][cell];
 
-        mask &= this[attackerColour];
+        var player = opponentColour.Invert();
+        
+        mask |= Piece.GetHorizontalSlidingMoves(this, player, opponentColour, cell);
+
+        mask |= Piece.GetVerticalSlidingMoves(this, player, opponentColour, cell);
+
+        mask |= Piece.GetDiagonalSlidingMoves(this, player, opponentColour, cell);
+
+        mask |= Piece.GetAntiDiagonalSlidingMoves(this, player, opponentColour, cell);
+
+        mask &= this[opponentColour];
         
         return BitOperations.PopCount(mask);
     }
