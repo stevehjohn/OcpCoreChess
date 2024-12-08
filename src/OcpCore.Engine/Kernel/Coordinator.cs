@@ -1,3 +1,4 @@
+using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
@@ -26,7 +27,7 @@ public sealed class Coordinator : IDisposable
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
-    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][(int) outcome];
+    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
     
     public int QueueSize { get; private set; }
 
@@ -95,7 +96,7 @@ public sealed class Coordinator : IDisposable
                 Interlocked.Add(ref _outcomes[depth][outcome], processor.GetOutcomeCount(depth, (MoveOutcome) (1 << outcome)));
             }
         }
-
+        
         if (isComplete)
         {
             _countdownEvent.Signal();
