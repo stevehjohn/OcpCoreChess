@@ -4,12 +4,14 @@
 
 ## Functionality TODOs
 
-- Promote to all possibilities. Handle in `Core` to split off possibilities.
-- Move ordering?
-  - Captures preferred.
-  - Lower value taking higher even better.
-  - Moves that don't go onto an attacked square.
-  - Could potentially be done buy putting all made moves on a `PriorityQueue` before further depth processing.
+- Promote to all possibilities. Handle in `StateProcessor` to split off possibilities.
+- Move ordering:
+  - Done:
+    - Captures preferred.
+    - Utilise `PriorityQueue` before further depth processing.
+  - TODO:
+    - Lower value taking higher even better.
+    - Moves that don't go onto an attacked square.
 
 ## Code Cleanup TODOs
 
