@@ -5,7 +5,6 @@ using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Kernel;
-using Plane = OcpCore.Engine.Bitboards.Plane;
 
 namespace OcpCore.Engine;
 
