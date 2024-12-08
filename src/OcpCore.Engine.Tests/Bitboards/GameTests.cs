@@ -245,7 +245,7 @@ public class GameTests
             Assert.False((outcome & MoveOutcome.Promotion) > 0);
         }
     }
-
+    
     [Fact]
     public void ThrowsExceptionOnMoveIfNoPieceInFromCell()
     {
@@ -254,5 +254,15 @@ public class GameTests
         var exception = Assert.Throws<InvalidMoveException>(() => _game.MakeMove(16, 17));
         
         Assert.Equal("No piece at a3.", exception.Message);
+    }
+    
+    [Fact]
+    public void ThrowsExceptionIfWrongPlayerMoves()
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+
+        var exception = Assert.Throws<InvalidMoveException>(() => _game.MakeMove(48, 49));
+        
+        Assert.Equal("Not the turn for Black.", exception.Message);
     }
 }
