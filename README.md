@@ -14,10 +14,6 @@
     - Moves that don't go onto an attacked square?
     - Randomness to break ties?
 
-## Potential Bugs
-
-- `CountCellAttackers`, sliders seem to teleport through own pieces to attack.
-
 ## Code Cleanup TODOs
 
 - Find a nice way to integrate PerfTree.
