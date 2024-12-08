@@ -99,15 +99,18 @@ public sealed class Coordinator : IDisposable
         for (var depth = 1; depth <= _maxDepth; depth++)
         {
             Interlocked.Add(ref _depthCounts[depth], processor.GetDepthCount(depth));
-
-            for (var outcome = 0; outcome < Constants.MoveOutcomes; outcome++)
-            {
-                Interlocked.Add(ref _outcomes[depth][outcome], processor.GetOutcomeCount(depth, (MoveOutcome) (1 << outcome)));
-            }
         }
-        
+
         if (isComplete)
         {
+            for (var depth = 1; depth <= _maxDepth; depth++)
+            {
+                for (var outcome = 0; outcome < Constants.MoveOutcomes; outcome++)
+                {
+                    Interlocked.Add(ref _outcomes[depth][outcome], processor.GetOutcomeCount(depth, (MoveOutcome) (1 << outcome)));
+                }
+            }
+
             _countdownEvent?.Signal();
         }
     }
