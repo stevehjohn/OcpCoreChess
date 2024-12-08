@@ -17,38 +17,34 @@ public class StateProcessor
     
     private readonly PriorityQueue<(Game game, int depth), int> _localQueue = new();
 
-    private readonly CancellationToken _cancellationToken;
-
     private readonly long[] _centralDepthCounts;
-    
-    private readonly long[] _depthCounts;
-    
-    private readonly long[][] _outcomes;
 
-    public StateProcessor(int maxDepth, PriorityQueue<(Game game, int depth), int> centralQueue, long[] centralDepthCounts, CancellationToken cancellationToken)
+    public long[] DepthCounts { get; }
+
+    public long[][] Outcomes { get; }
+
+    public StateProcessor(int maxDepth, PriorityQueue<(Game game, int depth), int> centralQueue, long[] centralDepthCounts)
     {
         _maxDepth = maxDepth;
 
         _centralQueue = centralQueue;
 
         _centralDepthCounts = centralDepthCounts;
-
-        _cancellationToken = cancellationToken;
         
-        _depthCounts = new long[maxDepth + 1];
+        DepthCounts = new long[maxDepth + 1];
 
-        _outcomes = new long[maxDepth + 1][];
-
-        for (var i = 1; i <= maxDepth; i++)
-        {
-            _depthCounts[i] = 0;
-
-            _outcomes[i] = new long[Constants.MoveOutcomes + 1];
-        }
+        Outcomes = new long[maxDepth + 1][];
     }
 
-    public void StartProcessing()
+    public void StartProcessing(Action<StateProcessor> completionCallback, CancellationToken cancellationToken)
     {
+        for (var i = 1; i <= _maxDepth; i++)
+        {
+            DepthCounts[i] = 0;
+
+            Outcomes[i] = new long[Constants.MoveOutcomes + 1];
+        }
+        
         // ReSharper disable once InconsistentlySynchronizedField
         while (_centralQueue.Count > 0)
         {
@@ -69,7 +65,7 @@ public class StateProcessor
 
             while (_localQueue.Count > 0)
             {
-                if (_cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
@@ -79,6 +75,8 @@ public class StateProcessor
                 ProcessWorkItem(game, depth);
             }
         }
+
+        completionCallback(this);
     }
 
     private void ProcessWorkItem(Game game, int depth)
@@ -190,13 +188,13 @@ public class StateProcessor
     
     private void IncrementCounts(int ply)
     {
-        _depthCounts[ply]++;
+        DepthCounts[ply]++;
 
-        if (_depthCounts[ply] > 1_000)
+        if (DepthCounts[ply] > 1_000)
         {
-            Interlocked.Add(ref _centralDepthCounts[ply], _depthCounts[ply]);
+            Interlocked.Add(ref _centralDepthCounts[ply], DepthCounts[ply]);
         
-            _depthCounts[ply] = 0;
+            DepthCounts[ply] = 0;
         }
     }
 
@@ -206,7 +204,7 @@ public class StateProcessor
         {
             var outcome = BitOperations.TrailingZeroCount((int) outcomes);
 
-            _outcomes[ply][outcome + 1]++;
+            Outcomes[ply][outcome + 1]++;
 
             outcomes ^= (MoveOutcome) (1 << outcome);
         }
