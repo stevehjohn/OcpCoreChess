@@ -17,7 +17,7 @@
 ## Code Cleanup TODOs
 
 - Find a nice way to integrate PerfTree.
-- Finish `Piece` subclass tests. Specifically: Pawn, Queen and King.
+- Flesh out `InlineData` test cases for pieces.
 
 ## Current Best Timings
 
