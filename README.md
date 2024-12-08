@@ -40,9 +40,14 @@
 - Diagonal: `(0, 0), (1, 1), (2, 2)...`. i.e. `/`. Anti-diagonal `(0, 7), (1, 6), (2, 5)...`. i.e. `\`.
 - `WhiteScore - BlackScore` will be positive if white has more material.
 - Move score is currently (remember `PriorityQueue` prefers lower values):
-  - `(MoveOutcome.CheckMate - outcomes) * 100` (CheckMate == 0, Nothing but a simple move = 100).
+  - `(MoveOutcome.CheckMate - outcomes) * 10,000` (CheckMate == 0, Nothing but a simple move = 100).
   - `+ 100 - capturedPieceValue * 10` (higher captured piece values will yield lower scores).
   - `+ movedPieceValue` (lower moved piece value is good).
+  - This leave space for an attacker count at digits 2 ans 3, i.e. `OOAACP` where:
+    - OO is outcome value.
+    - AA is number of attackers value.
+    - C is captured piece value inverted.
+    - P is player piece value.
 
 ### Cell Arrangement
 

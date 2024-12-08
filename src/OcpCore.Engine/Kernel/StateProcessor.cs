@@ -141,7 +141,7 @@ public class StateProcessor
 
     private static int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player)
     {
-        var priority = (MoveOutcome.CheckMate - outcome) * 100;
+        var priority = (MoveOutcome.CheckMate - outcome) * 10_000;
 
         if ((outcome & MoveOutcome.Capture) > 0)
         {
