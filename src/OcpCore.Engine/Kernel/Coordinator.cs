@@ -33,6 +33,8 @@ public sealed class Coordinator : IDisposable
     
     public int QueueSize { get; private set; }
 
+    public bool IsParallel => _countdownEvent != null;
+
     public Coordinator(int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;

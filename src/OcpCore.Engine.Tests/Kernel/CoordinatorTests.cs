@@ -7,15 +7,19 @@ namespace OcpCore.Engine.Tests.Kernel;
 
 public class CoordinatorTests
 {
-    [Fact]
-    public void ParallelisesAtGivenLevel()
+    [Theory]
+    [InlineData(2, 3, false)]
+    [InlineData(5, 3, true)]
+    public void ParallelisesAtGivenLevel(int requestedDepth, int parallelisationDepth, bool expectParallelisation)
     {
-        var coordinator = new Coordinator(1);
+        var coordinator = new Coordinator(parallelisationDepth);
 
         var game = new Game();
         
         game.ParseFen(Constants.InitialBoardFen);
+
+        coordinator.StartProcessing(game, requestedDepth);
         
-        coordinator.StartProcessing(game, 2);
+        Assert.Equal(expectParallelisation, coordinator.IsParallel);
     }
 }
