@@ -217,6 +217,7 @@ public class GameTests
     [InlineData("4q3/7b/8/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 7)]
     [InlineData("4q3/7b/6B1/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
     [InlineData("4q3/4R2b/8/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
+    // [InlineData("4q3/4p3/8/8/4P3/8/8/8 w - - 0 1", 28, Colour.Black, 0)]
     // [InlineData("4q3/4k2b/8/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
     // [InlineData("4q3/7b/6k1/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
     public void CountsAttackingPiecesCorrectly(string fen, int cell, Colour attackerColour, int expectedCount)
