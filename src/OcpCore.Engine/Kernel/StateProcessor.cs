@@ -147,13 +147,13 @@ public class StateProcessor
         {
             if ((outcome & MoveOutcome.EnPassant) > 0)
             {
-                priority += Scores.Pawn * 10;
+                priority += 100 - Scores.Pawn * 10;
             }
             else
             {
                 var capturedPiece = game.GetKind(target);
 
-                priority += PieceCache.Instance[capturedPiece].Value * 10;
+                priority += 100 - PieceCache.Instance[capturedPiece].Value * 10;
             }
         }
 
