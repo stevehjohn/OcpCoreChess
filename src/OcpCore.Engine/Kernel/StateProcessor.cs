@@ -156,7 +156,20 @@ public class StateProcessor
             
             copy.PromotePawn(move, kind);
 
-            Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
+            if (copy.IsKingInCheck(opponent))
+            {
+                outcomes |= MoveOutcome.Check;
+
+                if (! CanMove(copy, opponent))
+                {
+                    outcomes |= MoveOutcome.CheckMate;
+                }
+            }
+
+            if ((outcomes & MoveOutcome.CheckMate) == 0)
+            {
+                Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
+            }
         }
     }
 
