@@ -113,9 +113,11 @@ public class StateProcessor
                     continue;
                 }
 
-                IncrementCounts(ply);
-
                 var opponent = player.Invert();
+
+                HandlePromotion(ref outcomes, game, move, depth, opponent);
+
+                IncrementCounts(ply);
 
                 if (copy.IsKingInCheck(opponent))
                 {
@@ -129,7 +131,7 @@ public class StateProcessor
 
                 IncrementOutcomes(ply, outcomes);
 
-                if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
+                if (depth > 1 && (outcomes & MoveOutcome.CheckMate & MoveOutcome.Promotion) == 0)
                 {
                     Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
                 }
@@ -138,6 +140,23 @@ public class StateProcessor
             }
 
             cell = PopPiecePosition(ref pieces);
+        }
+    }
+
+    private void HandlePromotion(ref MoveOutcome outcomes, Game game, int move, int depth, Colour opponent)
+    {
+        if (depth == 1 || (outcomes & MoveOutcome.Promotion) == 0)
+        {
+            return;
+        }
+
+        for (var kind = Kind.Rook; kind < Kind.King; kind++)
+        {
+            var copy = new Game(game);
+            
+            copy.PromotePawn(move, kind);
+
+            Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
         }
     }
 

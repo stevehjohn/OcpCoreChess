@@ -190,6 +190,20 @@ public class Game
         return count;
     }
 
+    public void PromotePawn(int cell, Kind kind)
+    {
+        if (! IsKind(Kind.Pawn, cell))
+        {
+            throw new InvalidMoveException($"There isn't a Pawn at {cell.ToStandardNotation()}.");
+        }
+
+        var cellBit = 1ul << cell;
+
+        this[Kind.Pawn] &= ~cellBit;
+
+        this[kind] |= cellBit;
+    }
+
     public void ParseFen(string fen)
     {
         State = FenInterface.ParseFen(fen, _planes);
