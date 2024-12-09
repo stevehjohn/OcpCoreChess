@@ -131,7 +131,7 @@ public class StateProcessor
 
                 IncrementOutcomes(ply, outcomes);
 
-                if (depth > 1 && (outcomes & MoveOutcome.CheckMate & MoveOutcome.Promotion) == 0)
+                if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
                 {
                     Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
                 }
