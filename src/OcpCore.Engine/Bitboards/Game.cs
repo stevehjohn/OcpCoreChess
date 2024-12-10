@@ -36,8 +36,6 @@ public class Game
 
     public Game(Game game)
     {
-        var planeCount = Enum.GetValues<Plane>().Length;
-
         _planes = game._planes;
 
         State = new State(game.State);

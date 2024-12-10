@@ -7,7 +7,7 @@ namespace OcpCore.Engine.Tests.General;
 
 public class FenInterfaceTests
 {
-    private Planes _planes = new Planes();
+    private Planes _planes;
 
     [Theory]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null)]
