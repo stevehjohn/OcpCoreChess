@@ -31,7 +31,7 @@ From an initial board state.
  3   | ~ 10 ms
  4   | ~ 200 ms
  5   | ~ 500 ms
- 6   | ~ 3 s
+ 6   | ~ 3 m
  7   | ~ 1m 30s
  8   | ~ 40 m
  9   | ~ 1 d
