@@ -7,7 +7,7 @@ namespace OcpCore.Engine.Tests.General;
 
 public class FenInterfaceTests
 {
-    private readonly ulong[] _planes = new ulong[Enum.GetValues<Plane>().Length];
+    private Planes _planes = new Planes();
 
     [Theory]
     [InlineData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null)]
@@ -25,11 +25,11 @@ public class FenInterfaceTests
     {
         if (expectedMessage == null)
         {
-            FenInterface.ParseFen(fen, _planes);
+            FenInterface.ParseFen(fen, ref _planes);
         }
         else
         {
-            var exception = Assert.Throws<FenParseException>(() => FenInterface.ParseFen(fen, _planes));
+            var exception = Assert.Throws<FenParseException>(() => FenInterface.ParseFen(fen, ref _planes));
 
             Assert.Contains(expectedMessage, exception.Message);
         }

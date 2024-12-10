@@ -1,3 +1,4 @@
+using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General.StaticData;
@@ -6,7 +7,7 @@ namespace OcpCore.Engine.General;
 
 public static class FenInterface
 {
-    public static State ParseFen(string fen, ulong[] planes)
+    public static State ParseFen(string fen, ref Planes planes)
     {
         var parts = fen.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 

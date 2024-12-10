@@ -9,7 +9,7 @@ namespace OcpCore.Engine.Bitboards;
 
 public class Game
 {
-    private readonly ulong[] _planes;
+    private Planes _planes;
 
     private readonly Moves _moves = Moves.Instance;
     
@@ -29,7 +29,7 @@ public class Game
     
     public Game()
     {
-        _planes = new ulong[Enum.GetValues<Plane>().Length];
+        _planes = new Planes();
 
         State = new State();
     }
@@ -37,10 +37,8 @@ public class Game
     public Game(Game game)
     {
         var planeCount = Enum.GetValues<Plane>().Length;
-        
-        _planes = new ulong[planeCount];
-        
-        Buffer.BlockCopy(game._planes, 0, _planes, 0, planeCount * sizeof(ulong));
+
+        _planes = game._planes;
 
         State = new State(game.State);
     }
@@ -206,7 +204,7 @@ public class Game
 
     public void ParseFen(string fen)
     {
-        State = FenInterface.ParseFen(fen, _planes);
+        State = FenInterface.ParseFen(fen, ref _planes);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
