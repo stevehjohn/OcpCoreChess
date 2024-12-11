@@ -7,21 +7,19 @@ public class Moves
 {
     private static readonly Lazy<Moves> Instantiator = new(Instantiate);
     
-    private readonly ulong[][] _moveSets;
+    private readonly MoveSet[] _moveSets;
 
     public static Moves Instance => Instantiator.Value;
     
-    public ulong[] this[int cell] => _moveSets[cell];
+    public MoveSet this[int cell] => _moveSets[cell];
 
     private Moves()
     {
-        var sets = Enum.GetValues<MoveSets>().Length;
+        _moveSets = new MoveSet[Constants.Cells];
 
-        _moveSets = new ulong[Constants.Cells][];
-        
         for (var i = 0; i < Constants.Cells; i++)
         {
-            _moveSets[i] = new ulong[sets];
+            _moveSets[i] = new MoveSet();
         }
 
         GeneratePawnMoves();
@@ -62,7 +60,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[cell][(int) MoveSets.PawnToBlack] = mask;
+            this[cell][MoveSets.PawnToBlack] = mask;
 
             mask = 0ul;
 
@@ -80,7 +78,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[cell][(int) MoveSets.PawnToWhite] = mask;
+            this[cell][MoveSets.PawnToWhite] = mask;
         }
     }
     
@@ -104,7 +102,7 @@ public class Moves
                 mask |= 1ul << target;
             }
             
-            this[cell][(int) MoveSets.PawnWhiteAttack] = mask;
+            this[cell][MoveSets.PawnWhiteAttack] = mask;
 
             mask = 0ul;
 
@@ -122,7 +120,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[cell][(int) MoveSets.PawnBlackAttack] = mask;
+            this[cell][MoveSets.PawnBlackAttack] = mask;
         }
     }
 
@@ -130,9 +128,9 @@ public class Moves
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[cell][(int) MoveSets.Horizontal] = GenerateHorizontalMoves(Cell.GetRank(cell));
+            this[cell][MoveSets.Horizontal] = GenerateHorizontalMoves(Cell.GetRank(cell));
 
-            this[cell][(int) MoveSets.Vertical] = GenerateVerticalMoves(Cell.GetFile(cell));
+            this[cell][MoveSets.Vertical] = GenerateVerticalMoves(Cell.GetFile(cell));
         }
     }
 
@@ -140,9 +138,9 @@ public class Moves
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[cell][(int) MoveSets.Diagonal] = GenerateDiagonalMoves(cell);
+            this[cell][MoveSets.Diagonal] = GenerateDiagonalMoves(cell);
 
-            this[cell][(int) MoveSets.AntiDiagonal] = GenerateAntiDiagonalMoves(cell);
+            this[cell][MoveSets.AntiDiagonal] = GenerateAntiDiagonalMoves(cell);
         }
     }
 
@@ -162,7 +160,7 @@ public class Moves
                 }
             }
 
-            this[cell][(int) MoveSets.Knight] = mask;
+            this[cell][MoveSets.Knight] = mask;
         }
     }
 
@@ -182,7 +180,7 @@ public class Moves
                 }
             }
 
-            this[cell][(int) MoveSets.King] = mask;
+            this[cell][MoveSets.King] = mask;
         }
     }
     

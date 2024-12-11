@@ -174,21 +174,21 @@ public class Game
 
         var moves = _moves[position];
         
-        var attacks = moves[(int) MoveSets.Knight];
+        var attacks = moves[MoveSets.Knight];
         
         if ((attacks & opponentMask & this[Kind.Knight]) > 0)
         {
             return true;
         }
         
-        attacks = moves[(int) (colour == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack)];
+        attacks = moves[colour == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack];
         
         if ((this[Kind.Pawn] & opponentMask & attacks) > 0)
         {
             return true;
         }
 
-        attacks = moves[(int) MoveSets.King];
+        attacks = moves[MoveSets.King];
 
         if ((attacks & opponentMask & this[Kind.King]) > 0)
         {
@@ -197,7 +197,7 @@ public class Game
         
         var pieces = this[Kind.Bishop] | this[Kind.Queen];
 
-        if ((pieces & opponentMask & moves[(int) MoveSets.Diagonal]) > 0)
+        if ((pieces & opponentMask & moves[MoveSets.Diagonal]) > 0)
         {
             attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position);
 
@@ -207,7 +207,7 @@ public class Game
             }
         }
 
-        if ((pieces & opponentMask & moves[(int) MoveSets.AntiDiagonal]) > 0)
+        if ((pieces & opponentMask & moves[MoveSets.AntiDiagonal]) > 0)
         {
             attacks = Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
 
@@ -219,7 +219,7 @@ public class Game
 
         pieces = this[Kind.Rook] | this[Kind.Queen];
 
-        if ((pieces & opponentMask & moves[(int) MoveSets.Horizontal]) > 0)
+        if ((pieces & opponentMask & moves[MoveSets.Horizontal]) > 0)
         {
             attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position);
 
@@ -229,7 +229,7 @@ public class Game
             }
         }
 
-        if ((pieces & opponentMask & moves[(int) MoveSets.Vertical]) > 0)
+        if ((pieces & opponentMask & moves[MoveSets.Vertical]) > 0)
         {
             attacks = Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
 
@@ -246,13 +246,13 @@ public class Game
     {
         var moves = _moves[cell];
         
-        var mask = moves[(int) MoveSets.Knight] & this[Kind.Knight];
+        var mask = moves[MoveSets.Knight] & this[Kind.Knight];
 
-        mask |= moves[(int) MoveSets.King] & this[Kind.King];
+        mask |= moves[MoveSets.King] & this[Kind.King];
 
         var player = opponentColour.Invert();
 
-        mask |= moves[(int) (player == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack)] & this[Kind.Pawn];
+        mask |= moves[player == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack] & this[Kind.Pawn];
 
         mask &= this[opponentColour];
 

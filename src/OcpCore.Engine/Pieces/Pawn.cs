@@ -12,7 +12,7 @@ public class Pawn : Piece
     {
         var moveSet = colour == Colour.White ? MoveSets.PawnToBlack : MoveSets.PawnToWhite;
 
-        var moves = Moves[position][(int) moveSet] & ~game[opponentColour] & ~game[colour];
+        var moves = Moves[position][moveSet] & ~game[opponentColour] & ~game[colour];
 
         var rank = Cell.GetRank(position);
 
@@ -32,7 +32,7 @@ public class Pawn : Piece
 
         var attackSet = colour == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack;
 
-        moves |= Moves[position][(int) attackSet] & game[opponentColour];
+        moves |= Moves[position][attackSet] & game[opponentColour];
 
         if (game.State.EnPassantTarget != null)
         {
