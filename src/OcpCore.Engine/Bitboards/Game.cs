@@ -193,36 +193,42 @@ public class Game
             return true;
         }
         
-        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position);
+        var pieces = this[Kind.Bishop] | this[Kind.Queen];
 
-        var mask = this[Kind.Bishop] | this[Kind.Queen];
-        
-        if ((attacks & mask) > 0)
+        if ((pieces & opponentMask) > 0)
         {
-            return true;
+            attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position);
+
+            if ((attacks & pieces) > 0)
+            {
+                return true;
+            }
+
+            attacks = Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
+
+            if ((attacks & pieces) > 0)
+            {
+                return true;
+            }
         }
 
-        attacks = Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
-        
-        if ((attacks & mask) > 0)
-        {
-            return true;
-        }
+        pieces = this[Kind.Rook] | this[Kind.Queen];
 
-        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position);
-        
-        mask = this[Kind.Rook] | this[Kind.Queen];
-
-        if ((attacks & mask) > 0)
+        if ((pieces & opponentMask) > 0)
         {
-            return true;
-        }
+            attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position);
 
-        attacks = Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
-        
-        if ((attacks & mask) > 0)
-        {
-            return true;
+            if ((attacks & pieces) > 0)
+            {
+                return true;
+            }
+
+            attacks = Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
+
+            if ((attacks & pieces) > 0)
+            {
+                return true;
+            }
         }
 
         return false;
