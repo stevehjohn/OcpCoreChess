@@ -15,7 +15,7 @@ public class Moves
 
     private Moves()
     {
-        var sets = Enum.GetValues<MoveSet>().Length;
+        var sets = Enum.GetValues<MoveSets>().Length;
 
         _moveSets = new ulong[Constants.Cells][];
         
@@ -62,7 +62,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[cell][(int) MoveSet.PawnToBlack] = mask;
+            this[cell][(int) MoveSets.PawnToBlack] = mask;
 
             mask = 0ul;
 
@@ -80,7 +80,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[cell][(int) MoveSet.PawnToWhite] = mask;
+            this[cell][(int) MoveSets.PawnToWhite] = mask;
         }
     }
     
@@ -104,7 +104,7 @@ public class Moves
                 mask |= 1ul << target;
             }
             
-            this[cell][(int) MoveSet.PawnWhiteAttack] = mask;
+            this[cell][(int) MoveSets.PawnWhiteAttack] = mask;
 
             mask = 0ul;
 
@@ -122,7 +122,7 @@ public class Moves
                 mask |= 1ul << target;
             }
 
-            this[cell][(int) MoveSet.PawnBlackAttack] = mask;
+            this[cell][(int) MoveSets.PawnBlackAttack] = mask;
         }
     }
 
@@ -130,9 +130,9 @@ public class Moves
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[cell][(int) MoveSet.Horizontal] = GenerateHorizontalMoves(Cell.GetRank(cell));
+            this[cell][(int) MoveSets.Horizontal] = GenerateHorizontalMoves(Cell.GetRank(cell));
 
-            this[cell][(int) MoveSet.Vertical] = GenerateVerticalMoves(Cell.GetFile(cell));
+            this[cell][(int) MoveSets.Vertical] = GenerateVerticalMoves(Cell.GetFile(cell));
         }
     }
 
@@ -140,9 +140,9 @@ public class Moves
     {
         for (var cell = 0; cell < Constants.Cells; cell++)
         {
-            this[cell][(int) MoveSet.Diagonal] = GenerateDiagonalMoves(cell);
+            this[cell][(int) MoveSets.Diagonal] = GenerateDiagonalMoves(cell);
 
-            this[cell][(int) MoveSet.AntiDiagonal] = GenerateAntiDiagonalMoves(cell);
+            this[cell][(int) MoveSets.AntiDiagonal] = GenerateAntiDiagonalMoves(cell);
         }
     }
 
@@ -162,7 +162,7 @@ public class Moves
                 }
             }
 
-            this[cell][(int) MoveSet.Knight] = mask;
+            this[cell][(int) MoveSets.Knight] = mask;
         }
     }
 
@@ -182,7 +182,7 @@ public class Moves
                 }
             }
 
-            this[cell][(int) MoveSet.King] = mask;
+            this[cell][(int) MoveSets.King] = mask;
         }
     }
     

@@ -1,6 +1,6 @@
 namespace OcpCore.Engine.Bitboards;
 
-public enum MoveSet
+public enum MoveSets
 {
     Horizontal      = 0,
     Vertical        = 1,

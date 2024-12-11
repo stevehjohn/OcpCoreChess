@@ -10,7 +10,7 @@ public class Pawn : Piece
     
     protected override ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
-        var moveSet = colour == Colour.White ? MoveSet.PawnToBlack : MoveSet.PawnToWhite;
+        var moveSet = colour == Colour.White ? MoveSets.PawnToBlack : MoveSets.PawnToWhite;
 
         var moves = Moves[position][(int) moveSet] & ~game[opponentColour] & ~game[colour];
 
@@ -30,7 +30,7 @@ public class Pawn : Piece
                 break;
         }
 
-        var attackSet = colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack;
+        var attackSet = colour == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack;
 
         moves |= Moves[position][(int) attackSet] & game[opponentColour];
 

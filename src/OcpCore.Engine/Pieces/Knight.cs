@@ -10,7 +10,7 @@ public class Knight : Piece
     
     protected override ulong GetMoves(Game game, Colour colour, Colour opponentColour, int position)
     {
-        var moves = Moves[position][(int) MoveSet.Knight];
+        var moves = Moves[position][(int) MoveSets.Knight];
 
         moves &= ~game[colour];
         

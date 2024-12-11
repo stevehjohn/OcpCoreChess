@@ -25,7 +25,7 @@ public abstract class Piece
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[position][(int) MoveSet.Horizontal];
+        var mask = Moves[position][(int) MoveSets.Horizontal];
 
         var rightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
@@ -54,7 +54,7 @@ public abstract class Piece
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[position][(int) MoveSet.Vertical];
+        var mask = Moves[position][(int) MoveSets.Vertical];
 
         var upBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
@@ -83,7 +83,7 @@ public abstract class Piece
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[position][(int) MoveSet.Diagonal];
+        var mask = Moves[position][(int) MoveSets.Diagonal];
 
         var topRightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
 
@@ -112,7 +112,7 @@ public abstract class Piece
     {
         var positionBit = 1ul << position;
 
-        var mask = Moves[position][(int) MoveSet.AntiDiagonal];
+        var mask = Moves[position][(int) MoveSets.AntiDiagonal];
         
         var topLeftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
 
