@@ -16,6 +16,7 @@
 
 ## Code Cleanup TODOs
 
+- `IsKingInCheck`: Only call `Get___SlidingMoves` if the relevant piece exists on the attack plane.
 - Find a nice way to integrate PerfTree.
 - Flesh out `InlineData` test cases for pieces.
 
