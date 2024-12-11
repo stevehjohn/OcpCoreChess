@@ -34,7 +34,7 @@ From an initial board state.
  6   | ~ 3 m
  7   | ~ 1m 30s
  8   | ~ 40 m
- 9   | ~ 1 d
+ 9   | ~ 1 d 2h
 ```
 
 ## Developer Notes
