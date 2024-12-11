@@ -110,13 +110,13 @@ public sealed class Core : IDisposable
 
             var moves = PieceCache.Instance[kind].GetMoves(_game, cell);
 
-            var move = Piece.PopNextMove(ref moves);
+            var move = moves.PopBit();
 
             while (move > -1)
             {
                 allowedMoves.Add($"{cell.ToStandardNotation()}{move.ToStandardNotation()}");
 
-                move = Piece.PopNextMove(ref moves);
+                move = moves.PopBit();
             }
 
             cell = PopPiecePosition(ref pieces);

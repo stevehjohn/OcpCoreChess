@@ -90,7 +90,7 @@ public class StateProcessor
 
         var pieces = game[player];
 
-        var cell = PopPiecePosition(ref pieces);
+        var cell = pieces.PopBit();
 
         while (cell > -1)
         {
@@ -98,7 +98,7 @@ public class StateProcessor
 
             var moves = PieceCache.Instance[kind].GetMoves(game, cell);
 
-            var move = Piece.PopNextMove(ref moves);
+            var move = moves.PopBit();
 
             while (move > -1)
             {
@@ -108,7 +108,7 @@ public class StateProcessor
 
                 if (copy.IsKingInCheck(player))
                 {
-                    move = Piece.PopNextMove(ref moves);
+                    move = moves.PopBit();
 
                     continue;
                 }
@@ -136,10 +136,10 @@ public class StateProcessor
                     Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
                 }
 
-                move = Piece.PopNextMove(ref moves);
+                move = moves.PopBit();
             }
 
-            cell = PopPiecePosition(ref pieces);
+            cell = pieces.PopBit();
         }
     }
 
@@ -198,25 +198,11 @@ public class StateProcessor
         return priority;
     }
 
-    private static int PopPiecePosition(ref ulong pieces)
-    {
-        var emptyMoves = BitOperations.TrailingZeroCount(pieces);
-
-        if (emptyMoves == 64)
-        {
-            return -1;
-        }
-
-        pieces ^= 1ul << emptyMoves;
-
-        return emptyMoves;
-    }
-
     private static bool CanMove(Game game, Colour colour)
     {
         var pieces = game[colour];
 
-        var cell = PopPiecePosition(ref pieces);
+        var cell = pieces.PopBit();
 
         while (cell > -1)
         {
@@ -224,7 +210,7 @@ public class StateProcessor
 
             var moves = PieceCache.Instance[kind].GetMoves(game, cell);
 
-            var move = Piece.PopNextMove(ref moves);
+            var move = moves.PopBit();
 
             while (move > -1)
             {
@@ -234,7 +220,7 @@ public class StateProcessor
 
                 if (copy.IsKingInCheck(colour))
                 {
-                    move = Piece.PopNextMove(ref moves);
+                    move = moves.PopBit();
                 
                     continue;
                 }
@@ -242,7 +228,7 @@ public class StateProcessor
                 return true;
             }
 
-            cell = PopPiecePosition(ref pieces);
+            cell = pieces.PopBit();
         }
 
         return false;
