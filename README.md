@@ -32,10 +32,10 @@ From an initial board state.
  3   | ~ 10 ms
  4   | ~ 100 ms
  5   | ~ 500 ms
- 6   | ~ 2.5 s
- 7   | ~ 1 m
- 8   | ~ 30 m
- 9   | ~ 1 d 2h
+ 6   | ~ 1 s
+ 7   | ~ 20 s
+ 8   | ~ 10 m
+ 9   | ~ 5 h
 ```
 
 ## Developer Notes
