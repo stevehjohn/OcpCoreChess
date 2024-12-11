@@ -17,7 +17,7 @@ public class Moves
     {
         var sets = Enum.GetValues<MoveSet>().Length;
 
-        _moveSets = new ulong[sets + 1][];
+        _moveSets = new ulong[sets][];
         
         for (var i = 0; i < sets; i++)
         {
