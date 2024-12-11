@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using OcpCore.Engine.Exceptions;
@@ -17,16 +18,81 @@ public class Game
 
     public ulong this[Colour colour]
     {
-        get => _planes[(int) colour];
-        private set => _planes[(int) colour] = value;
+        get
+        {
+            Debug.Assert(colour is Colour.White or Colour.Black);
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            return colour switch
+#pragma warning restore CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            {
+                Colour.White => _planes[0],
+                Colour.Black => _planes[1],
+            };
+        }
+        private set
+        {
+            Debug.Assert(colour is Colour.White or Colour.Black);
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            switch (colour)
+#pragma warning restore CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            {
+                case Colour.White:
+                    _planes[0] = value;
+                    break;
+                case Colour.Black:
+                    _planes[1] = value;
+                    break;
+            }
+        }
     }
 
     public ulong this[Kind kind]
     {
-        get => _planes[(int) kind];
-        private set => _planes[(int) kind] = value;
+        get
+        {
+            Debug.Assert(kind is Kind.Pawn or Kind.Rook or Kind.Knight or Kind.Bishop or Kind.Queen or Kind.King);
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            return kind switch
+#pragma warning restore CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            {
+                Kind.Pawn => _planes[2],
+                Kind.Rook => _planes[3],
+                Kind.Knight => _planes[4],
+                Kind.Bishop => _planes[5],
+                Kind.Queen => _planes[6],
+                Kind.King => _planes[7],
+            };
+        }
+
+        private set
+        {
+            Debug.Assert(kind is Kind.Pawn or Kind.Rook or Kind.Knight or Kind.Bishop or Kind.Queen or Kind.King);
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            switch (kind)
+#pragma warning restore CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
+            {
+                case Kind.Pawn:
+                    _planes[2] = value;
+                    break;
+                case Kind.Rook:
+                    _planes[3] = value;
+                    break;
+                case Kind.Knight:
+                    _planes[4] = value;
+                    break;
+                case Kind.Bishop:
+                    _planes[5] = value;
+                    break;
+                case Kind.Queen:
+                    _planes[6] = value;
+                    break;
+                case Kind.King:
+                    _planes[7] = value;
+                    break;
+            }
+        }
     }
-    
+
     public Game()
     {
         _planes = new Planes();
