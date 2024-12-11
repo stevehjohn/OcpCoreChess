@@ -147,7 +147,7 @@ public class StateProcessor
 
     private void HandlePromotion(ref MoveOutcome outcomes, Game game, int move, int depth, Colour opponent)
     {
-        if (depth == 1 || (outcomes & MoveOutcome.Promotion) == 0)
+        if ((outcomes & MoveOutcome.Promotion) == 0)
         {
             return;
         }
@@ -170,7 +170,10 @@ public class StateProcessor
 
             if ((outcomes & MoveOutcome.CheckMate) == 0)
             {
-                Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
+                if (depth > 1)
+                {
+                    Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
+                }
             }
         }
     }
