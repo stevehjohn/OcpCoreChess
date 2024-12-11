@@ -29,11 +29,11 @@ From an initial board state.
  1   | < 1 ms
  2   | < 1 ms
  3   | ~ 10 ms
- 4   | ~ 200 ms
+ 4   | ~ 100 ms
  5   | ~ 500 ms
- 6   | ~ 2.5 s
- 7   | ~ 1m
- 8   | ~ 30 m
+ 6   | ~ 1.5 s
+ 7   | ~ 30 s
+ 8   | ~ 12 m
  9   | ~ 1 d 2h
 ```
 
