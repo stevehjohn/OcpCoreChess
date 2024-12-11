@@ -2,7 +2,7 @@ namespace OcpCore.Engine.Bitboards;
 
 public class MoveSet
 {
-    private readonly ulong[] _moves;
+    private MoveArray _moves;
 
     public ulong this[MoveSets moveSet]
     {
@@ -14,6 +14,6 @@ public class MoveSet
     {
         var sets = Enum.GetValues<MoveSets>().Length;
 
-        _moves = new ulong[sets];
+        _moves = new MoveArray();
     }
 }
