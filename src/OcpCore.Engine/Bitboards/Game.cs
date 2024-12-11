@@ -195,7 +195,7 @@ public class Game
         
         var pieces = this[Kind.Bishop] | this[Kind.Queen];
 
-        if ((pieces & opponentMask) > 0)
+        if ((pieces & opponentMask & _moves[MoveSet.Diagonal][position]) > 0)
         {
             attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position);
 
@@ -203,7 +203,10 @@ public class Game
             {
                 return true;
             }
+        }
 
+        if ((pieces & opponentMask & _moves[MoveSet.AntiDiagonal][position]) > 0)
+        {
             attacks = Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
 
             if ((attacks & pieces) > 0)
@@ -214,7 +217,7 @@ public class Game
 
         pieces = this[Kind.Rook] | this[Kind.Queen];
 
-        if ((pieces & opponentMask) > 0)
+        if ((pieces & opponentMask & _moves[MoveSet.Horizontal][position]) > 0)
         {
             attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position);
 
@@ -222,7 +225,10 @@ public class Game
             {
                 return true;
             }
+        }
 
+        if ((pieces & opponentMask & _moves[MoveSet.Vertical][position]) > 0)
+        {
             attacks = Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
 
             if ((attacks & pieces) > 0)
