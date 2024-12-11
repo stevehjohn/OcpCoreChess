@@ -18,6 +18,8 @@ public sealed class Core : IDisposable
 
     private readonly Colour _engineColour;
 
+    private readonly PieceCache _pieceCache = PieceCache.Instance;
+    
     private Coordinator _coordinator;
 
     private CancellationTokenSource _cancellationTokenSource;
@@ -60,7 +62,7 @@ public sealed class Core : IDisposable
 
         var kind = _game.GetKind(position);
         
-        var moves = PieceCache.Instance[kind].GetMoves(_game, position);
+        var moves = _pieceCache[kind].GetMoves(_game, position);
         
         if ((moves & (1ul << target)) == 0)
         {
@@ -108,7 +110,7 @@ public sealed class Core : IDisposable
         {
             var kind = _game.GetKind(cell);
 
-            var moves = PieceCache.Instance[kind].GetMoves(_game, cell);
+            var moves = _pieceCache[kind].GetMoves(_game, cell);
 
             var move = moves.PopBit();
 

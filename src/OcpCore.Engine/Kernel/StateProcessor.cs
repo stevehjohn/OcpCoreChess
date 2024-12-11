@@ -13,6 +13,8 @@ public class StateProcessor
     private readonly PriorityQueue<(Game game, int depth), int> _centralQueue;
     
     private readonly PriorityQueue<(Game game, int depth), int> _localQueue = new();
+    
+    private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private int _maxDepth;
 
@@ -96,7 +98,7 @@ public class StateProcessor
         {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Instance[kind].GetMoves(game, cell);
+            var moves = _pieceCache[kind].GetMoves(game, cell);
 
             var move = moves.PopBit();
 
@@ -173,7 +175,7 @@ public class StateProcessor
         }
     }
 
-    private static int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
+    private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
     {
         var priority = (MoveOutcome.CheckMate - outcome) * 1_000_000;
 
@@ -187,10 +189,10 @@ public class StateProcessor
             {
                 var capturedPiece = game.GetKind(target);
         
-                priority += (10 - PieceCache.Instance[capturedPiece].Value) * 1_000;
+                priority += (10 - _pieceCache[capturedPiece].Value) * 1_000;
             }
         
-            priority += PieceCache.Instance[player].Value * 100;
+            priority += _pieceCache[player].Value * 100;
         }
         
         // priority += game.CountCellAttackers(target, opponent) * 10_000;
@@ -198,7 +200,7 @@ public class StateProcessor
         return priority;
     }
 
-    private static bool CanMove(Game game, Colour colour)
+    private bool CanMove(Game game, Colour colour)
     {
         var pieces = game[colour];
 
@@ -208,7 +210,7 @@ public class StateProcessor
         {
             var kind = game.GetKind(cell);
 
-            var moves = PieceCache.Instance[kind].GetMoves(game, cell);
+            var moves = _pieceCache[kind].GetMoves(game, cell);
 
             var move = moves.PopBit();
 
