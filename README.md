@@ -4,7 +4,7 @@
 
 ## Functionality TODOs
 
-- Promote to all possibilities. Handle in `StateProcessor` to split off possibilities.
+- Promote to all possibilities. Done but needs testing.
 - Move ordering:
   - Done:
     - Captures preferred.
