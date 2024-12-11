@@ -2,7 +2,7 @@ namespace OcpCore.Engine.Bitboards;
 
 public class MoveSet
 {
-    private MoveArray _moves;
+    private Moves _moves;
 
     public ulong this[MoveSets moveSet]
     {
@@ -12,6 +12,6 @@ public class MoveSet
 
     public MoveSet()
     {
-        _moves = new MoveArray();
+        _moves = new Moves();
     }
 }

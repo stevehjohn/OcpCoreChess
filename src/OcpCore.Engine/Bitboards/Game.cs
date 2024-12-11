@@ -11,7 +11,7 @@ public class Game
 {
     private Planes _planes;
 
-    private readonly Moves _moves = Moves.Instance;
+    private readonly MoveCache _moves = MoveCache.Instance;
     
     public State State { get; private set; } 
 
