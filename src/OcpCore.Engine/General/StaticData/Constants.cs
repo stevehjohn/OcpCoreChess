@@ -12,6 +12,8 @@ public static class Constants
 
     public const int MoveOutcomes = 7;
 
+    public const int MoveSets = 10;
+    
     public const int Planes = 8;
 
     public const int WhiteEnPassantTargetRankStart = 40;

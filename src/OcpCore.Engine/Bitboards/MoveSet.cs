@@ -12,8 +12,6 @@ public class MoveSet
 
     public MoveSet()
     {
-        var sets = Enum.GetValues<MoveSets>().Length;
-
         _moves = new MoveArray();
     }
 }
