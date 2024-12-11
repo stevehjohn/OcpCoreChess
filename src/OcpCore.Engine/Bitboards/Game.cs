@@ -27,6 +27,7 @@ public class Game
         }
         private set
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (colour)
             {
                 case Colour.White:
@@ -56,6 +57,7 @@ public class Game
 
         private set
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (kind)
             {
                 case Kind.Pawn:
