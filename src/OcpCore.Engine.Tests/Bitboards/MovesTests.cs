@@ -43,7 +43,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesHorizontalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.Horizontal][cell];
+        var attack = _moves[cell][(int) MoveSet.Horizontal];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -83,7 +83,7 @@ public class MovesTests
                     "10000000")]
     public void GeneratesVerticalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.Vertical][cell];
+        var attack = _moves[cell][(int) MoveSet.Vertical];
         
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -163,7 +163,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesDiagonalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.Diagonal][cell];
+        var attack = _moves[cell][(int) MoveSet.Diagonal];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -243,7 +243,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesAntiDiagonalMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.AntiDiagonal][cell];
+        var attack = _moves[cell][(int) MoveSet.AntiDiagonal];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -291,7 +291,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesKnightMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.Knight][cell];
+        var attack = _moves[cell][(int) MoveSet.Knight];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -339,7 +339,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesKingMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.King][cell];
+        var attack = _moves[cell][(int) MoveSet.King];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -411,7 +411,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesWhitePawnAttacksCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.PawnWhiteAttack][cell];
+        var attack = _moves[cell][(int) MoveSet.PawnWhiteAttack];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -467,7 +467,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesBlackPawnAttacksCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.PawnBlackAttack][cell];
+        var attack = _moves[cell][(int) MoveSet.PawnBlackAttack];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -555,7 +555,7 @@ public class MovesTests
                     "00000000")]
     public void GeneratesWhitePawnMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.PawnToBlack][cell];
+        var attack = _moves[cell][(int) MoveSet.PawnToBlack];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
@@ -643,7 +643,7 @@ public class MovesTests
                     "10000000")]
     public void GeneratesBlackPawnMovesCorrectly(int cell, string expected)
     {
-        var attack = _moves[MoveSet.PawnToWhite][cell];
+        var attack = _moves[cell][(int) MoveSet.PawnToWhite];
 
         Assert.Equal(expected, Convert.ToString((long) attack, 2).PadLeft(Constants.Cells, '0'));
     }
