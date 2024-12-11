@@ -21,8 +21,8 @@ public class Game
         {
             return colour switch
             {
-                Colour.White => _planes[0],
-                _ => _planes[1]
+                Colour.White => _planes[Planes.White],
+                _ => _planes[Planes.Black]
             };
         }
         private set
@@ -30,10 +30,10 @@ public class Game
             switch (colour)
             {
                 case Colour.White:
-                    _planes[0] = value;
+                    _planes[Planes.White] = value;
                     break;
                 case Colour.Black:
-                    _planes[1] = value;
+                    _planes[Planes.Black] = value;
                     break;
             }
         }
@@ -45,12 +45,12 @@ public class Game
         {
             return kind switch
             {
-                Kind.Pawn => _planes[2],
-                Kind.Rook => _planes[3],
-                Kind.Knight => _planes[4],
-                Kind.Bishop => _planes[5],
-                Kind.Queen => _planes[6],
-                _ => _planes[7]
+                Kind.Pawn => _planes[Planes.Pawn],
+                Kind.Rook => _planes[Planes.Rook],
+                Kind.Knight => _planes[Planes.Knight],
+                Kind.Bishop => _planes[Planes.Bishop],
+                Kind.Queen => _planes[Planes.Queen],
+                _ => _planes[Planes.King]
             };
         }
 
@@ -59,22 +59,22 @@ public class Game
             switch (kind)
             {
                 case Kind.Pawn:
-                    _planes[2] = value;
+                    _planes[Planes.Pawn] = value;
                     break;
                 case Kind.Rook:
-                    _planes[3] = value;
+                    _planes[Planes.Rook] = value;
                     break;
                 case Kind.Knight:
-                    _planes[4] = value;
+                    _planes[Planes.Knight] = value;
                     break;
                 case Kind.Bishop:
-                    _planes[5] = value;
+                    _planes[Planes.Bishop] = value;
                     break;
                 case Kind.Queen:
-                    _planes[6] = value;
+                    _planes[Planes.Queen] = value;
                     break;
                 case Kind.King:
-                    _planes[7] = value;
+                    _planes[Planes.King] = value;
                     break;
             }
         }
