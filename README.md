@@ -16,7 +16,7 @@
 
 ## Code Cleanup TODOs
 
-- Index Moves by cell first, reducing array access in IsKingInCheck.
+- Remove casting of MoveSet to int.
 - Find a nice way to integrate PerfTree.
 - Flesh out `InlineData` test cases for pieces.
 
