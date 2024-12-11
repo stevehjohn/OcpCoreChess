@@ -16,7 +16,7 @@
 
 ## Code Cleanup TODOs
 
-- `IsKingInCheck`: Only call `Get___SlidingMoves` if the relevant piece exists on the attack plane.
+- Index Moves by cell first, reducing array access in IsKingInCheck.
 - Find a nice way to integrate PerfTree.
 - Flesh out `InlineData` test cases for pieces.
 
