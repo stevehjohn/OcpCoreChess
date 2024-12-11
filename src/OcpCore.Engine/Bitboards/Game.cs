@@ -169,44 +169,62 @@ public class Game
         }
 
         var opponentColour = colour.Invert();
+
+        var opponentMask = this[opponentColour];
     
         var attacks = _moves[MoveSet.Knight][position];
         
-        if ((attacks & this[opponentColour] & this[Kind.Knight]) > 0)
+        if ((attacks & opponentMask & this[Kind.Knight]) > 0)
         {
             return true;
         }
-
-        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position)
-                  | Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
         
-        if ((attacks & (this[Kind.Bishop] | this[Kind.Queen])) > 0)
-        {
-            return true;
-        }
-
-        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position)
-                  | Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
-        
-        if ((attacks & (this[Kind.Rook] | this[Kind.Queen])) > 0)
-        {
-            return true;
-        }
-
         attacks = _moves[colour == Colour.White ? MoveSet.PawnWhiteAttack : MoveSet.PawnBlackAttack][position];
         
-        if ((this[Kind.Pawn] & this[opponentColour] & attacks) > 0)
+        if ((this[Kind.Pawn] & opponentMask & attacks) > 0)
         {
             return true;
         }
 
         attacks = _moves[MoveSet.King][position];
 
-        if ((attacks & this[opponentColour] & this[Kind.King]) > 0)
+        if ((attacks & opponentMask & this[Kind.King]) > 0)
         {
             return true;
         }
         
+        attacks = Piece.GetDiagonalSlidingMoves(this, colour, opponentColour, position);
+
+        var mask = this[Kind.Bishop] | this[Kind.Queen];
+        
+        if ((attacks & mask) > 0)
+        {
+            return true;
+        }
+
+        attacks = Piece.GetAntiDiagonalSlidingMoves(this, colour, opponentColour, position);
+        
+        if ((attacks & mask) > 0)
+        {
+            return true;
+        }
+
+        attacks = Piece.GetHorizontalSlidingMoves(this, colour, opponentColour, position);
+        
+        mask = this[Kind.Rook] | this[Kind.Queen];
+
+        if ((attacks & mask) > 0)
+        {
+            return true;
+        }
+
+        attacks = Piece.GetVerticalSlidingMoves(this, colour, opponentColour, position);
+        
+        if ((attacks & mask) > 0)
+        {
+            return true;
+        }
+
         return false;
     }
 
