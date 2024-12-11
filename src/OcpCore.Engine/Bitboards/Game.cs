@@ -84,8 +84,6 @@ public class Game
 
     public Game()
     {
-        _planes = new Planes();
-
         State = new State();
     }
 

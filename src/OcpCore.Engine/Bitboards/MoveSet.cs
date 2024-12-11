@@ -9,9 +9,4 @@ public class MoveSet
         get => _moves[(int) moveSet];
         set => _moves[(int) moveSet] = value;
     }
-
-    public MoveSet()
-    {
-        _moves = new Moves();
-    }
 }
