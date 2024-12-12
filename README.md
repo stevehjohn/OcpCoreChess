@@ -16,7 +16,6 @@
 
 ## Code Cleanup TODOs
 
-- Remove casting of MoveSet to int.
 - Find a nice way to integrate PerfTree.
 - Flesh out `InlineData` test cases for pieces.
 
