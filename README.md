@@ -144,4 +144,11 @@ Rank 8 | 56 57 58 59 60 61 62 63  Black
       Promotion:              0 ✓
       Check:        968,981,593 ✓
       Check Mate:     9,852,036 ✓
-```
+    FAIL  Depth:  9  Combinations:  2,439,517,233,385  Expected:  2,439,530,234,167  Delta: <  -13,000,782
+      Capture:  125,196,684,209   Delta:   -11,851,944
+      En Passant:   319,496,827 ✓
+      Castle:     1,784,356,000 ✓
+      Promotion:      4,333,594   Delta:   -13,000,782
+      Check:     36,093,992,402   Delta:    -1,909,501
+      Check Mate:   400,185,877   Delta:        -6,086
+ ```
