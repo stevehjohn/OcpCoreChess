@@ -78,11 +78,20 @@ public sealed class Coordinator : IDisposable
         {
             _countdownEvent = new CountdownEvent(Threads);
 
+            Exception exception = null;
+
             for (var i = 0; i < Threads; i++)
             {
                 var index = i;
             
-                Task.Factory.StartNew(() => _processors[index].StartProcessing(maxDepth, CoalesceResults, _cancellationToken), _cancellationToken);
+                Task.Factory.StartNew(() => _processors[index].StartProcessing(maxDepth, CoalesceResults, _cancellationToken), _cancellationToken)
+                    .ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            Console.WriteLine(t.Exception);
+                        }
+                    }, _cancellationToken);
             }
 
             while (! _countdownEvent.IsSet)
