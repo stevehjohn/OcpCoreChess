@@ -84,3 +84,64 @@ Rank 8 | 56 57 58 59 60 61 62 63  Black
 - k: Black king cell.
 - h: Halfmove clock.
 - m: Fullmove count.
+
+## Perf Test Results
+
+```
+  ✓ PASS  Depth:  1  Combinations:                 20  Expected:                 20
+      Capture:                0 ✓
+      En Passant:             0 ✓
+      Castle:                 0 ✓
+      Promotion:              0 ✓
+      Check:                  0 ✓
+      Check Mate:             0 ✓
+  ✓ PASS  Depth:  2  Combinations:                400  Expected:                400
+      Capture:                0 ✓
+      En Passant:             0 ✓
+      Castle:                 0 ✓
+      Promotion:              0 ✓
+      Check:                  0 ✓
+      Check Mate:             0 ✓
+  ✓ PASS  Depth:  3  Combinations:              8,902  Expected:              8,902
+      Capture:               34 ✓
+      En Passant:             0 ✓
+      Castle:                 0 ✓
+      Promotion:              0 ✓
+      Check:                 12 ✓
+      Check Mate:             0 ✓
+  ✓ PASS  Depth:  4  Combinations:            197,281  Expected:            197,281
+      Capture:            1,576 ✓
+      En Passant:             0 ✓
+      Castle:                 0 ✓
+      Promotion:              0 ✓
+      Check:                469 ✓
+      Check Mate:             8 ✓
+  ✓ PASS  Depth:  5  Combinations:          4,865,609  Expected:          4,865,609
+      Capture:           82,719 ✓
+      En Passant:           258 ✓
+      Castle:                 0 ✓
+      Promotion:              0 ✓
+      Check:             27,351 ✓
+      Check Mate:           347 ✓
+  ✓ PASS  Depth:  6  Combinations:        119,060,324  Expected:        119,060,324
+      Capture:        2,812,008 ✓
+      En Passant:         5,248 ✓
+      Castle:                 0 ✓
+      Promotion:              0 ✓
+      Check:            809,099 ✓
+      Check Mate:        10,828 ✓
+  ✓ PASS  Depth:  7  Combinations:      3,195,901,860  Expected:      3,195,901,860
+      Capture:      108,329,926 ✓
+      En Passant:       319,617 ✓
+      Castle:           883,453 ✓
+      Promotion:              0 ✓
+      Check:         33,103,848 ✓
+      Check Mate:       435,767 ✓
+  ✓ PASS  Depth:  8  Combinations:     84,998,978,956  Expected:     84,998,978,956
+      Capture:    3,523,740,106 ✓
+      En Passant:     7,187,977 ✓
+      Castle:        23,605,205 ✓
+      Promotion:              0 ✓
+      Check:        968,981,593 ✓
+      Check Mate:     9,852,036 ✓
+```
