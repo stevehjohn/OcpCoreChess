@@ -117,7 +117,7 @@ public class StateProcessor
 
                 var opponent = player.Invert();
 
-                HandlePromotion(ref outcomes, game, move, depth, opponent);
+                HandlePromotion(ref outcomes, copy, move, depth, opponent);
 
                 IncrementCounts(ply);
 
