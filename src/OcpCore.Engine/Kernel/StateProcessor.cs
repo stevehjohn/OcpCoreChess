@@ -168,12 +168,9 @@ public class StateProcessor
                 }
             }
 
-            if ((outcomes & MoveOutcome.CheckMate) == 0)
+            if (depth > 1)
             {
-                if (depth > 1)
-                {
-                    Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
-                }
+                Enqueue(copy, depth - 1, CalculatePriority(copy, outcomes, move, kind, opponent));
             }
         }
     }
