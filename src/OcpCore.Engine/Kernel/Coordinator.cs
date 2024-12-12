@@ -89,13 +89,18 @@ public sealed class Coordinator : IDisposable
                     {
                         if (t.Exception != null)
                         {
-                            Console.WriteLine(t.Exception);
+                            exception = t.Exception;
                         }
                     }, _cancellationToken);
             }
 
             while (! _countdownEvent.IsSet)
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 QueueSize = _queue.Count;
             
                 Thread.Sleep(500);
