@@ -124,6 +124,8 @@ public class StateProcessor
                     _depthCounts[ply] += 4;
                     
                     IncrementOutcomes(ply, outcomes);
+
+                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion)] += 3;
                 
                     _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += promotionResult.Checks;
 
