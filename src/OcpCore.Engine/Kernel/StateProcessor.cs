@@ -125,9 +125,9 @@ public class StateProcessor
                     
                     IncrementOutcomes(ply, outcomes);
                 
-                    _outcomes[ply][6] += promotionResult.Checks;
-                
-                    _outcomes[ply][7] += promotionResult.CheckMates;
+                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += promotionResult.Checks;
+
+                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.CheckMate) + 1] += promotionResult.CheckMates;
                 
                     move = moves.PopBit();
                 
