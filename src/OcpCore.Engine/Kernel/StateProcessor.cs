@@ -117,7 +117,22 @@ public class StateProcessor
 
                 var opponent = player.Invert();
 
-                HandlePromotion(ref outcomes, copy, move, depth, opponent);
+                var promotionResult = HandlePromotion(ref outcomes, copy, move, depth, opponent);
+                
+                if (promotionResult.Promoted)
+                {
+                    _depthCounts[ply] += 4;
+                    
+                    IncrementOutcomes(ply, outcomes);
+
+                    _outcomes[ply][6] += promotionResult.Checks;
+
+                    _outcomes[ply][7] += promotionResult.CheckMates;
+
+                    move = moves.PopBit();
+
+                    continue;
+                }
 
                 IncrementCounts(ply);
 
@@ -145,12 +160,16 @@ public class StateProcessor
         }
     }
 
-    private void HandlePromotion(ref MoveOutcome outcomes, Game game, int move, int depth, Colour opponent)
+    private (bool Promoted, int Checks, int CheckMates) HandlePromotion(ref MoveOutcome outcomes, Game game, int move, int depth, Colour opponent)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
-            return;
+            return (false, 0, 0);
         }
+
+        var checks = 0;
+
+        var checkMates = 0;
 
         for (var kind = Kind.Rook; kind < Kind.King; kind++)
         {
@@ -162,9 +181,13 @@ public class StateProcessor
             {
                 outcomes |= MoveOutcome.Check;
 
+                checks++;
+
                 if (! CanMove(copy, opponent))
                 {
                     outcomes |= MoveOutcome.CheckMate;
+
+                    checkMates++;
                 }
             }
 
@@ -173,6 +196,8 @@ public class StateProcessor
                 Enqueue(copy, depth - 1, CalculatePriority(copy, outcomes, move, kind, opponent));
             }
         }
+
+        return (true, checks, checkMates);
     }
 
     private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
