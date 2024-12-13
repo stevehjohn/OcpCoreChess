@@ -124,13 +124,13 @@ public class StateProcessor
                     _depthCounts[ply] += 4;
                     
                     IncrementOutcomes(ply, outcomes);
-
+                
                     _outcomes[ply][6] += promotionResult.Checks;
-
+                
                     _outcomes[ply][7] += promotionResult.CheckMates;
-
+                
                     move = moves.PopBit();
-
+                
                     continue;
                 }
 
