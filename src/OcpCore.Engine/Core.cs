@@ -14,12 +14,12 @@ public sealed class Core : IDisposable
 
     public const string Author = "Stevo John";
 
-    private readonly Game _game;
-
     private readonly Colour _engineColour;
 
     private readonly PieceCache _pieceCache = PieceCache.Instance;
     
+    private Game _game;
+
     private Coordinator _coordinator;
 
     private CancellationTokenSource _cancellationTokenSource;
