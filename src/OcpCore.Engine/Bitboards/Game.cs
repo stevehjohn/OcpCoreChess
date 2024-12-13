@@ -7,7 +7,7 @@ using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.Bitboards;
 
-public class Game
+public struct Game
 {
     private Planes _planes;
 
