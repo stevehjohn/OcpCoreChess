@@ -9,7 +9,7 @@ namespace OcpCore.Engine.Tests.Bitboards;
 
 public class GameTests
 {
-    private readonly Game _game = new();
+    private Game _game = new();
 
     [Theory]
     [InlineData(
