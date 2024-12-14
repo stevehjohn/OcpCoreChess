@@ -11,6 +11,7 @@ Passes all Etherial tests.
 
 ## Functionality TODOs
 
+- Figure out why adjusting the priority for attackers hits performance so much.
 - Add undo move to core using a stack.
 - Promote to all possibilities. Done but needs testing.
 - Move ordering:
