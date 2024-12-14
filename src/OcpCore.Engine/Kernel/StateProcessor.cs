@@ -126,6 +126,8 @@ public class StateProcessor
                 if (promotionResult.Promoted)
                 {
                     _depthCounts[ply] += 4;
+                    
+                    _perftCollector.AddCount(ply, cell, move, 4);
 
                     if ((outcomes & MoveOutcome.Capture) > 0)
                     {
@@ -144,6 +146,8 @@ public class StateProcessor
                 }
 
                 IncrementCounts(ply);
+                
+                _perftCollector.AddCount(ply, cell, move);
 
                 if (copy.IsKingInCheck(opponent))
                 {
