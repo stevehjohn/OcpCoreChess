@@ -4,6 +4,7 @@
 
 ## Functionality TODOs
 
+- Add undo move to core using a stack.
 - Promote to all possibilities. Done but needs testing.
 - Move ordering:
   - Done:

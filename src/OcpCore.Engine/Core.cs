@@ -130,7 +130,6 @@ public sealed class Core : IDisposable
 
             while (move > -1)
             {
-
                 var copy = new Game(_game);
 
                 copy.MakeMove(cell, move);

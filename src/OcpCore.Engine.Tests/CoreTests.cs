@@ -74,14 +74,30 @@ public class CoreTests
 
         var moves = movesToMake.Split(',');
 
-        var allowedMoves = core.GetAllowedMoves();
-
-        foreach (var move in allowedMoves)
+        foreach (var move in moves)
         {
             core.MakeMove(move);
         }
 
-        Assert.Equal(1, moves.Count(m => m == expectedMove));
+        var allowedMoves = core.GetAllowedMoves();
+
+        Assert.Equal(1, allowedMoves.Count(m => m == expectedMove));
+    }
+
+    [Theory]
+    [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1")]
+    public void ReturnsValidAllowedMoves(string fen)
+    {
+        using var core = new Core(Colour.White, fen);
+
+        var moves = core.GetAllowedMoves();
+
+        foreach (var move in moves)
+        {
+            var testCore = new Core(Colour.White, fen);
+            
+            testCore.MakeMove(move);
+        }
     }
 
     [Fact]
