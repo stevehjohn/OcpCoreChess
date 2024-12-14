@@ -55,6 +55,17 @@ public class CoreTests
         }
     }
 
+    [Theory]
+    [InlineData("2B1k2r/p1ppqpb1/1n2pnp1/3PN3/1p2P3/2N2Q1p/PPPB1PPP/R3K2R b KQk - 0 2", "e8g8")]
+    public void DoesNotMakeMistakesIdentifiedInPerfTesting(string fen, string expectedMove)
+    {
+        using var core = new Core(Colour.White, fen);
+
+        var moves = core.GetAllowedMoves();
+
+        Assert.Equal(1, moves.Count(m => m == expectedMove));
+    }
+
     [Fact]
     public void ReportsWhenNotBusy()
     {
