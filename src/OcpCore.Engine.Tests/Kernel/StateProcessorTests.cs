@@ -26,7 +26,7 @@ public class StateProcessorTests
         
         cancellationTokenSource.Cancel();
         
-        processor.StartProcessing(1, (_, _) => { }, cancellationToken);
+        processor.StartProcessing(1, null, cancellationToken);
         
         Thread.Sleep(100);
         
