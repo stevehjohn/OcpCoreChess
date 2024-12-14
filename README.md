@@ -90,6 +90,7 @@ Rank 8 | 56 57 58 59 60 61 62 63  Black
 ## Useful Resources
 
 - https://github.com/AndyGrant/Ethereal
+- https://lichess.org/analysis
 
 ## Perf Test Results
 
