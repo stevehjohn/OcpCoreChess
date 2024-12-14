@@ -16,38 +16,39 @@ public static class Stockfish
         };
 
         process.Start();
+
+        var perft = GetPerft(process, fen, depth);
         
-        Interact(process);
+        Console.WriteLine($"{perft[0].Move}: {perft[0].Count}");
         
         process.WaitForExit();
     }
 
-    private static void Interact(Process stockfish)
+    private static List<(string Move, long Count)> GetPerft(Process stockfish, string fen, int depth)
     {
-        var stage = 0;
+        stockfish.StandardInput.WriteLine($"position fen {fen}");
+        
+        stockfish.StandardInput.WriteLine($"go perft {depth}");
 
-        var sw = new Stopwatch();
+        var perft = new List<(string Move, long Count)>();
         
         while (true)
         {
-            sw.Start();
-            
-            var output = stockfish.StandardOutput.ReadLine();
-            
-            Console.WriteLine(output);
+            var line = stockfish.StandardOutput.ReadLine() ?? string.Empty;
 
-            switch (stage)
+            if (string.IsNullOrEmpty(line) || line.StartsWith("Stockfish", StringComparison.InvariantCultureIgnoreCase))
             {
-                case 0:
-                    stockfish.StandardInput.WriteLine("uci");
-                    stage++;
-                    break;
-                
-                case 1:
-                    stockfish.StandardInput.WriteLine("isready");
-                    stage++;
-                    break;
+                continue;
             }
+
+            if (line.StartsWith("Nodes", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return perft;
+            }
+            
+            var parts = line.Split(':', StringSplitOptions.TrimEntries);
+
+            perft.Add((parts[0], long.Parse(parts[1])));
         }
     }
 }
