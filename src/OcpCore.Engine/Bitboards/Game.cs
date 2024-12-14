@@ -441,16 +441,15 @@ public struct Game
 
         var file = Cell.GetFile(position);
 
-        if (file == 0)
+        switch (file)
         {
-            State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
+            case 0:
+                State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
             
-            return;
-        }
-
-        if (file == 7)
-        {
-            State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+                return;
+            case 7:
+                State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+                break;
         }
     }
 
