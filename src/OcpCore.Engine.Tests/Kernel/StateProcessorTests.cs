@@ -35,10 +35,11 @@ public class StateProcessorTests
     }
 
     [Theory]
-    [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0)]
-    [InlineData("6pk/2P5/8/8/8/8/8/8 w - - 0 1", 4, 0)]
-    // [InlineData("4k3/2P5/8/8/8/8/8/8 w - - 0 1", 4, 1)]
-    public void HandlesPromotionsCorrectly(string fen, int expectedTotal, int checks)
+    [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0, 0, 0)]
+    [InlineData("6pk/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 0, 0)]
+    [InlineData("4k3/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 2, 0)]
+    [InlineData("5kp1/2P1ppp1/8/8/8/8/8/8 w - - 0 1", 4, 4, 2, 2)]
+    public void HandlesPromotionsCorrectly(string fen, int expectedMoves, int promotions, int checks, int checkmates)
     {
         var game = new Game();
         
@@ -46,7 +47,7 @@ public class StateProcessorTests
         
         var queue = new PriorityQueue<(Game game, int depth, int root), int>();
 
-        queue.Enqueue((game, 1, -1), 0);
+        queue.Enqueue((game, 2, -1), 0);
         
         var processor = new StateProcessor(queue);
         
@@ -54,12 +55,17 @@ public class StateProcessorTests
 
         var cancellationToken = cancellationTokenSource.Token;
         
-        processor.StartProcessing(1, (_, _) => { }, cancellationToken);
+        processor.StartProcessing(2, (_, _) => { }, cancellationToken);
         
         Thread.Sleep(100);
         
-        Assert.Equal(expectedTotal, processor.GetDepthCount(1));
+        Assert.Equal(expectedMoves, processor.GetDepthCount(1));
 
-        Assert.Equal(checks, processor.GetOutcomeCount(1, MoveOutcome.Check));
+        // TODO: Figure out why the << 1?
+        Assert.Equal(promotions, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Promotion << 1)));
+
+        Assert.Equal(checks, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Check << 1)));
+
+        Assert.Equal(checkmates, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.CheckMate << 1)));
     }
 }

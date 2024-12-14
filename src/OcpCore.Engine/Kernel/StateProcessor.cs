@@ -304,13 +304,15 @@ public class StateProcessor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void IncrementPromotionOutcomes(int ply, MoveOutcome outcomes, int checks, int checkmates)
     {
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Move) + 1] += 4;
+                
         if ((outcomes & MoveOutcome.Capture) > 0)
         {
             _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Capture) + 1] += 4;
         }
 
         _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion) + 1] += 4;
-                
+
         _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += checks;
 
         _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.CheckMate) + 1] += checkmates;
