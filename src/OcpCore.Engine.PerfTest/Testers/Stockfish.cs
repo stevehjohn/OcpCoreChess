@@ -18,13 +18,37 @@ public static class Stockfish
 
         process.Start();
 
-        var stockfishPerft = GetStockfishPerft(process, fen, depth).Order();
+        var stockfishPerft = GetStockfishPerft(process, fen, depth);
 
-        var ocpPerft = GetOcpPerft(fen, depth).Order();
+        var ocpPerft = GetOcpPerft(fen, depth);
 
-        foreach (var item in ocpPerft)
+        var keys = stockfishPerft.Select(i => i.Move).Union(ocpPerft.Select(i => i.Move)).Order();
+
+        Console.WriteLine("");
+        
+        foreach (var key in keys)
         {
-            Console.WriteLine($"{item.Move}: {item.Count}");
+            Console.Write($"{key}: ");
+
+            var stockfish = stockfishPerft.SingleOrDefault(i => i.Move == key);
+
+            var ocp = ocpPerft.SingleOrDefault(i => i.Move == key);
+
+            if (stockfish != default)
+            {
+                Console.Write($"{stockfish.Count,13:N0}  ");
+            }
+            else
+            {
+                Console.Write("               ");
+            }
+
+            if (ocp != default)
+            {
+                Console.Write($"{ocp.Count,13:N0}");
+            }
+            
+            Console.WriteLine();
         }
         
         process.Kill();
