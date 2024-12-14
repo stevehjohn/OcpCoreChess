@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using OcpCore.Engine.General;
 
 namespace OcpCore.Engine.PerfTest.Testers;
 
@@ -17,14 +18,23 @@ public static class Stockfish
 
         process.Start();
 
-        var perft = GetPerft(process, fen, depth);
-        
-        Console.WriteLine($"{perft[0].Move}: {perft[0].Count}");
+        var stockfishPerft = GetStockfishPerft(process, fen, depth);
+
+        var ocpPerft = GetOcpPerft(fen, depth);
         
         process.WaitForExit();
     }
 
-    private static List<(string Move, long Count)> GetPerft(Process stockfish, string fen, int depth)
+    private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth)
+    {
+        var core = new Core(Colour.White, fen, true);
+
+        core.GetMove(depth);
+
+        return core.PerftData.Select(i => (i.Key, i.Value)).ToList();
+    }
+
+    private static List<(string Move, long Count)> GetStockfishPerft(Process stockfish, string fen, int depth)
     {
         stockfish.StandardInput.WriteLine($"position fen {fen}");
         

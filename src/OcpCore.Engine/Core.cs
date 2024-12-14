@@ -18,6 +18,8 @@ public sealed class Core : IDisposable
 
     private readonly PieceCache _pieceCache = PieceCache.Instance;
     
+    private readonly PerftCollector _perftCollector;
+
     private Game _game;
 
     private Coordinator _coordinator;
@@ -28,8 +30,6 @@ public sealed class Core : IDisposable
 
     private Task _getMoveTask;
 
-    private PerftCollector _perftCollector;
-
     public long GetDepthCount(int ply) => _coordinator.GetDepthCount(ply);
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
@@ -37,6 +37,8 @@ public sealed class Core : IDisposable
     public bool IsBusy => _cancellationTokenSource != null;
 
     public int QueueSize => _coordinator?.QueueSize ?? 0;
+
+    public IReadOnlyDictionary<string, long> PerftData => _perftCollector?.Counts;
 
     public Core(Colour engineColour, bool collectPerft = false)
     {

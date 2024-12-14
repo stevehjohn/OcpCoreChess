@@ -5,6 +5,8 @@ namespace OcpCore.Engine.Kernel;
 public class PerftCollector
 {
     private readonly Dictionary<string, long> _counts = [];
+
+    public IReadOnlyDictionary<string, long> Counts => _counts;
     
     public void AddCount(int ply, int root, int count = 1)
     {
