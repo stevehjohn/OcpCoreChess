@@ -64,6 +64,8 @@ public class StateProcessorTests
 
         // TODO: Figure out why the << 1?
         Assert.Equal(promotions, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Promotion << 1)));
+        
+        Assert.Equal(captures, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Capture << 1)));
 
         Assert.Equal(checks, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Check << 1)));
 
