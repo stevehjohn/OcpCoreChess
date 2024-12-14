@@ -15,7 +15,8 @@ public static class Basic
         119_060_324,
         3_195_901_860,
         84_998_978_956,
-        2_439_530_234_167
+        2_439_530_234_167,
+        69_352_859_712_417
     ];
     
     private static readonly Dictionary<(int Ply, MoveOutcome Outcome), long> ExpectedOutcomes = new()
@@ -81,7 +82,7 @@ public static class Basic
         { (9, MoveOutcome.Castle), 1_784_356_000 },
         { (9, MoveOutcome.Promotion), 17_334_376 },
         { (9, MoveOutcome.Check), 36_095_901_903 },
-        { (9, MoveOutcome.CheckMate), 400_191_963 }
+        { (9, MoveOutcome.CheckMate), 400_191_963 },
     };
 
     public static void Test(int depth)
@@ -176,6 +177,11 @@ public static class Basic
                 var delta = count - expected;
 
                 Console.Write($"  Delta: {(delta > 0 ? ">" : "<")}{delta,13:N0}");
+            }
+
+            if (depth >= 10)
+            {
+                continue;
             }
 
             Console.WriteLine();
