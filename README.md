@@ -2,10 +2,6 @@
 
 3rd attempt at making a chess playing engine.
 
-## Bugs
-
-- Removing castle rights when a rook is taken needs to know which rook was taken.
-
 ## Functionality TODOs
 
 - Add undo move to core using a stack.
@@ -40,6 +36,7 @@ From an initial board state.
  7   | ~ 20 s
  8   | ~ 10 m
  9   | ~ 5 h
+ 10  | ~ 1 month
 ```
 
 ## Developer Notes
