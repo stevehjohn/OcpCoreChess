@@ -29,7 +29,7 @@ public class StateProcessor
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
-    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome)];
+    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
     public StateProcessor(PriorityQueue<(Game Game, int Depth, int Root), int> centralQueue, PerftCollector perftCollector = null)
     {

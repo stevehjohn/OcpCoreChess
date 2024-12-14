@@ -62,13 +62,12 @@ public class StateProcessorTests
         
         Assert.Equal(expectedMoves, processor.GetDepthCount(1));
 
-        // TODO: Figure out why the << 1?
-        Assert.Equal(promotions, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Promotion << 1)));
+        Assert.Equal(promotions, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.Promotion));
         
-        Assert.Equal(captures, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Capture << 1)));
-
-        Assert.Equal(checks, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.Check << 1)));
-
-        Assert.Equal(checkmates, processor.GetOutcomeCount(1, (MoveOutcome) ((int) MoveOutcome.CheckMate << 1)));
+        Assert.Equal(captures, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.Capture));
+        
+        Assert.Equal(checks, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.Check));
+        
+        Assert.Equal(checkmates, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.CheckMate));
     }
 }
