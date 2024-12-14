@@ -18,9 +18,9 @@ public static class Stockfish
 
         process.Start();
 
-        var stockfishPerft = GetStockfishPerft(process, fen, depth);
+        var stockfishPerft = GetStockfishPerft(process, fen, depth).Order();
 
-        var ocpPerft = GetOcpPerft(fen, depth);
+        var ocpPerft = GetOcpPerft(fen, depth).Order();
 
         foreach (var item in ocpPerft)
         {
