@@ -5,6 +5,10 @@
 Passes all Pertf tests up to ply 9.
 Passes all Etherial tests.
 
+## Status
+
+[![.NET](https://github.com/stevehjohn/OcpCoreChess/actions/workflows/dotnet.yml/badge.svg)](https://github.com/stevehjohn/OcpCoreChess/actions/workflows/dotnet.yml)
+
 ## Functionality TODOs
 
 - Add undo move to core using a stack.
