@@ -12,7 +12,7 @@ public class CoordinatorTests
     [InlineData(5, 3, true)]
     public void ParallelisesAtGivenLevel(int requestedDepth, int parallelisationDepth, bool expectParallelisation)
     {
-        var coordinator = new Coordinator(parallelisationDepth);
+        var coordinator = new Coordinator(null, parallelisationDepth);
 
         var game = new Game();
         

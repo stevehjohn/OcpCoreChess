@@ -28,6 +28,8 @@ public sealed class Core : IDisposable
 
     private Task _getMoveTask;
 
+    private PerftCollector _perftCollector;
+
     public long GetDepthCount(int ply) => _coordinator.GetDepthCount(ply);
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
@@ -36,18 +38,28 @@ public sealed class Core : IDisposable
 
     public int QueueSize => _coordinator?.QueueSize ?? 0;
 
-    public Core(Colour engineColour)
+    public Core(Colour engineColour, bool collectPerft = false)
     {
         _engineColour = engineColour;
+
+        if (collectPerft)
+        {
+            _perftCollector = new PerftCollector();
+        }
 
         _game = new Game();
         
         _game.ParseFen(Constants.InitialBoardFen);
     }
 
-    public Core(Colour engineColour, string fen)
+    public Core(Colour engineColour, string fen, bool collectPerft = false)
     {
         _engineColour = engineColour;
+
+        if (collectPerft)
+        {
+            _perftCollector = new PerftCollector();
+        }
 
         _game = new Game();
         
@@ -129,7 +141,7 @@ public sealed class Core : IDisposable
 
     private void GetMoveInternal(int depth, Action callback = null)
     {
-        _coordinator = new Coordinator();
+        _coordinator = new Coordinator(_perftCollector);
         
         _coordinator.StartProcessing(_game, depth);
 
