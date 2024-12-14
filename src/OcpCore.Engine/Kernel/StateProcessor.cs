@@ -199,6 +199,7 @@ public class StateProcessor
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
     {
         var priority = (MoveOutcome.CheckMate - outcome) * 10_000;
