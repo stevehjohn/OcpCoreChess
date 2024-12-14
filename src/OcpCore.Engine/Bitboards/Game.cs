@@ -340,11 +340,11 @@ public struct Game
 
             if (State.Player == Colour.White)
             {
-                State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
+                State.RemoveCastleRights(file == 7 ? Castle.BlackQueenSide : Castle.BlackKingSide);
             }
             else
             {
-                State.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
+                State.RemoveCastleRights(file == 7 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
             }
         }
     }
