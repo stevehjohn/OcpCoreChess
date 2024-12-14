@@ -26,30 +26,51 @@ public static class Stockfish
 
         Console.WriteLine("");
         
+        Console.WriteLine("          StockFish         OcpCore            Delta");
+
+        var colour = Console.ForegroundColor;
+        
         foreach (var key in keys)
         {
             Console.Write($"{key}: ");
 
-            var stockfish = stockfishPerft.SingleOrDefault(i => i.Move == key);
+            var stockfish = stockfishPerft.Skip(1).SingleOrDefault(i => i.Move == key);
 
             var ocp = ocpPerft.SingleOrDefault(i => i.Move == key);
 
+            var delta = ocp.Count - stockfish.Count;
+
+            if (delta != 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+
             if (stockfish != default)
             {
-                Console.Write($"{stockfish.Count,13:N0}  ");
+                Console.Write($"{stockfish.Count,13:N0}    ");
             }
             else
             {
-                Console.Write("               ");
+                Console.Write("                 ");
             }
 
             if (ocp != default)
             {
-                Console.Write($"{ocp.Count,13:N0}");
+                Console.Write($"{ocp.Count,13:N0}   ");
+            }
+            else
+            {
+                Console.Write("                 ");
             }
             
+            Console.Write($"{delta,13:N0}");
+
+            Console.ForegroundColor = colour;
+
             Console.WriteLine();
         }
+        
+        Console.WriteLine();
         
         process.Kill();
     }
