@@ -2,6 +2,9 @@
 
 3rd attempt at making a chess playing engine.
 
+Passes all Pertf tests up to ply 9.
+Passes all Etherial tests.
+
 ## Functionality TODOs
 
 - Add undo move to core using a stack.
