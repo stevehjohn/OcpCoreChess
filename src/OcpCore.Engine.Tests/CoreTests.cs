@@ -105,6 +105,19 @@ public class CoreTests
     }
 
     [Fact]
+    public void ReportsPerftResultsWhenEnabled()
+    {
+        var core = new Core(Colour.White, true);
+
+        core.GetMove(2);
+
+        foreach (var item in core.PerftData)
+        {
+            Assert.Equal(20, item.Value);
+        }
+    }
+
+    [Fact]
     public void ReportsWhenNotBusy()
     {
         using var core = new Core(Colour.White);
