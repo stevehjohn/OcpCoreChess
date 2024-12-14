@@ -125,10 +125,10 @@ public class StateProcessor
 
                     if ((outcomes & MoveOutcome.Capture) > 0)
                     {
-                        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Capture)] += 4;
+                        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Capture) + 1] += 4;
                     }
 
-                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion)] += 4;
+                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion) + 1] += 4;
                 
                     _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += promotionResult.Checks;
 
