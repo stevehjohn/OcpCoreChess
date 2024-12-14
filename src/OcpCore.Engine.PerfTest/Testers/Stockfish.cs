@@ -75,24 +75,10 @@ public static class Stockfish
                 Console.ForegroundColor = ConsoleColor.Magenta;
             }
 
-            if (stockfish != default)
-            {
-                Console.Write($"{stockfish.Count,13:N0}    ");
-            }
-            else
-            {
-                Console.Write("                 ");
-            }
+            Console.Write(stockfish != default ? $"{stockfish.Count,13:N0}    " : "                 ");
 
-            if (ocp != default)
-            {
-                Console.Write($"{ocp.Count,13:N0}   ");
-            }
-            else
-            {
-                Console.Write("                 ");
-            }
-            
+            Console.Write(ocp != default ? $"{ocp.Count,13:N0}   " : "                 ");
+
             Console.Write($"{delta,13:N0}");
 
             Console.ForegroundColor = colour;

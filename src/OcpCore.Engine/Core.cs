@@ -128,6 +128,15 @@ public sealed class Core : IDisposable
 
             var move = moves.PopBit();
 
+            var copy = new Game(_game);
+
+            copy.MakeMove(cell, move);
+
+            if (copy.IsKingInCheck(player))
+            {
+                continue;
+            }
+
             while (move > -1)
             {
                 allowedMoves.Add($"{cell.ToStandardNotation()}{move.ToStandardNotation()}");
