@@ -23,12 +23,6 @@ Passes all Etherial tests.
     - Moves that don't go onto an attacked square?
     - Randomness to break ties?
 
-## Code Cleanup TODOs
-
-- Unit test promotions.
-- Find a nice way to integrate PerfTree.
-- Flesh out `InlineData` test cases for pieces.
-
 ## Current Best Timings
 
 From an initial board state.
