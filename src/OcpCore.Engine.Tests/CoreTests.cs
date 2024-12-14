@@ -67,7 +67,8 @@ public class CoreTests
     }
 
     [Theory]
-    [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", "e2a6,a8c8,a6c8", "e8g8")]
+    // [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", "e2a6,a8c8,a6c8", "e8g8")]
+    [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", "a1b1,a6e2,b1a1,e2d1", "e1g1")]
     public void DoesNotMakeMistakesIdentifiedInPerfTestingAfterMoving(string fen, string movesToMake, string expectedMove)
     {
         using var core = new Core(Colour.White, fen);

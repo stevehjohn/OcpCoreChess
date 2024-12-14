@@ -432,14 +432,19 @@ public struct Game
             return;
         }
 
-        if (Cell.GetFile(position) == 0)
+        var file = Cell.GetFile(position);
+
+        if (file == 0)
         {
             State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
             
             return;
         }
 
-        State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+        if (file == 7)
+        {
+            State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
