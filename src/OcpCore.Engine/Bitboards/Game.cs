@@ -338,13 +338,13 @@ public struct Game
                 return;
             }
 
-            if (State.Player == Colour.White)
+            if (State.Player == Colour.White && rank == 7)
             {
-                State.RemoveCastleRights(file == 7 ? Castle.BlackQueenSide : Castle.BlackKingSide);
+                State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
             }
-            else
+            else if (rank == 0)
             {
-                State.RemoveCastleRights(file == 7 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
+                State.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
             }
         }
     }
