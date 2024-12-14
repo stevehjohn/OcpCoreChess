@@ -21,7 +21,7 @@ public static class EntryPoint
             
             if (arguments[0].StartsWith("di", StringComparison.InvariantCultureIgnoreCase))
             {
-                Stockfish.Test(arguments[1]);
+                Stockfish.Test(int.Parse(arguments[1]), arguments[2]);
                 
                 return;
             }

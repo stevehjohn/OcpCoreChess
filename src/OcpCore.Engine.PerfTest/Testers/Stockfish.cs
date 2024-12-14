@@ -4,7 +4,7 @@ namespace OcpCore.Engine.PerfTest.Testers;
 
 public static class Stockfish
 {
-    public static void Test(string fen)
+    public static void Test(int depth, string fen)
     {
         using var process = new Process();
 
