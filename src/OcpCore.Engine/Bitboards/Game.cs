@@ -240,37 +240,62 @@ public struct Game
         return false;
     }
 
-    public int CountCellAttackers(int cell, Colour opponentColour)
+    public bool CellHasAttackers(int cell, Colour opponentColour)
     {
         var moves = _moves[cell];
         
         var mask = moves[MoveSets.Knight] & this[Kind.Knight];
 
-        mask |= moves[MoveSets.King] & this[Kind.King];
+        if (mask > 0)
+        {
+            return true;
+        }
+
+        mask = moves[MoveSets.King] & this[Kind.King];
+
+        if (mask > 0)
+        {
+            return true;
+        }
 
         var player = opponentColour.Invert();
 
-        mask |= moves[player == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack] & this[Kind.Pawn];
+        mask = moves[player == Colour.White ? MoveSets.PawnWhiteAttack : MoveSets.PawnBlackAttack] & this[Kind.Pawn];
 
         mask &= this[opponentColour];
 
-        var count = BitOperations.PopCount(mask);
+        if (mask > 0)
+        {
+            return true;
+        }
 
         var attacks = Piece.GetDiagonalSlidingMoves(this, player, opponentColour, cell)
                       | Piece.GetAntiDiagonalSlidingMoves(this, player, opponentColour, cell);
 
-        count += BitOperations.PopCount(attacks & this[Kind.Bishop]);
+        if ((attacks & this[Kind.Bishop]) > 0)
+        {
+            return true;
+        }
 
-        count += BitOperations.PopCount(attacks & this[Kind.Queen]);
+        if ((attacks & this[Kind.Queen]) > 0)
+        {
+            return true;
+        }
 
         attacks = Piece.GetHorizontalSlidingMoves(this, player, opponentColour, cell)
                   | Piece.GetVerticalSlidingMoves(this, player, opponentColour, cell);
 
-        count += BitOperations.PopCount(attacks & this[Kind.Rook]);
+        if ((attacks & this[Kind.Rook]) > 0)
+        {
+            return true;
+        }
 
-        count += BitOperations.PopCount(attacks & this[Kind.Queen]);
+        if ((attacks & this[Kind.Queen]) > 0)
+        {
+            return true;
+        }
 
-        return count;
+        return false;
     }
 
     public void PromotePawn(int cell, Kind kind)

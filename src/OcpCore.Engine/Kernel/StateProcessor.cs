@@ -225,7 +225,7 @@ public class StateProcessor
             priority += _pieceCache[player].Value * 100;
         }
         
-        // priority += game.CountCellAttackers(target, opponent) * 10_000;
+        //priority += game.CountCellAttackers(target, opponent) * 10_000;
         
         return priority;
     }

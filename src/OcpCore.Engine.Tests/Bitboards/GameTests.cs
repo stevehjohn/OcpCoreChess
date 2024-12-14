@@ -224,7 +224,7 @@ public class GameTests
     {
         _game.ParseFen(fen);
         
-        Assert.Equal(expectedCount, _game.CountCellAttackers(cell, attackerColour));
+        Assert.Equal(expectedCount, _game.CellHasAttackers(cell, attackerColour));
     }
 
     [Theory]
