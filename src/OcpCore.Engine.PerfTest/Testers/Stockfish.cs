@@ -40,7 +40,7 @@ public static class Stockfish
     {
         var stockfishPerft = GetStockfishPerft(process, fen, depth, moves);
 
-        var ocpPerft = GetOcpPerft(fen, depth);
+        var ocpPerft = GetOcpPerft(fen, depth, moves);
 
         var keys = stockfishPerft.Select(i => i.Move).Union(ocpPerft.Select(i => i.Move)).Order();
 
