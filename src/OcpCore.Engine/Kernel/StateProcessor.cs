@@ -122,14 +122,8 @@ public class StateProcessor
 
                 var opponent = player.Invert();
 
-                var promotionResult = HandlePromotion(ref outcomes, copy, root, move, depth, opponent);
-                
-                if (promotionResult.Promoted)
+                if (HandlePromotion(ref outcomes, copy, ply, root, cell, move, depth, opponent))
                 {
-                    IncrementCounts(ply, 4, ref root, cell, move);
-
-                    IncrementPromotionOutcomes(ply, outcomes, promotionResult.Checks, promotionResult.Checkmates);
-                
                     move = moves.PopBit();
                 
                     continue;
@@ -161,22 +155,22 @@ public class StateProcessor
         }
     }
 
-    private (bool Promoted, int Checks, int Checkmates) HandlePromotion(ref MoveOutcome outcomes, Game game, int root, int move, int depth, Colour opponent)
+    private bool HandlePromotion(ref MoveOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
-            return (false, 0, 0);
+            return false;
         }
 
         var checks = 0;
 
-        var checkMates = 0;
+        var checkmates = 0;
 
         for (var kind = Kind.Rook; kind < Kind.King; kind++)
         {
             var copy = new Game(game);
             
-            copy.PromotePawn(move, kind);
+            copy.PromotePawn(to, kind);
 
             if (copy.IsKingInCheck(opponent))
             {
@@ -188,17 +182,21 @@ public class StateProcessor
                 {
                     outcomes |= MoveOutcome.CheckMate;
 
-                    checkMates++;
+                    checkmates++;
                 }
             }
 
             if (depth > 1)
             {
-                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, move, kind, opponent));
+                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
         }
+        
+        IncrementCounts(ply, 4, ref root, from, to);
 
-        return (true, checks, checkMates);
+        IncrementPromotionOutcomes(ply, outcomes, checks, checkmates);
+
+        return true;
     }
 
     private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
