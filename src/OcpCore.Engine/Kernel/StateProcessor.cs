@@ -128,16 +128,7 @@ public class StateProcessor
                 {
                     IncrementCounts(ply, 4, ref root, cell, move);
 
-                    if ((outcomes & MoveOutcome.Capture) > 0)
-                    {
-                        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Capture) + 1] += 4;
-                    }
-
-                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion) + 1] += 4;
-                
-                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += promotionResult.Checks;
-
-                    _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.CheckMate) + 1] += promotionResult.CheckMates;
+                    IncrementPromotionOutcomes(ply, outcomes, promotionResult.Checks, promotionResult.Checkmates);
                 
                     move = moves.PopBit();
                 
@@ -170,7 +161,7 @@ public class StateProcessor
         }
     }
 
-    private (bool Promoted, int Checks, int CheckMates) HandlePromotion(ref MoveOutcome outcomes, Game game, int root, int move, int depth, Colour opponent)
+    private (bool Promoted, int Checks, int Checkmates) HandlePromotion(ref MoveOutcome outcomes, Game game, int root, int move, int depth, Colour opponent)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
@@ -310,6 +301,21 @@ public class StateProcessor
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void IncrementPromotionOutcomes(int ply, MoveOutcome outcomes, int checks, int checkmates)
+    {
+        if ((outcomes & MoveOutcome.Capture) > 0)
+        {
+            _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Capture) + 1] += 4;
+        }
+
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion) + 1] += 4;
+                
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += checks;
+
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.CheckMate) + 1] += checkmates;
+    }
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Enqueue(Game game, int depth, int root, int priority)
     {
