@@ -34,7 +34,7 @@ public static class Stockfish
         {
             Console.Write($"{key}: ");
 
-            var stockfish = stockfishPerft.Skip(1).SingleOrDefault(i => i.Move == key);
+            var stockfish = stockfishPerft.SingleOrDefault(i => i.Move == key);
 
             var ocp = ocpPerft.SingleOrDefault(i => i.Move == key);
 
