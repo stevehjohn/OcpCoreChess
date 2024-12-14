@@ -19,8 +19,10 @@ public class StateTests
     [Repeat(10, nameof(State.IncrementHalfmoves))]
     [Repeat(10, nameof(State.ResetHalfmoves))]
     [Repeat(10, nameof(State.IncrementFullmoves))]
-    public void StateComponentsDoNotInterfereWithEachOther(string methodToInvoke)
+    public void StateComponentsDoNotInterfereWithEachOther(string methodToInvoke, Guid iteration)
     {
+        Assert.NotEqual(Guid.Empty, iteration);
+        
         var rng = Random.Shared;
 
         var player = rng.Next(2) == 1 ? Colour.White : Colour.Black;

@@ -13,7 +13,7 @@ public class RepeatAttribute : DataAttribute
     {
         _count = count;
 
-        _data = data;
+        _data = data.Union([Guid.NewGuid()]).ToArray();
     }
 
     public override IEnumerable<object[]> GetData(MethodInfo testMethod)
