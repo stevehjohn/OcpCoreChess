@@ -21,6 +21,11 @@ public static class Stockfish
         var stockfishPerft = GetStockfishPerft(process, fen, depth);
 
         var ocpPerft = GetOcpPerft(fen, depth);
+
+        foreach (var item in ocpPerft)
+        {
+            Console.WriteLine($"{item.Move}: {item.Count}");
+        }
         
         process.WaitForExit();
     }
