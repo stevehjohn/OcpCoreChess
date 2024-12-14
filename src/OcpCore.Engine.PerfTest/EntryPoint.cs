@@ -278,8 +278,6 @@ public static class EntryPoint
         var tests = File.ReadAllLines("Data/standard.epd");
 
         var stopwatch = Stopwatch.StartNew();
-        
-        Console.WriteLine();
 
         var fails = new List<(int Index, string Fen)>();
 
@@ -294,6 +292,8 @@ public static class EntryPoint
             using var core = new Core(Colour.White, fen);
 
             var depth = parts.Length - 1;
+        
+            Console.WriteLine();
             
             Console.WriteLine($"  Test: {i + 1,3}/{tests.Length,3}  Depth: {depth}  FEN: {parts[0]}");
             
