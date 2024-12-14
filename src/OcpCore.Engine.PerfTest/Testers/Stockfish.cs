@@ -19,19 +19,20 @@ public static class Stockfish
         process.Start();
 
         var moves = new List<string>();
-        
-        while (depth > 0)
+
+        do
         {
             PerformRound(process, fen, depth, moves);
-            
+
             Console.Write("  Move? ");
 
             var move = Console.ReadLine();
 
             moves.Add(move);
-            
+
             depth--;
-        }
+
+        } while (depth > 0);
 
         process.Kill();
     }
@@ -46,13 +47,13 @@ public static class Stockfish
 
         Console.WriteLine("");
         
-        Console.WriteLine("          StockFish         OcpCore            Delta");
+        Console.WriteLine("            StockFish         OcpCore            Delta");
 
         var colour = Console.ForegroundColor;
         
         foreach (var key in keys)
         {
-            Console.Write($"{key}: ");
+            Console.Write($"  {key}: ");
 
             var stockfish = stockfishPerft.SingleOrDefault(i => i.Move == key);
 
