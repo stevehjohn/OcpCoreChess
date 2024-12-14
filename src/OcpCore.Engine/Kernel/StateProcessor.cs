@@ -10,9 +10,9 @@ public class StateProcessor
 {
     private const int CentralPoolMax = 1_000;
     
-    private readonly PriorityQueue<(Game game, int depth), int> _centralQueue;
+    private readonly PriorityQueue<(Game game, int depth, int root), int> _centralQueue;
     
-    private readonly PriorityQueue<(Game game, int depth), int> _localQueue = new();
+    private readonly PriorityQueue<(Game game, int depth, int root), int> _localQueue = new();
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
@@ -30,7 +30,7 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome)];
 
-    public StateProcessor(PriorityQueue<(Game game, int depth), int> centralQueue, PerftCollector perftCollector = null)
+    public StateProcessor(PriorityQueue<(Game game, int depth, int root), int> centralQueue, PerftCollector perftCollector = null)
     {
         _centralQueue = centralQueue;
 
@@ -79,16 +79,16 @@ public class StateProcessor
                     return;
                 }
 
-                var (game, depth) = _localQueue.Dequeue();
+                var (game, depth, root) = _localQueue.Dequeue();
                 
-                ProcessWorkItem(game, depth);
+                ProcessWorkItem(game, depth, root);
             }
         }
 
         callback(this, true);
     }
 
-    private void ProcessWorkItem(Game game, int depth)
+    private void ProcessWorkItem(Game game, int depth, int root)
     {
         var player = game.State.Player;
 
@@ -121,13 +121,21 @@ public class StateProcessor
 
                 var opponent = player.Invert();
 
-                var promotionResult = HandlePromotion(ref outcomes, copy, move, depth, opponent);
+                var promotionResult = HandlePromotion(ref outcomes, copy, root, move, depth, opponent);
                 
                 if (promotionResult.Promoted)
                 {
                     _depthCounts[ply] += 4;
-                    
-                    _perftCollector.AddCount(ply, cell, move, 4);
+
+                    if (_perftCollector != null)
+                    {
+                        if (root == -1)
+                        {
+                            root = cell << 8 | move;
+                        }
+
+                        _perftCollector.AddCount(ply, root, 4);
+                    }
 
                     if ((outcomes & MoveOutcome.Capture) > 0)
                     {
@@ -146,8 +154,16 @@ public class StateProcessor
                 }
 
                 IncrementCounts(ply);
-                
-                _perftCollector.AddCount(ply, cell, move);
+
+                if (_perftCollector != null)
+                {
+                    if (root == -1)
+                    {
+                        root = cell << 8 | move;
+                    }
+
+                    _perftCollector.AddCount(ply, root);
+                }
 
                 if (copy.IsKingInCheck(opponent))
                 {
@@ -163,7 +179,7 @@ public class StateProcessor
 
                 if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
                 {
-                    Enqueue(copy, depth - 1, CalculatePriority(game, outcomes, move, kind, opponent));
+                    Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, move, kind, opponent));
                 }
 
                 move = moves.PopBit();
@@ -173,7 +189,7 @@ public class StateProcessor
         }
     }
 
-    private (bool Promoted, int Checks, int CheckMates) HandlePromotion(ref MoveOutcome outcomes, Game game, int move, int depth, Colour opponent)
+    private (bool Promoted, int Checks, int CheckMates) HandlePromotion(ref MoveOutcome outcomes, Game game, int root, int move, int depth, Colour opponent)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
@@ -206,7 +222,7 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                Enqueue(copy, depth - 1, CalculatePriority(copy, outcomes, move, kind, opponent));
+                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, move, kind, opponent));
             }
         }
 
@@ -301,19 +317,19 @@ public class StateProcessor
         }
     }
 
-    private void Enqueue(Game game, int depth, int priority)
+    private void Enqueue(Game game, int depth, int root, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
             lock (_centralQueue)
             {
-                _centralQueue.Enqueue((game, depth), priority);
+                _centralQueue.Enqueue((game, depth, root), priority);
             }
         }
         else
         {
-            _localQueue.Enqueue((game, depth), priority);
+            _localQueue.Enqueue((game, depth, root), priority);
         }
     }
 }

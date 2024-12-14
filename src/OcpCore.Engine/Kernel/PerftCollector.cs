@@ -5,18 +5,18 @@ namespace OcpCore.Engine.Kernel;
 public class PerftCollector
 {
     private readonly Dictionary<string, long> _counts = [];
-
-    public IReadOnlyDictionary<string, long> Count => _counts;
     
-    public void AddCount(int ply, int from, int to, int count = 1)
+    public void AddCount(int ply, int root, int count = 1)
     {
+        var node = $"{(root >> 8).ToStandardNotation()}{(root & 0xFF).ToStandardNotation()}";
+        
         if (ply == 1)
         {
-            _counts.Add($"{from.ToStandardNotation()}{to.ToStandardNotation()}", count);
+            _counts.Add(node, count);
         }
         else
         {
-            //_counts[move] += count;
+            _counts[node] += count;
         }
     }
 }

@@ -9,13 +9,13 @@ public class StateProcessorTests
     [Fact]
     public void CancelsWhenRequested()
     {
-        var queue = new PriorityQueue<(Game game, int depth), int>();
+        var queue = new PriorityQueue<(Game game, int depth, int root), int>();
         
         var processor = new StateProcessor(queue);
 
         for (var i = 0; i < 1_000_000; i++)
         {
-            queue.Enqueue((new Game(), 1), 0);
+            queue.Enqueue((new Game(), 1, -1), 0);
         }
 
         var cancellationTokenSource = new CancellationTokenSource();

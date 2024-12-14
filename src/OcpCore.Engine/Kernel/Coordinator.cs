@@ -9,7 +9,7 @@ public sealed class Coordinator : IDisposable
 {
     public static readonly int Threads = Environment.ProcessorCount - 2;
 
-    private readonly PriorityQueue<(Game game, int depth), int> _queue = new();
+    private readonly PriorityQueue<(Game game, int depth, int root), int> _queue = new();
 
     private readonly StateProcessor[] _processors;
 
@@ -64,7 +64,7 @@ public sealed class Coordinator : IDisposable
 
         _queue.Clear();
         
-        _queue.Enqueue((game, _maxDepth), 0);
+        _queue.Enqueue((game, _maxDepth, -1), 0);
 
         _cancellationTokenSource = new CancellationTokenSource();
 
