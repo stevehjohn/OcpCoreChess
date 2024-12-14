@@ -331,6 +331,13 @@ public struct Game
                 return;
             }
 
+            var rank = Cell.GetRank(to);
+
+            if (rank is not (0 or 7))
+            {
+                return;
+            }
+
             if (State.Player == Colour.White)
             {
                 State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
