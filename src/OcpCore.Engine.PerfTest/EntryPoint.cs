@@ -100,6 +100,8 @@ public static class EntryPoint
             if (arguments[0].StartsWith("st", StringComparison.InvariantCultureIgnoreCase))
             {
                 TestAgainstStandard();
+                
+                return;
             }
         }
 
@@ -276,6 +278,8 @@ public static class EntryPoint
     {
         var tests = File.ReadAllLines("Data/standard.epd");
 
+        var stopwatch = Stopwatch.StartNew();
+        
         foreach (var test in tests)
         {
             var parts = test.Split(';', StringSplitOptions.TrimEntries);
@@ -288,5 +292,13 @@ public static class EntryPoint
             
             Console.WriteLine($"  FEN: {parts[0]}");
         }
+        
+        stopwatch.Stop();
+
+        Console.WriteLine();
+        
+        Console.WriteLine($"  {tests.Length} test{(tests.Length > 1 ? "s" : string.Empty)} executed in {(stopwatch.Elapsed.Days > 0 ? $"{stopwatch.Elapsed.Days:N0}d " : string.Empty)}{(stopwatch.Elapsed.Hours > 0 ? $"{stopwatch.Elapsed.Hours}h " : string.Empty)}{stopwatch.Elapsed.Minutes}m {stopwatch.Elapsed.Seconds:N0}s {stopwatch.Elapsed.Milliseconds}ms");
+
+        Console.WriteLine();
     }
 }
