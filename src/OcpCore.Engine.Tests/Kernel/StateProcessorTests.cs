@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Kernel;
 using Xunit;
@@ -34,9 +35,10 @@ public class StateProcessorTests
     }
 
     [Theory]
-    [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1)]
-    [InlineData("8/2P5/8/8/8/8/8/8 w - - 0 1", 4)]
-    public void HandlesPromotionsCorrectly(string fen, int expectedTotal)
+    [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0)]
+    [InlineData("6pk/2P5/8/8/8/8/8/8 w - - 0 1", 4, 0)]
+    // [InlineData("4k3/2P5/8/8/8/8/8/8 w - - 0 1", 4, 1)]
+    public void HandlesPromotionsCorrectly(string fen, int expectedTotal, int checks)
     {
         var game = new Game();
         
@@ -57,5 +59,7 @@ public class StateProcessorTests
         Thread.Sleep(100);
         
         Assert.Equal(expectedTotal, processor.GetDepthCount(1));
+
+        Assert.Equal(checks, processor.GetOutcomeCount(1, MoveOutcome.Check));
     }
 }
