@@ -281,13 +281,17 @@ public static class EntryPoint
         
         Console.WriteLine();
 
+        var fails = new List<(int Index, string Fen)>();
+
         for (var i = 0; i < tests.Length; i++)
         {
             var test = tests[i];
             
             var parts = test.Split(';', StringSplitOptions.TrimEntries);
+
+            var fen = parts[0];
             
-            using var core = new Core(Colour.White, parts[0]);
+            using var core = new Core(Colour.White, fen);
 
             var depth = parts.Length - 1;
             
@@ -296,9 +300,11 @@ public static class EntryPoint
             Console.WriteLine();
 
             var exception = false;
+
+            var pass = false;
             
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(depth, () => TestComplete(core, depth, parts[1..]))
+            core.GetMove(depth, () => pass = TestComplete(core, depth, parts[1..]))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
@@ -344,10 +350,25 @@ public static class EntryPoint
                 }
             }
 
+            if (! pass)
+            {
+                fails.Add((i, fen));
+            }
+
             Console.WriteLine();
         }
         
         stopwatch.Stop();
+
+        if (fails.Count > 0)
+        {
+            Console.WriteLine();
+
+            foreach (var fail in fails)
+            {
+                Console.WriteLine($"  Failed test {fail.Index + 1}: {fail.Fen}");
+            }
+        }
 
         Console.WriteLine();
         
@@ -356,11 +377,13 @@ public static class EntryPoint
         Console.WriteLine();
     }
 
-    private static void TestComplete(Core core, int depth, string[] test)
+    private static bool TestComplete(Core core, int depth, string[] test)
     {
         Console.Write("                                                                          ");
 
         Console.CursorLeft = 0;
+
+        var pass = true;
         
         for (var i = 0; i < depth; i++)
         {
@@ -368,7 +391,18 @@ public static class EntryPoint
 
             var result = core.GetDepthCount(i + 1);
             
-            Console.WriteLine($"    Ply: {i + 1} {(result == expected ? "✓" : string.Empty)} {expected,14:N0}");
+            Console.Write($"    Ply: {i + 1} {(result == expected ? "✓" : string.Empty)} {expected,14:N0}");
+
+            if (result != expected)
+            {
+                Console.Write($"  Delta: {result - expected,14:N0}");
+
+                pass = false;
+            }
+            
+            Console.WriteLine();
         }
+
+        return pass;
     }
 }
