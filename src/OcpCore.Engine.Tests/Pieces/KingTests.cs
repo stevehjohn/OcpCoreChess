@@ -100,6 +100,8 @@ public class KingTests
         0b0110_1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000)]
     [InlineData("r3k2r/p1ppqpb1/1n2pnp1/3PN3/1p2P3/P1N2Q1p/1PPB1PPP/3bK2R w Kkq - 0 3", 4,
         0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001_0000_0110_1000)]
+    [InlineData("r3k2r/2ppqpb1/1n2pnp1/pb1PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w Kkq - 0 3", 4,
+        0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0110_1000)]
     public void DetectsCastlingOpportunity(string fen, int position, ulong expectedMoves)
     {
         var game = new Game();
