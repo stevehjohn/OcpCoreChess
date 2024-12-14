@@ -126,7 +126,7 @@ public class StateProcessor
                 
                 if (promotionResult.Promoted)
                 {
-                    IncrementCounts(ply, 4, root, cell, move);
+                    IncrementCounts(ply, 4, ref root, cell, move);
 
                     if ((outcomes & MoveOutcome.Capture) > 0)
                     {
@@ -144,7 +144,7 @@ public class StateProcessor
                     continue;
                 }
 
-                IncrementCounts(ply, 1, root, cell, move);
+                IncrementCounts(ply, 1, ref root, cell, move);
 
                 if (copy.IsKingInCheck(opponent))
                 {
@@ -272,7 +272,7 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IncrementCounts(int ply, int count, int root, int from, int to)
+    private void IncrementCounts(int ply, int count, ref int root, int from, int to)
     {
         _depthCounts[ply] += count;
 
