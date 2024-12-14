@@ -27,7 +27,7 @@ public static class Stockfish
             Console.WriteLine($"{item.Move}: {item.Count}");
         }
         
-        process.WaitForExit();
+        process.Kill();
     }
 
     private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth)

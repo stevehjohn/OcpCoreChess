@@ -14,7 +14,10 @@ public class PerftCollector
         
         if (ply == 1)
         {
-            _counts.Add(node, count);
+            if (! _counts.TryAdd(node, count))
+            {
+                _counts[node] += count;
+            }
         }
         else
         {
