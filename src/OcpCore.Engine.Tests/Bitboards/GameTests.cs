@@ -223,6 +223,8 @@ public class GameTests
     [InlineData("8/4r3/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
     [InlineData("7q/8/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
     [InlineData("6q1/8/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    [InlineData("3q4/8/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("5q2/8/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
     [InlineData("8/8/8/4k3/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
     [InlineData("8/8/5k2/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
     public void DetectsAttackingPiecesCorrectly(string fen, int cell, Colour attackerColour, bool attacked)
