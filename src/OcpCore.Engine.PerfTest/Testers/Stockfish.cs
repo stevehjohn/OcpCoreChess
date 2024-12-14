@@ -18,6 +18,13 @@ public static class Stockfish
 
         process.Start();
 
+        PerformRound(process, fen, depth);
+        
+        process.Kill();
+    }
+
+    private static void PerformRound(Process process, string fen, int depth)
+    {
         var stockfishPerft = GetStockfishPerft(process, fen, depth);
 
         var ocpPerft = GetOcpPerft(fen, depth);
@@ -71,8 +78,6 @@ public static class Stockfish
         }
         
         Console.WriteLine();
-        
-        process.Kill();
     }
 
     private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth)
