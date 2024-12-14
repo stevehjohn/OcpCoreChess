@@ -17,6 +17,7 @@
 
 ## Code Cleanup TODOs
 
+- Unit test promotions.
 - Find a nice way to integrate PerfTree.
 - Flesh out `InlineData` test cases for pieces.
 
