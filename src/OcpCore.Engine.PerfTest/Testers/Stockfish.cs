@@ -26,7 +26,14 @@ public static class Stockfish
 
             Console.Write("  Move? ");
 
-            var move = Console.ReadLine();
+            var move = Console.ReadLine() ?? string.Empty;
+
+            if (move.StartsWith("q", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine();
+                
+                break;
+            }
 
             moves.Add(move);
 
@@ -39,6 +46,8 @@ public static class Stockfish
 
     private static void PerformRound(Process process, string fen, int depth, List<string> moves)
     {
+        Console.WriteLine();
+        
         var stockfishPerft = GetStockfishPerft(process, fen, depth, moves);
 
         var ocpPerft = GetOcpPerft(fen, depth, moves);
@@ -122,9 +131,15 @@ public static class Stockfish
         stockfish.StandardInput.WriteLine($"go perft {depth}");
 
         var perft = new List<(string Move, long Count)>();
+
+        var sum = 0L;
         
         while (true)
         {
+            Console.Write($"  Stockfish: {sum:N0}");
+
+            Console.CursorLeft = 0;
+
             var line = stockfish.StandardOutput.ReadLine() ?? string.Empty;
 
             if (string.IsNullOrEmpty(line) || line.StartsWith("Stockfish", StringComparison.InvariantCultureIgnoreCase))
@@ -134,12 +149,16 @@ public static class Stockfish
 
             if (line.StartsWith("Nodes", StringComparison.InvariantCultureIgnoreCase))
             {
+                Console.WriteLine();
+                
                 return perft;
             }
             
             var parts = line.Split(':', StringSplitOptions.TrimEntries);
 
             perft.Add((parts[0], long.Parse(parts[1])));
+
+            sum += long.Parse(parts[1]);
         }
     }
 }
