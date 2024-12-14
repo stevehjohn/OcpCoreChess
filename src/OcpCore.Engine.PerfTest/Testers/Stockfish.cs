@@ -18,14 +18,27 @@ public static class Stockfish
 
         process.Start();
 
-        PerformRound(process, fen, depth);
+        var moves = new List<string>();
         
+        while (depth > 0)
+        {
+            PerformRound(process, fen, depth, moves);
+            
+            Console.Write("  Move? ");
+
+            var move = Console.ReadLine();
+
+            moves.Add(move);
+            
+            depth--;
+        }
+
         process.Kill();
     }
 
-    private static void PerformRound(Process process, string fen, int depth)
+    private static void PerformRound(Process process, string fen, int depth, List<string> moves)
     {
-        var stockfishPerft = GetStockfishPerft(process, fen, depth);
+        var stockfishPerft = GetStockfishPerft(process, fen, depth, moves);
 
         var ocpPerft = GetOcpPerft(fen, depth);
 
@@ -80,19 +93,31 @@ public static class Stockfish
         Console.WriteLine();
     }
 
-    private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth)
+    private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth, List<string> moves)
     {
         var core = new Core(Colour.White, fen, true);
+
+        foreach (var move in moves)
+        {
+            core.MakeMove(move);
+        }
 
         core.GetMove(depth);
 
         return core.PerftData.Select(i => (i.Key, i.Value)).ToList();
     }
 
-    private static List<(string Move, long Count)> GetStockfishPerft(Process stockfish, string fen, int depth)
+    private static List<(string Move, long Count)> GetStockfishPerft(Process stockfish, string fen, int depth, List<string> moves)
     {
-        stockfish.StandardInput.WriteLine($"position fen {fen}");
+        stockfish.StandardInput.Write($"position fen {fen}");
+
+        if (moves.Count > 0)
+        {
+            stockfish.StandardInput.Write($" moves {string.Join(' ', moves)}");
+        }
         
+        stockfish.StandardInput.WriteLine();
+
         stockfish.StandardInput.WriteLine($"go perft {depth}");
 
         var perft = new List<(string Move, long Count)>();
