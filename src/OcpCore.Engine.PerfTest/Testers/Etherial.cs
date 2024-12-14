@@ -23,7 +23,7 @@ public static class Etherial
             
             using var core = new Core(Colour.White, fen);
 
-            var depth = parts.Length - 1;
+            var depth = parts[^1][1] - '0';
         
             Console.WriteLine();
             
@@ -114,10 +114,17 @@ public static class Etherial
         Console.CursorLeft = 0;
 
         var pass = true;
+
+        var part = 0;
         
         for (var i = 0; i < depth; i++)
         {
-            var expected = long.Parse(test[i][3..]);
+            if (test[part][1] - '0' != i + 1)
+            {
+                continue;
+            }
+
+            var expected = long.Parse(test[part][3..]);
 
             var result = core.GetDepthCount(i + 1);
             
@@ -131,6 +138,8 @@ public static class Etherial
             }
             
             Console.WriteLine();
+
+            part++;
         }
 
         return pass;
