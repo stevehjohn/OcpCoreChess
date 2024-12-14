@@ -8,18 +8,15 @@ public class PerftCollector
 
     public IReadOnlyDictionary<string, long> Counts => _counts;
     
-    public void AddCount(int ply, int root, int count = 1)
+    public void AddCount(int ply, int maxDepth, int root, int count = 1)
     {
         var node = $"{(root >> 8).ToStandardNotation()}{(root & 0xFF).ToStandardNotation()}";
         
         if (ply == 1)
         {
-            if (! _counts.TryAdd(node, count))
-            {
-                _counts[node] += count;
-            }
+            _counts.Add(node, maxDepth == 1 ? 1 : 0);
         }
-        else
+        else if (ply == maxDepth)
         {
             _counts[node] += count;
         }

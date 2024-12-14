@@ -134,7 +134,7 @@ public class StateProcessor
                             root = cell << 8 | move;
                         }
 
-                        _perftCollector.AddCount(ply, root, 4);
+                        _perftCollector.AddCount(ply, _maxDepth, root, 4);
                     }
 
                     if ((outcomes & MoveOutcome.Capture) > 0)
@@ -162,7 +162,7 @@ public class StateProcessor
                         root = cell << 8 | move;
                     }
 
-                    _perftCollector.AddCount(ply, root);
+                    _perftCollector.AddCount(ply, _maxDepth, root);
                 }
 
                 if (copy.IsKingInCheck(opponent))
