@@ -97,61 +97,62 @@ public class StateProcessor
 
         var pieces = game[player];
 
-        var cell = pieces.PopBit();
+        var from = pieces.PopBit();
 
-        while (cell > -1)
+        while (from > -1)
         {
-            var kind = game.GetKind(cell);
+            var kind = game.GetKind(from);
 
-            var moves = _pieceCache[kind].GetMoves(game, cell);
+            var moves = _pieceCache[kind].GetMoves(game, from);
 
-            var move = moves.PopBit();
+            var to = moves.PopBit();
 
-            while (move > -1)
+            while (to > -1)
             {
-                var copy = new Game(game);
+                ProcessMove(game, player, depth, ply, kind, from, to, root);
 
-                var outcomes = copy.MakeMove(cell, move);
-
-                if (copy.IsKingInCheck(player))
-                {
-                    move = moves.PopBit();
-
-                    continue;
-                }
-
-                var opponent = player.Invert();
-
-                if (HandlePromotion(ref outcomes, copy, ply, root, cell, move, depth, opponent))
-                {
-                    move = moves.PopBit();
-                
-                    continue;
-                }
-
-                IncrementCounts(ply, 1, ref root, cell, move);
-
-                if (copy.IsKingInCheck(opponent))
-                {
-                    outcomes |= MoveOutcome.Check;
-
-                    if (! CanMove(copy, opponent))
-                    {
-                        outcomes |= MoveOutcome.CheckMate;
-                    }
-                }
-
-                IncrementOutcomes(ply, outcomes);
-
-                if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
-                {
-                    Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, move, kind, opponent));
-                }
-
-                move = moves.PopBit();
+                to = moves.PopBit();
             }
 
-            cell = pieces.PopBit();
+            from = pieces.PopBit();
+        }
+    }
+
+    private void ProcessMove(Game game, Colour player, int depth, int ply, Kind kind, int from, int to, int root)
+    {
+        var copy = new Game(game);
+
+        var outcomes = copy.MakeMove(from, to);
+
+        if (copy.IsKingInCheck(player))
+        {
+            return;
+        }
+
+        var opponent = player.Invert();
+
+        if (HandlePromotion(ref outcomes, copy, ply, root, from, to, depth, opponent))
+        {
+            return;
+        }
+
+        IncrementCounts(ply, 1, ref root, from, to);
+
+        if (copy.IsKingInCheck(opponent))
+        {
+            outcomes |= MoveOutcome.Check;
+
+            if (! CanMove(copy, opponent))
+            {
+                outcomes |= MoveOutcome.CheckMate;
+            }
+        }
+
+        IncrementOutcomes(ply, outcomes);
+
+        if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
+        {
+            Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
         }
     }
 
