@@ -129,7 +129,7 @@ public class StateProcessor
 
                     if (_perftCollector != null)
                     {
-                        if (root == -1)
+                        if (ply == 1)
                         {
                             root = cell << 8 | move;
                         }
@@ -157,7 +157,7 @@ public class StateProcessor
 
                 if (_perftCollector != null)
                 {
-                    if (root == -1)
+                    if (ply == 1)
                     {
                         root = cell << 8 | move;
                     }
