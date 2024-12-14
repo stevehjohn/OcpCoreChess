@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using OcpCore.Engine.General;
 
 namespace OcpCore.Engine.PerfTest.Testers;
 
+[ExcludeFromCodeCoverage]
 public static class Basic
 {
         private static readonly List<long> ExpectedCombinations =
