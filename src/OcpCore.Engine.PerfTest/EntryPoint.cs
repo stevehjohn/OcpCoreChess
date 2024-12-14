@@ -156,8 +156,7 @@ public static class EntryPoint
                     {
                         var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
 
-                        var etr =
-                            $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
+                        var etr = $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
 
                         Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: {etr}          ");
                     }
@@ -280,17 +279,72 @@ public static class EntryPoint
 
         var stopwatch = Stopwatch.StartNew();
         
-        foreach (var test in tests)
+        Console.WriteLine();
+
+        for (var i = 0; i < tests.Length; i++)
         {
+            var test = tests[i];
+            
             var parts = test.Split(';', StringSplitOptions.TrimEntries);
             
             using var core = new Core(Colour.White, parts[0]);
 
-            Console.WriteLine($"  Created engine {Core.Name} by {Core.Author}");
+            var depth = parts.Length - 1;
+            
+            Console.WriteLine($"  Test: {i + 1,3}/{tests.Length,3}  Depth: {depth}  FEN: {parts[0]}");
+            
+            Console.WriteLine();
+
+            var exception = false;
+            
+            // ReSharper disable once AccessToDisposedClosure
+            core.GetMove(depth, () => TestComplete(core, depth, parts[1..]))
+                .ContinueWith(task =>
+                {
+                    if (task.Exception != null)
+                    {
+                        exception = true;
+
+                        Console.WriteLine(task.Exception);
+                    }
+                });
+
+            var expected = long.Parse(parts[^1][3..]);
+
+            var y = Console.CursorLeft;
+
+            while (core.IsBusy && !exception)
+            {
+                Thread.Sleep(1000);
+                
+                if (core.IsBusy)
+                {
+                    var depthCount = core.GetDepthCount(depth);
+
+                    var percent = (float) depthCount / expected * 100;
+
+                    var averagePerSecond = stopwatch.Elapsed.TotalSeconds / depthCount;
+
+                    var remaining = expected - depthCount;
+
+                    try
+                    {
+                        var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
+
+                        var etr = $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
+
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {expected:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: {etr}          ");
+                    }
+                    catch
+                    {
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {expected:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: ∞          ");
+                    }
+
+                    Console.CursorLeft = y;
+                }
+            }
 
             Console.WriteLine();
-            
-            Console.WriteLine($"  FEN: {parts[0]}");
         }
         
         stopwatch.Stop();
@@ -300,5 +354,21 @@ public static class EntryPoint
         Console.WriteLine($"  {tests.Length} test{(tests.Length > 1 ? "s" : string.Empty)} executed in {(stopwatch.Elapsed.Days > 0 ? $"{stopwatch.Elapsed.Days:N0}d " : string.Empty)}{(stopwatch.Elapsed.Hours > 0 ? $"{stopwatch.Elapsed.Hours}h " : string.Empty)}{stopwatch.Elapsed.Minutes}m {stopwatch.Elapsed.Seconds:N0}s {stopwatch.Elapsed.Milliseconds}ms");
 
         Console.WriteLine();
+    }
+
+    private static void TestComplete(Core core, int depth, string[] test)
+    {
+        Console.Write("                                                                          ");
+
+        Console.CursorLeft = 0;
+        
+        for (var i = 0; i < depth; i++)
+        {
+            var expected = long.Parse(test[i][3..]);
+
+            var result = core.GetDepthCount(i + 1);
+            
+            Console.WriteLine($"    Ply: {i + 1} {(result == expected ? "✓" : string.Empty)} {expected,14:N0}");
+        }
     }
 }
