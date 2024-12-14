@@ -10,9 +10,9 @@ public class StateProcessor
 {
     private const int CentralPoolMax = 1_000;
     
-    private readonly PriorityQueue<(Game game, int depth, int root), int> _centralQueue;
+    private readonly PriorityQueue<(Game Game, int Depth, int Root), int> _centralQueue;
     
-    private readonly PriorityQueue<(Game game, int depth, int root), int> _localQueue = new();
+    private readonly PriorityQueue<(Game Game, int Depth, int Root), int> _localQueue = new();
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
@@ -30,7 +30,7 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome)];
 
-    public StateProcessor(PriorityQueue<(Game game, int depth, int root), int> centralQueue, PerftCollector perftCollector = null)
+    public StateProcessor(PriorityQueue<(Game Game, int Depth, int Root), int> centralQueue, PerftCollector perftCollector = null)
     {
         _centralQueue = centralQueue;
 
@@ -319,6 +319,13 @@ public class StateProcessor
 
     private void Enqueue(Game game, int depth, int root, int priority)
     {
+        if (_localQueue.Count == 0)
+        {
+            _localQueue.Enqueue((game, depth, root), priority);
+            
+            return;
+        }
+
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
