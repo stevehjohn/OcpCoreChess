@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
@@ -125,17 +126,7 @@ public class StateProcessor
                 
                 if (promotionResult.Promoted)
                 {
-                    _depthCounts[ply] += 4;
-
-                    if (_perftCollector != null)
-                    {
-                        if (ply == 1)
-                        {
-                            root = cell << 8 | move;
-                        }
-
-                        _perftCollector.AddCount(ply, _maxDepth, root, 4);
-                    }
+                    IncrementCounts(ply, 4, root, cell, move);
 
                     if ((outcomes & MoveOutcome.Capture) > 0)
                     {
@@ -153,17 +144,7 @@ public class StateProcessor
                     continue;
                 }
 
-                IncrementCounts(ply);
-
-                if (_perftCollector != null)
-                {
-                    if (ply == 1)
-                    {
-                        root = cell << 8 | move;
-                    }
-
-                    _perftCollector.AddCount(ply, _maxDepth, root);
-                }
+                IncrementCounts(ply, 1, root, cell, move);
 
                 if (copy.IsKingInCheck(opponent))
                 {
@@ -290,9 +271,10 @@ public class StateProcessor
         return false;
     }
     
-    private void IncrementCounts(int ply)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void IncrementCounts(int ply, int count, int root, int from, int to)
     {
-        _depthCounts[ply]++;
+        _depthCounts[ply] += count;
 
         if (_depthCounts[ply] > 1_000)
         {
@@ -303,8 +285,19 @@ public class StateProcessor
                 _depthCounts[i] = 0;
             }
         }
+        
+        if (_perftCollector != null)
+        {
+            if (ply == 1)
+            {
+                root = from << 8 | to;
+            }
+
+            _perftCollector.AddCount(ply, _maxDepth, root, count);
+        }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void IncrementOutcomes(int ply, MoveOutcome outcomes)
     {
         while (outcomes > 0)
@@ -317,6 +310,7 @@ public class StateProcessor
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Enqueue(Game game, int depth, int root, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
