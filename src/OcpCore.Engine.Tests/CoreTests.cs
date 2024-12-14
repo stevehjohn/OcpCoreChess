@@ -66,6 +66,24 @@ public class CoreTests
         Assert.Equal(1, moves.Count(m => m == expectedMove));
     }
 
+    [Theory]
+    [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", "e2a6,a8c8,a6c8", "e8g8")]
+    public void DoesNotMakeMistakesIdentifiedInPerfTestingAfterMoving(string fen, string movesToMake, string expectedMove)
+    {
+        using var core = new Core(Colour.White, fen);
+
+        var moves = movesToMake.Split(',');
+
+        var allowedMoves = core.GetAllowedMoves();
+
+        foreach (var move in allowedMoves)
+        {
+            core.MakeMove(move);
+        }
+
+        Assert.Equal(1, moves.Count(m => m == expectedMove));
+    }
+
     [Fact]
     public void ReportsWhenNotBusy()
     {
