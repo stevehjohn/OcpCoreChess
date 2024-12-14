@@ -111,8 +111,21 @@ public static class Stockfish
         {
             core.MakeMove(move);
         }
+        
+        core.GetMove(depth, () =>
+        {
+        });
 
-        core.GetMove(depth);
+        while (core.IsBusy)
+        {
+            Thread.Sleep(100);
+            
+            Console.Write($"  OcpCore:   {core.GetDepthCount(depth),13:N0}");
+
+            Console.CursorLeft = 0;
+        }
+        
+        Console.WriteLine();
 
         return core.PerftData.Select(i => (i.Key, i.Value)).ToList();
     }
@@ -136,7 +149,7 @@ public static class Stockfish
         
         while (true)
         {
-            Console.Write($"  Stockfish: {sum:N0}");
+            Console.Write($"  Stockfish: {sum,13:N0}");
 
             Console.CursorLeft = 0;
 
