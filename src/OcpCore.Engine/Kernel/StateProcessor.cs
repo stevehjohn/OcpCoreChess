@@ -16,6 +16,8 @@ public class StateProcessor
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
+    private readonly PerftCollector _perftCollector;
+    
     private int _maxDepth;
 
     private long[] _depthCounts;
@@ -28,9 +30,11 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome)];
 
-    public StateProcessor(PriorityQueue<(Game game, int depth), int> centralQueue)
+    public StateProcessor(PriorityQueue<(Game game, int depth), int> centralQueue, PerftCollector perftCollector = null)
     {
         _centralQueue = centralQueue;
+
+        _perftCollector = perftCollector;
     }
 
     public void StartProcessing(int maxDepth, Action<StateProcessor, bool> callback, CancellationToken cancellationToken)
