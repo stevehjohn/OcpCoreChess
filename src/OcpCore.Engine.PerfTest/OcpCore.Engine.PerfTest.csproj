@@ -11,4 +11,10 @@
       <ProjectReference Include="..\OcpCore.Engine\OcpCore.Engine.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Data\standard.epd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

@@ -96,6 +96,11 @@ public static class EntryPoint
             {
                 depth = 6;
             }
+
+            if (arguments[0].StartsWith("st", StringComparison.InvariantCultureIgnoreCase))
+            {
+                TestAgainstStandard();
+            }
         }
 
         Console.WriteLine();
@@ -265,5 +270,23 @@ public static class EntryPoint
         Console.WriteLine($"  {maxDepth} depth{(maxDepth > 1 ? "s" : string.Empty)} explored in {(stopwatch.Elapsed.Days > 0 ? $"{stopwatch.Elapsed.Days:N0}d " : string.Empty)}{(stopwatch.Elapsed.Hours > 0 ? $"{stopwatch.Elapsed.Hours}h " : string.Empty)}{stopwatch.Elapsed.Minutes}m {stopwatch.Elapsed.Seconds:N0}s {stopwatch.Elapsed.Milliseconds}ms");
 
         Console.WriteLine();
+    }
+
+    private static void TestAgainstStandard()
+    {
+        var tests = File.ReadAllLines("Data/standard.epd");
+
+        foreach (var test in tests)
+        {
+            var parts = test.Split(';', StringSplitOptions.TrimEntries);
+            
+            using var core = new Core(Colour.White, parts[0]);
+
+            Console.WriteLine($"  Created engine {Core.Name} by {Core.Author}");
+
+            Console.WriteLine();
+            
+            Console.WriteLine($"  FEN: {parts[0]}");
+        }
     }
 }
