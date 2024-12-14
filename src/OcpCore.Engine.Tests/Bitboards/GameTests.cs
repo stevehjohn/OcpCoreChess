@@ -213,18 +213,23 @@ public class GameTests
     }
 
     [Theory]
-    [InlineData("8/8/8/6n1/4P3/6n1/3n4/8 w - - 0 1", 28, Colour.Black, 3)]
-    [InlineData("4q3/7b/8/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 7)]
-    [InlineData("4q3/7b/6B1/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
-    [InlineData("4q3/4R2b/8/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
-    [InlineData("4q3/4p3/8/8/4P3/8/8/8 w - - 0 1", 28, Colour.Black, 0)]
-    [InlineData("4q3/4k2b/8/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
-    [InlineData("4q3/7b/6k1/3p4/r3P3/5kn1/3n4/8 w - - 0 1", 28, Colour.Black, 6)]
-    public void CountsAttackingPiecesCorrectly(string fen, int cell, Colour attackerColour, int expectedCount)
+    [InlineData("8/8/8/4p3/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("8/8/8/3p4/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    [InlineData("8/8/4n3/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("8/8/5n2/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    [InlineData("8/b7/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("8/1b6/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    [InlineData("8/3r4/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("8/4r3/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    [InlineData("7q/8/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("6q1/8/8/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    [InlineData("8/8/8/4k3/3P4/8/8/8 w - - 0 1", 27, Colour.Black, true)]
+    [InlineData("8/8/5k2/8/3P4/8/8/8 w - - 0 1", 27, Colour.Black, false)]
+    public void DetectsAttackingPiecesCorrectly(string fen, int cell, Colour attackerColour, bool attacked)
     {
         _game.ParseFen(fen);
         
-        Assert.Equal(expectedCount > 0, _game.CellHasAttackers(cell, attackerColour));
+        Assert.Equal(attacked, _game.CellHasAttackers(cell, attackerColour));
     }
 
     [Theory]
