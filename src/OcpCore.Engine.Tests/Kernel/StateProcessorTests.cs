@@ -35,11 +35,12 @@ public class StateProcessorTests
     }
 
     [Theory]
-    [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0, 0, 0)]
-    [InlineData("6pk/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 0, 0)]
-    [InlineData("4k3/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 2, 0)]
-    [InlineData("5kp1/2P1ppp1/8/8/8/8/8/8 w - - 0 1", 4, 4, 2, 2)]
-    public void HandlesPromotionsCorrectly(string fen, int expectedMoves, int promotions, int checks, int checkmates)
+    [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0, 0, 0, 0)]
+    [InlineData("6pk/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 0, 0, 0)]
+    [InlineData("4k3/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 0, 2, 0)]
+    [InlineData("5kp1/2P1ppp1/8/8/8/8/8/8 w - - 0 1", 4, 4, 0, 2, 2)]
+    [InlineData("3p4/2P5/8/8/8/8/8/8 w - - 0 1", 8, 8, 4, 0, 0)]
+    public void HandlesPromotionsCorrectly(string fen, int expectedMoves, int promotions, int captures, int checks, int checkmates)
     {
         var game = new Game();
         
