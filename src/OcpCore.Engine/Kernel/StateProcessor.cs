@@ -319,13 +319,6 @@ public class StateProcessor
 
     private void Enqueue(Game game, int depth, int root, int priority)
     {
-        if (_localQueue.Count == 0)
-        {
-            _localQueue.Enqueue((game, depth, root), priority);
-            
-            return;
-        }
-
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
