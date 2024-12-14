@@ -89,7 +89,7 @@ public static class Basic
     {
         Console.WriteLine();
 
-        for (var maxDepth = depth; maxDepth <= depth; maxDepth++)
+        for (var maxDepth = 1; maxDepth <= depth; maxDepth++)
         {
             using var core = new Core(Colour.White);
             

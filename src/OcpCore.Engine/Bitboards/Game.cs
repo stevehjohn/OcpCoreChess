@@ -326,6 +326,11 @@ public struct Game
         {
             var file = Cell.GetFile(to);
 
+            if (file is not (0 or 7))
+            {
+                return;
+            }
+
             if (State.Player == Colour.White)
             {
                 State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
