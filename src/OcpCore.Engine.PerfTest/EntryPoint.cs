@@ -389,7 +389,7 @@ public static class EntryPoint
 
             var result = core.GetDepthCount(i + 1);
             
-            Console.Write($"    Ply: {i + 1} {(result == expected ? "✓" : string.Empty)} {expected,14:N0}");
+            Console.Write($"    Ply: {i + 1} {(result == expected ? "✓" : " ")} {expected,14:N0}");
 
             if (result != expected)
             {
