@@ -2,8 +2,9 @@
 
 3rd attempt at making a chess playing engine.
 
-Passes all Perft tests up to ply 9.
-Passes all Etherial tests.
+Passes:
+- All Perft tests up to ply 9.
+- All Etherial tests.
 
 ## Status
 
@@ -11,17 +12,13 @@ Passes all Etherial tests.
 
 ## Functionality TODOs
 
+- Minimax and Alpha/Beta pruning.
 - Figure out why adjusting the priority for attackers hits performance so much.
 - Add undo move to core using a stack.
-- Promote to all possibilities. Done but needs testing.
 - Move ordering:
-  - Done:
-    - Captures preferred.
-    - Lower value taking higher is better.
-    - Utilise `PriorityQueue` before further depth processing.
-  - TODO:
-    - Moves that don't go onto an attacked square?
-    - Randomness to break ties?
+  - Moves that don't go onto an attacked square?
+  - Randomness to break ties?
+  - Test
 
 ## Current Best Timings
 
