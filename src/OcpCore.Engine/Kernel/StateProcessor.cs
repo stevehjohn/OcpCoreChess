@@ -11,9 +11,9 @@ public class StateProcessor
 {
     private const int CentralPoolMax = 1_000;
     
-    private readonly PriorityQueue<(Game Game, int Depth, int Root), int> _centralQueue;
+    private readonly PriorityQueue<Node, int> _centralQueue;
     
-    private readonly PriorityQueue<(Game Game, int Depth, int Root), int> _localQueue = new();
+    private readonly PriorityQueue<Node, int> _localQueue = new();
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
@@ -31,7 +31,7 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<(Game Game, int Depth, int Root), int> centralQueue, PerftCollector perftCollector = null)
+    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerftCollector perftCollector = null)
     {
         _centralQueue = centralQueue;
 
@@ -80,17 +80,19 @@ public class StateProcessor
                     return;
                 }
 
-                var (game, depth, root) = _localQueue.Dequeue();
+                var node = _localQueue.Dequeue();
                 
-                ProcessWorkItem(game, depth, root);
+                ProcessWorkItem(node);
             }
         }
 
         callback(this, true);
     }
 
-    private void ProcessWorkItem(Game game, int depth, int root)
+    private void ProcessWorkItem(Node node)
     {
+        var (game, depth, root) = (node.Game, node.Depth, node.Root);
+        
         var player = game.State.Player;
 
         var ply = _maxDepth - depth + 1;
@@ -326,12 +328,12 @@ public class StateProcessor
         {
             lock (_centralQueue)
             {
-                _centralQueue.Enqueue((game, depth, root), priority);
+                _centralQueue.Enqueue(new Node(game, depth, root), priority);
             }
         }
         else
         {
-            _localQueue.Enqueue((game, depth, root), priority);
+            _localQueue.Enqueue(new Node(game, depth, root), priority);
         }
     }
 }

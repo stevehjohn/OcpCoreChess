@@ -15,9 +15,9 @@ public class StateProcessorTests
         
         game.ParseFen(Constants.InitialBoardFen);
         
-        var queue = new PriorityQueue<(Game game, int depth, int root), int>();
+        var queue = new PriorityQueue<Node, int>();
 
-        queue.Enqueue((game, 1, -1), 0);
+        queue.Enqueue(new Node(game, 1, -1), 0);
         
         var processor = new StateProcessor(queue);
         
@@ -46,9 +46,9 @@ public class StateProcessorTests
         
         game.ParseFen(fen);
         
-        var queue = new PriorityQueue<(Game game, int depth, int root), int>();
+        var queue = new PriorityQueue<Node, int>();
 
-        queue.Enqueue((game, 2, -1), 0);
+        queue.Enqueue(new Node(game, 2, -1), 0);
         
         var processor = new StateProcessor(queue);
         
