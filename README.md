@@ -36,7 +36,7 @@ From an initial board state.
  7   | ~ 20 s
  8   | ~ 10 m
  9   | ~ 5 h
- 10  | ~ 1 month
+ 10  | ~ 6 d
 ```
 
 ## Developer Notes
