@@ -91,13 +91,9 @@ public class StateProcessor
 
     private void ProcessWorkItem(Node node)
     {
-        var (game, depth, root) = (node.Game, node.Depth, node.Root);
+        var game = node.Game;
         
-        var player = game.State.Player;
-
-        var ply = _maxDepth - depth + 1;
-
-        var pieces = game[player];
+        var pieces = game[game.State.Player];
 
         var from = pieces.PopBit();
 
@@ -111,7 +107,7 @@ public class StateProcessor
 
             while (to > -1)
             {
-                ProcessMove(game, player, depth, ply, kind, from, to, root);
+                ProcessMove(node, kind, from, to);
 
                 to = moves.PopBit();
             }
@@ -120,11 +116,15 @@ public class StateProcessor
         }
     }
 
-    private void ProcessMove(Game game, Colour player, int depth, int ply, Kind kind, int from, int to, int root)
+    private void ProcessMove(Node node, Kind kind, int from, int to)
     {
+        var (game, depth, root) = (node.Game, node.Depth, node.Root);
+
         var copy = new Game(game);
 
         var outcomes = copy.MakeMove(from, to);
+
+        var player = game.State.Player;
 
         if (copy.IsKingInCheck(player))
         {
@@ -132,6 +132,8 @@ public class StateProcessor
         }
 
         var opponent = player.Invert();
+
+        var ply = _maxDepth - depth + 1;
 
         if (HandlePromotion(ref outcomes, copy, ply, root, from, to, depth, opponent))
         {
