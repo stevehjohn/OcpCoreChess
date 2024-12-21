@@ -205,7 +205,7 @@ public class StateProcessor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
     {
-        var priority = (MoveOutcome.CheckMate - outcome) * 100;
+        var priority = ((int) MoveOutcome.CheckMate - (1 << BitOperations.Log2((uint) outcome))) * 100;
 
         if ((outcome & MoveOutcome.Capture) > 0)
         {
@@ -223,7 +223,8 @@ public class StateProcessor
             priority += _pieceCache[player].Value;
         }
 
-        // priority += game.CellHasAttackers(target, opponent) ? 100_000 : 0;
+        // TODO: Add this when minimaxing
+        // priority += game.CellHasAttackers(target, opponent) ? 10_000 : 0;
         
         return priority;
     }

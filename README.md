@@ -45,10 +45,10 @@ From an initial board state.
 - Diagonal: `(0, 0), (1, 1), (2, 2)...`. i.e. `/`. Anti-diagonal `(0, 7), (1, 6), (2, 5)...`. i.e. `\`.
 - `WhiteScore - BlackScore` will be positive if white has more material.
 - Move score is currently (remember `PriorityQueue` prefers lower values):
-  - `(MoveOutcome.CheckMate - outcomes) * 10,000` (CheckMate == 0, Nothing but a simple move = 63,000,000).
-  - `+ (10 - capturedPieceValue) * 100` (higher captured piece values will yield lower scores).
+  - `(MoveOutcome.CheckMate - outcomes) * 100` (CheckMate == 0, Nothing but a simple move = 6,300).
+  - `+ (10 - capturedPieceValue) * 10` (higher captured piece values will yield lower scores).
   - `+ movedPieceValue` (lower moved piece value is good).
-  - So, effectively `OO__CP`, where:
+  - So, effectively `OOCP`, where:
     - OO is outcome value.
     - C is captured piece value inverted.
     - P is player piece value.
