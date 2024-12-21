@@ -48,7 +48,8 @@ From an initial board state.
   - `(MoveOutcome.CheckMate - outcomes) * 100` (CheckMate == 0, Nothing but a simple move = 6,300).
   - `+ (10 - capturedPieceValue) * 10` (higher captured piece values will yield lower scores).
   - `+ movedPieceValue` (lower moved piece value is good).
-  - So, effectively `OOCP`, where:
+  - So, effectively `AOOCP`, where:
+    - A is 1 if cell has attackers (To be added - not currently used).
     - OO is outcome value.
     - C is captured piece value inverted.
     - P is player piece value.
