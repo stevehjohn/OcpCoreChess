@@ -121,12 +121,17 @@ public class StateProcessor
                 from = pieces.PopBit();
             }
 
-            for (var i = 0; i < _moves.Count; i++)
+            lock (_centralQueue)
             {
-                var move = _moves[i];
+                for (var i = 0; i < _moves.Count; i++)
+                {
+                    var move = _moves[i];
 
-                Enqueue(new Node(game, node.Depth, node.Root, move), 0);
+                    _centralQueue.Enqueue(new Node(game, node.Depth, node.Root, move), 0);
+                }
             }
+            
+            _moves.Clear();
         }
         else
         {
