@@ -27,23 +27,27 @@ public abstract class Piece
 
         var mask = Moves[position][MoveSets.Horizontal];
 
-        var rightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
+        var gameOpponentColour = game[opponentColour];
+
+        var gameColour = game[colour];
+
+        var rightBlockers = (gameColour | gameOpponentColour) & mask & (~(positionBit - 1) - positionBit);
 
         var firstRightBlocker = rightBlockers != 0 ? BitOperations.TrailingZeroCount(rightBlockers) : 64;
 
         var rightMask = firstRightBlocker < 64 ? (1ul << firstRightBlocker) - 1 - positionBit : ulong.MaxValue;
 
-        rightMask |= rightBlockers != 0 && (game[opponentColour] & (1ul << firstRightBlocker)) != 0
+        rightMask |= rightBlockers != 0 && (gameOpponentColour & (1ul << firstRightBlocker)) != 0
             ? 1ul << firstRightBlocker
             : 0;
 
-        var leftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
+        var leftBlockers = (gameColour | gameOpponentColour) & mask & positionBit - 1;
 
         var firstLeftBlocker = leftBlockers != 0 ? BitOperations.LeadingZeroCount(leftBlockers) - 1 : 64;
 
         var leftMask = firstLeftBlocker < 64 ? ~((1ul << (63 - firstLeftBlocker)) - 1) : ulong.MaxValue;
 
-        leftMask |= leftBlockers != 0 && (game[opponentColour] & (1ul << (63 - firstLeftBlocker - 1))) != 0
+        leftMask |= leftBlockers != 0 && (gameOpponentColour & (1ul << (63 - firstLeftBlocker - 1))) != 0
             ? 1ul << (63 - firstLeftBlocker - 1)
             : 0;
         
@@ -56,23 +60,27 @@ public abstract class Piece
 
         var mask = Moves[position][MoveSets.Vertical];
 
-        var upBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
+        var gameOpponentColour = game[opponentColour];
+
+        var gameColour = game[colour];
+
+        var upBlockers = (gameColour | gameOpponentColour) & mask & (~(positionBit - 1) - positionBit);
 
         var firstUpBlocker = upBlockers != 0 ? BitOperations.TrailingZeroCount(upBlockers) : 64;
 
         var upMask = firstUpBlocker < 64 ? (1ul << firstUpBlocker) - 1 - positionBit : ulong.MaxValue;
 
-        upMask |= upBlockers != 0 && (game[opponentColour] & (1ul << firstUpBlocker)) != 0
+        upMask |= upBlockers != 0 && (gameOpponentColour & (1ul << firstUpBlocker)) != 0
             ? 1ul << firstUpBlocker
             : 0;
 
-        var downBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
+        var downBlockers = (gameColour | gameOpponentColour) & mask & positionBit - 1;
 
         var firstDownBlocker = downBlockers != 0 ? BitOperations.LeadingZeroCount(downBlockers) - 1 : 64;
 
         var downMask = firstDownBlocker < 64 ? ~((1ul << (63 - firstDownBlocker)) - 1) : ulong.MaxValue;
 
-        downMask |= downBlockers != 0 && (game[opponentColour] & (1ul << (63 - firstDownBlocker - 1))) != 0
+        downMask |= downBlockers != 0 && (gameOpponentColour & (1ul << (63 - firstDownBlocker - 1))) != 0
             ? 1ul << (63 - firstDownBlocker - 1)
             : 0;
 
@@ -85,23 +93,27 @@ public abstract class Piece
 
         var mask = Moves[position][MoveSets.Diagonal];
 
-        var topRightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
+        var gameOpponentColour = game[opponentColour];
+
+        var gameColour = game[colour];
+
+        var topRightBlockers = (gameColour | gameOpponentColour) & mask & (~(positionBit - 1) - positionBit);
 
         var firstTopRightBlocker = topRightBlockers != 0 ? BitOperations.TrailingZeroCount(topRightBlockers) : 64;
         
         var topRightMask = firstTopRightBlocker < 64 ? (1ul << firstTopRightBlocker) - 1 - positionBit : ulong.MaxValue;
 
-        topRightMask |= topRightBlockers != 0 && (game[opponentColour] & (1ul << firstTopRightBlocker)) != 0
+        topRightMask |= topRightBlockers != 0 && (gameOpponentColour & (1ul << firstTopRightBlocker)) != 0
             ? 1ul << firstTopRightBlocker
             : 0;
         
-        var bottomLeftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
+        var bottomLeftBlockers = (gameColour | gameOpponentColour) & mask & positionBit - 1;
 
         var firstBottomLeftBlocker = bottomLeftBlockers != 0 ? BitOperations.LeadingZeroCount(bottomLeftBlockers) - 1 : 64;
         
         var bottomLeftMask = firstBottomLeftBlocker < 64 ? ~((1ul << (63 - firstBottomLeftBlocker)) - 1) : ulong.MaxValue;
 
-        bottomLeftMask |= bottomLeftBlockers != 0 && (game[opponentColour] & (1ul << (63 - firstBottomLeftBlocker - 1))) != 0
+        bottomLeftMask |= bottomLeftBlockers != 0 && (gameOpponentColour & (1ul << (63 - firstBottomLeftBlocker - 1))) != 0
             ? 1ul << (63 - firstBottomLeftBlocker - 1)
             : 0;
 
@@ -114,23 +126,27 @@ public abstract class Piece
 
         var mask = Moves[position][MoveSets.AntiDiagonal];
         
-        var topLeftBlockers = (game[colour] | game[opponentColour]) & mask & positionBit - 1;
+        var gameOpponentColour = game[opponentColour];
+
+        var gameColour = game[colour];
+
+        var topLeftBlockers = (gameColour | gameOpponentColour) & mask & positionBit - 1;
 
         var firstTopLeftBlocker = topLeftBlockers != 0 ? BitOperations.LeadingZeroCount(topLeftBlockers) - 1 : 64;
 
         var topLeftMask = firstTopLeftBlocker < 64 ? ~((1ul << (63 - firstTopLeftBlocker)) - 1) : ulong.MaxValue;
 
-        topLeftMask |= topLeftBlockers != 0 && (game[opponentColour] & (1ul << (63 - firstTopLeftBlocker - 1))) != 0
+        topLeftMask |= topLeftBlockers != 0 && (gameOpponentColour & (1ul << (63 - firstTopLeftBlocker - 1))) != 0
             ? 1ul << (63 - firstTopLeftBlocker - 1)
             : 0;
         
-        var bottomRightBlockers = (game[colour] | game[opponentColour]) & mask & (~(positionBit - 1) - positionBit);
+        var bottomRightBlockers = (gameColour | gameOpponentColour) & mask & (~(positionBit - 1) - positionBit);
 
         var firstBottomRightBlocker = bottomRightBlockers != 0 ? BitOperations.TrailingZeroCount(bottomRightBlockers) : 64;
 
         var bottomRightMask = firstBottomRightBlocker < 64 ? (1ul << firstBottomRightBlocker) - 1 - positionBit : ulong.MaxValue;
 
-        bottomRightMask |= bottomRightBlockers != 0 && (game[opponentColour] & (1ul << firstBottomRightBlocker)) != 0
+        bottomRightMask |= bottomRightBlockers != 0 && (gameOpponentColour & (1ul << firstBottomRightBlocker)) != 0
             ? 1ul << firstBottomRightBlocker
             : 0;
 
