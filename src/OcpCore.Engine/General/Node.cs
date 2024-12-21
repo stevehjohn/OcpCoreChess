@@ -4,11 +4,13 @@ namespace OcpCore.Engine.General;
 
 public struct Node
 {
-    public Game Game { get; private set; }
+    public Game Game { get; }
 
-    public int Depth { get; private set; }
+    public int Depth { get; }
     
-    public int Root { get; private set; }
+    public int Root { get; }
+    
+    public Move Move { get; }
 
     public Node(Game game, int depth, int root)
     {
@@ -17,5 +19,18 @@ public struct Node
         Depth = depth;
         
         Root = root;
+        
+        Move = Move.Null;
+    }
+
+    public Node(Game game, int depth, int root, Move move)
+    {
+        Game = game;
+        
+        Depth = depth;
+        
+        Root = root;
+
+        Move = move;
     }
 }

@@ -15,6 +15,8 @@ public class StateProcessor
     
     private readonly PriorityQueue<Node, int> _localQueue = new();
     
+    private readonly List<Move> _moves = [];
+    
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private readonly PerftCollector _perftCollector;
@@ -92,33 +94,51 @@ public class StateProcessor
     private void ProcessWorkItem(Node node)
     {
         var game = node.Game;
-        
+
         var pieces = game[game.State.Player];
 
-        var from = pieces.PopBit();
-
-        while (from > -1)
+        if (node.Move == Move.Null)
         {
-            var kind = game.GetKind(from);
+            _moves.Clear();
 
-            var moves = _pieceCache[kind].GetMoves(game, from);
+            var from = pieces.PopBit();
 
-            var to = moves.PopBit();
-
-            while (to > -1)
+            while (from > -1)
             {
-                ProcessMove(node, kind, from, to);
+                var kind = game.GetKind(from);
 
-                to = moves.PopBit();
+                var moves = _pieceCache[kind].GetMoves(game, from);
+
+                var to = moves.PopBit();
+
+                while (to > -1)
+                {
+                    _moves.Add(new Move(kind, from, to));
+
+                    to = moves.PopBit();
+                }
+
+                from = pieces.PopBit();
             }
 
-            from = pieces.PopBit();
+            for (var i = 0; i < _moves.Count; i++)
+            {
+                var move = _moves[i];
+
+                Enqueue(new Node(game, node.Depth, node.Root, move), 0);
+            }
+        }
+        else
+        {
+            ProcessMove(node);
         }
     }
 
-    private void ProcessMove(Node node, Kind kind, int from, int to)
+    private void ProcessMove(Node node)
     {
         var (game, depth, root) = (node.Game, node.Depth, node.Root);
+
+        var (kind, from, to) = node.Move;
 
         var copy = new Game(game);
 
@@ -156,7 +176,7 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+            Enqueue(new Node(copy, depth - 1, root), CalculatePriority(game, outcomes, to, kind, opponent));
         }
     }
 
@@ -193,7 +213,7 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                Enqueue(new Node(copy, depth - 1, root), CalculatePriority(copy, outcomes, to, kind, opponent));
             }
         }
         
@@ -324,19 +344,19 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Enqueue(Game game, int depth, int root, int priority)
+    private void Enqueue(Node node, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
             lock (_centralQueue)
             {
-                _centralQueue.Enqueue(new Node(game, depth, root), priority);
+                _centralQueue.Enqueue(node, priority);
             }
         }
         else
         {
-            _localQueue.Enqueue(new Node(game, depth, root), priority);
+            _localQueue.Enqueue(node, priority);
         }
     }
 }
