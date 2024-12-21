@@ -5,9 +5,9 @@ public enum MoveOutcome
 {
     Move      = 1,
     Castle    = 2,
-    Promotion = 4,
-    EnPassant = 8,
-    Capture   = 16,
-    Check     = 32,
+    EnPassant = 4,
+    Capture   = 8,
+    Check     = 16,
+    Promotion = 32,
     CheckMate = 64
 }

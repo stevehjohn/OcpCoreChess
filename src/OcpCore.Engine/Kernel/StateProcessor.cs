@@ -205,19 +205,19 @@ public class StateProcessor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
     {
-        var priority = (MoveOutcome.CheckMate - outcome) * 10_000;
+        var priority = (MoveOutcome.CheckMate - outcome) * 100;
 
         if ((outcome & MoveOutcome.Capture) > 0)
         {
             if ((outcome & MoveOutcome.EnPassant) > 0)
             {
-                priority += (10 - Scores.Pawn) * 100;
+                priority += (10 - Scores.Pawn) * 10;
             }
             else
             {
                 var capturedPiece = game.GetKind(target);
         
-                priority += (10 - _pieceCache[capturedPiece].Value) * 100;
+                priority += (10 - _pieceCache[capturedPiece].Value) * 10;
             }
         
             priority += _pieceCache[player].Value;
