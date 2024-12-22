@@ -3,7 +3,7 @@
 3rd attempt at making a chess playing engine.
 
 Passes:
-- All Perft tests up to ply 9.
+- All Perf tests up to ply 9.
 - All Etherial tests.
 
 ## Status
