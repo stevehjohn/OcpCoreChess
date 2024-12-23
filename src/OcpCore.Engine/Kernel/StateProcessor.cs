@@ -155,7 +155,16 @@ public class StateProcessor
         IncrementOutcomes(ply, outcomes);
 
         var score = EvaluatePosition(game, outcomes, node.IsMaximising);
-        
+
+        if (node.IsMaximising)
+        {
+            node.Alpha = Math.Max(node.Alpha, score);
+        }
+        else
+        {
+            node.Beta = Math.Min(node.Beta, score);
+        }
+
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
             var newNode = new Node(node, copy, depth - 1, root, score);
@@ -167,18 +176,7 @@ public class StateProcessor
         }
         else
         {
-            if (node.IsMaximising)
-            {
-                node.Alpha = Math.Max(node.Alpha, score);
-
-                node.PropagateScore(root, score);
-            }
-            else
-            {
-                node.Beta = Math.Min(node.Beta, score);
-                
-                node.PropagateScore(root, score);
-            }
+            node.PropagateScore(root, score);
         }
     }
 
