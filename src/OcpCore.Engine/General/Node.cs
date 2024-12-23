@@ -76,10 +76,8 @@ public class Node
                 if (score > node.Score)
                 {
                     node.Score = score;
-                    
-                    Console.WriteLine(builder.ToString());
 
-                    Moves = builder.ToString();
+                    node.Moves = builder.ToString();
                 }
             }
             else
@@ -87,10 +85,8 @@ public class Node
                 if (score < node.Score)
                 {
                     node.Score = score;
-                    
-                    Console.WriteLine(builder.ToString());
 
-                    Moves = builder.ToString();
+                    node.Moves = builder.ToString();
                 }
             }
 
