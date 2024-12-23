@@ -162,7 +162,7 @@ public class StateProcessor
         }
         else
         {
-            node.PropagateScore(EvaluatePosition(game, outcomes, node.IsMaximising));
+            node.PropagateScore(root, EvaluatePosition(game, outcomes, node.IsMaximising));
         }
     }
 
@@ -222,7 +222,7 @@ public class StateProcessor
             }
             else
             {
-                parent.PropagateScore(EvaluatePosition(game, outcomes, parent.IsMaximising));
+                parent.PropagateScore(root, EvaluatePosition(game, outcomes, parent.IsMaximising));
             }
         }
         

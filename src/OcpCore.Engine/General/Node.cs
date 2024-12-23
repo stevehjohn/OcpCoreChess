@@ -10,7 +10,7 @@ public class Node
 
     public int Depth { get; }
     
-    public int Root { get; }
+    public int Root { get; private set; }
     
     public int Score { get; private set; }
 
@@ -44,7 +44,7 @@ public class Node
         IsMaximising = ! parent.IsMaximising;
     }
 
-    public void PropagateScore(int score)
+    public void PropagateScore(int root, int score)
     {
         var node = this;
         
@@ -54,6 +54,8 @@ public class Node
             {
                 if (score > node.Score)
                 {
+                    node.Root = root;
+                    
                     node.Score = score;
                 }
             }
@@ -61,6 +63,8 @@ public class Node
             {
                 if (score < node.Score)
                 {
+                    node.Root = root;
+                    
                     node.Score = score;
                 }
             }
