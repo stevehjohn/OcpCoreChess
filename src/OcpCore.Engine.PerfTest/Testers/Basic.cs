@@ -261,7 +261,7 @@ public static class Basic
             ? $"      Best Score:            {(score == int.MinValue ? "-" : " ")}∞"
             : $"      Best Score: {score,13:N0}");
         
-        Console.WriteLine($"      Move: {core.BestMove}");
+        Console.WriteLine($"      Move:                {core.BestMove}");
 
         Console.WriteLine();
         
