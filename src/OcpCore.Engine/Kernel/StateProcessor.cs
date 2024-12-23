@@ -179,7 +179,7 @@ public class StateProcessor
         {
             score = isMaximising ? int.MaxValue : int.MinValue;
         }
-
+        
         return score;
     }
 
