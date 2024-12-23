@@ -213,19 +213,6 @@ public class StateProcessor
                     checkmates++;
                 }
             }
-
-            var promotion = kind switch
-            {
-                Kind.Rook => 'r',
-                Kind.Knight => 'n',
-                Kind.Bishop => 'b',
-                _ => 'q'
-            };
-
-            if (game.State.Player == Colour.White)
-            {
-                promotion = char.ToUpper(promotion);
-            }
         
             if (depth > 1)
             {
@@ -324,13 +311,13 @@ public class StateProcessor
             }
         }
         
+        if (ply == 1 && root == -1)
+        {
+            root = from << 8 | to;
+        }
+
         if (_perftCollector != null)
         {
-            if (ply == 1)
-            {
-                root = from << 8 | to;
-            }
-
             _perftCollector.AddCount(ply, _maxDepth, root, count);
         }
     }
