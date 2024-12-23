@@ -31,14 +31,7 @@ public class Node
 
         IsMaximising = isMaximising;
 
-        if (isMaximising)
-        {
-            Score = int.MinValue;
-        }
-        else
-        {
-            Score = int.MaxValue;
-        }
+        Score = isMaximising ? int.MinValue : int.MaxValue;
     }
     
     public Node(Node parent, Game game, int depth, int root, string move, int score)

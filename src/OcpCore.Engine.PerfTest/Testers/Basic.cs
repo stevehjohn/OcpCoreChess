@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using OcpCore.Engine.General;
-using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.PerfTest.Testers;
 
