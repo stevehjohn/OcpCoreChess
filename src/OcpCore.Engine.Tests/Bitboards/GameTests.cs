@@ -263,6 +263,10 @@ public class GameTests
     [InlineData("4k3/8/8/4n3/3P4/8/8/4K3 w - - 0 1", "d4e5", Scores.Pawn, Scores.Knight, Scores.Pawn, 0)]
     [InlineData("4k3/8/8/4b3/3P4/8/8/4K3 w - - 0 1", "d4e5", Scores.Pawn, Scores.Bishop, Scores.Pawn, 0)]
     [InlineData("4k3/8/8/4q3/3P4/8/8/4K3 w - - 0 1", "d4e5", Scores.Pawn, Scores.Queen, Scores.Pawn, 0)]
+    [InlineData("4k3/8/8/4R3/3p4/8/8/4K3 b - - 0 1", "d4e5", Scores.Rook, Scores.Pawn, 0, Scores.Pawn)]
+    [InlineData("4k3/8/8/4N3/3p4/8/8/4K3 b - - 0 1", "d4e5", Scores.Knight, Scores.Pawn, 0, Scores.Pawn)]
+    [InlineData("4k3/8/8/4B3/3p4/8/8/4K3 b - - 0 1", "d4e5", Scores.Bishop, Scores.Pawn, 0, Scores.Pawn)]
+    [InlineData("4k3/8/8/4Q3/3p4/8/8/4K3 b - - 0 1", "d4e5", Scores.Queen, Scores.Pawn, 0, Scores.Pawn)]
     public void HandlesScoringCorrectly(string fen, string move, int initialWhiteScore, int initialBlackScore, int expectedWhiteScore, int expectedBlackScore)
     {
         var game = new Game();
