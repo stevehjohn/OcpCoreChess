@@ -153,16 +153,18 @@ public class StateProcessor
         }
 
         IncrementOutcomes(ply, outcomes);
+
+        var score = EvaluatePosition(game, outcomes, node.IsMaximising);
         
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            var newNode = new Node(node, copy, depth - 1, root, EvaluatePosition(game, outcomes, node.IsMaximising));
+            var newNode = new Node(node, copy, depth - 1, root, score);
                 
             Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
         else
         {
-            node.PropagateScore(root, EvaluatePosition(game, outcomes, node.IsMaximising));
+            node.PropagateScore(root, score);
         }
     }
 
