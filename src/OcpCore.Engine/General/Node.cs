@@ -58,21 +58,23 @@ public class Node
         IsMaximising = ! parent.IsMaximising;
     }
 
-    public void PropagateScore(int score)
+    public void PropagateScore(string move, int score)
     {
         var node = this;
 
-        var builder = new StringBuilder();
+        var builder = new StringBuilder(move);
         
         while (node != null)
         {
-            builder.Insert(0, $"{_move} ");
+            builder.Insert(0, $"{node._move} ");
                 
             if (node.IsMaximising)
             {
                 if (score > node.Score)
                 {
                     node.Score = score;
+                    
+                    Console.WriteLine(builder.ToString());
 
                     Moves = builder.ToString();
                 }
@@ -82,6 +84,8 @@ public class Node
                 if (score < node.Score)
                 {
                     node.Score = score;
+                    
+                    Console.WriteLine(builder.ToString());
 
                     Moves = builder.ToString();
                 }

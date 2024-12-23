@@ -42,6 +42,8 @@ public sealed class Core : IDisposable
 
     public int BestScore => _coordinator.BestScore;
 
+    public string BestMoves => _coordinator.BestMoves;
+    
     public Core(Colour engineColour, bool collectPerft = false)
     {
         _engineColour = engineColour;
