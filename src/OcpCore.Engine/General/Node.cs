@@ -10,10 +10,14 @@ public class Node
 
     public int Depth { get; }
     
+    public int Alpha { get; }
+    
+    public int Beta { get; }
+
     public int Root { get; private set; }
     
     public int Score { get; private set; }
-
+    
     public bool IsMaximising { get; }
 
     public Node(Game game, int depth, int root, bool isMaximising)
@@ -27,6 +31,10 @@ public class Node
         IsMaximising = isMaximising;
 
         Score = isMaximising ? int.MinValue : int.MaxValue;
+
+        Alpha = int.MinValue;
+
+        Beta = int.MinValue;
     }
     
     public Node(Node parent, Game game, int depth, int root, int score)
