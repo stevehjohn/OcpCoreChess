@@ -311,15 +311,12 @@ public class StateProcessor
             }
         }
         
-        if (ply == 1 && root == -1)
+        if (ply == 1)
         {
             root = from << 8 | to;
         }
 
-        if (_perftCollector != null)
-        {
-            _perftCollector.AddCount(ply, _maxDepth, root, count);
-        }
+        _perftCollector?.AddCount(ply, _maxDepth, root, count);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
