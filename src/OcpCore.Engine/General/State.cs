@@ -26,7 +26,7 @@ public class State
 
     public State()
     {
-        SetState(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, 0, 0, 0, 0, 0, 1);
+        SetState(Colour.White, Castle.WhiteQueenSide | Castle.WhiteKingSide | Castle.BlackQueenSide | Castle.BlackKingSide, 0, Scores.Initial, Scores.Initial, 0, 0, 0, 1);
     }
     
     public State(Colour player, Castle castleStatus, int? enPassantTarget, int whiteScore, int blackScore, int whiteKingCell, int blackKingCell, int halfmoves, int fullmoves)

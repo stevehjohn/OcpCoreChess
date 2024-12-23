@@ -13,6 +13,8 @@ public struct Game
 
     private readonly MoveCache _moves = MoveCache.Instance;
     
+    private readonly PieceCache _pieceCache = PieceCache.Instance;
+
     public State State { get; private set; } 
 
     public ulong this[Colour colour]
@@ -322,6 +324,17 @@ public struct Game
     {
         outcome |= MoveOutcome.Capture;
 
+        var capturedKind = GetKind(to);
+
+        if (State.Player == Colour.White)
+        {
+            State.UpdateBlackScore(-_pieceCache[capturedKind].Value);
+        }
+        else
+        {
+            State.UpdateWhiteScore(-_pieceCache[capturedKind].Value);
+        }
+
         if ((this[Kind.Rook] & (1ul << to)) > 0)
         {
             var file = Cell.GetFile(to);
@@ -365,6 +378,15 @@ public struct Game
             this[Colour.Black] &= clearMask;
 
             this[Kind.Pawn] &= clearMask;
+            
+            if (State.Player == Colour.White)
+            {
+                State.UpdateBlackScore(-Scores.Pawn);
+            }
+            else
+            {
+                State.UpdateWhiteScore(-Scores.Pawn);
+            }
         }
 
         if (Cell.GetRank(to) is 0 or 7)
