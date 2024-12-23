@@ -13,6 +13,7 @@ Passes:
 ## Functionality TODOs
 
 - Minimax and Alpha/Beta pruning.
+- Add type of promotion to move, i.e. `a7a8Q`.
 - Figure out why adjusting the priority for attackers hits performance so much.
 - Add undo move to core using a stack.
 - Move ordering:
