@@ -156,10 +156,27 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            var newNode = new Node(node, copy, depth - 1, root);
+            var newNode = new Node(node, copy, depth - 1, root, EvaluatePosition(game, outcomes));
                 
             Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
+    }
+
+    private static int EvaluatePosition(Game game, MoveOutcome outcomes)
+    {
+        var score = game.State.WhiteScore - game.State.BlackScore;
+
+        if ((outcomes & MoveOutcome.Check) > 0)
+        {
+            score += game.State.Player == Colour.White ? 50 : -50;
+        }
+
+        if ((outcomes & MoveOutcome.CheckMate) > 0)
+        {
+            score += game.State.Player == Colour.White ? int.MaxValue : int.MinValue;
+        }
+
+        return score;
     }
 
     private bool HandlePromotion(ref MoveOutcome outcomes, Node parent, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
@@ -195,7 +212,7 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                var newNode = new Node(parent, copy, depth - 1, root);
+                var newNode = new Node(parent, copy, depth - 1, root, EvaluatePosition(game, outcomes));
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }

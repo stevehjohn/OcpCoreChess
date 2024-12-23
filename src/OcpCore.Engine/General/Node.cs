@@ -6,11 +6,13 @@ public class Node
 {
     public Node Parent { get; }
     
-    public Game Game { get; private set; }
+    public Game Game { get; }
 
-    public int Depth { get; private set; }
+    public int Depth { get; }
     
-    public int Root { get; private set; }
+    public int Root { get; }
+    
+    public int Score { get; }
 
     public Node(Game game, int depth, int root)
     {
@@ -21,7 +23,7 @@ public class Node
         Root = root;
     }
     
-    public Node(Node parent, Game game, int depth, int root)
+    public Node(Node parent, Game game, int depth, int root, int score)
     {
         Parent = parent;
         
@@ -30,5 +32,7 @@ public class Node
         Depth = depth;
         
         Root = root;
+
+        Score = score;
     }
 }
