@@ -160,6 +160,10 @@ public class StateProcessor
                 
             Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
+        else
+        {
+            node.PropagateScore(EvaluatePosition(game, outcomes));
+        }
     }
 
     private static int EvaluatePosition(Game game, MoveOutcome outcomes)

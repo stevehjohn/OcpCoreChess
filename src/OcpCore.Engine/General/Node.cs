@@ -12,7 +12,7 @@ public class Node
     
     public int Root { get; }
     
-    public int Score { get; }
+    public int Score { get; private set; }
 
     public Node(Game game, int depth, int root)
     {
@@ -34,5 +34,20 @@ public class Node
         Root = root;
 
         Score = score;
+    }
+
+    public void PropagateScore(int score)
+    {
+        var node = Parent;
+
+        while (node != null)
+        {
+            if (score > node.Score)
+            {
+                node.Score = score;
+            }
+
+            node = node.Parent;
+        }
     }
 }
