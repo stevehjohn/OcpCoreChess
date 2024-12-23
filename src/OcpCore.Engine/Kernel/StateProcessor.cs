@@ -156,7 +156,7 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            var newNode = new Node(node, copy, depth - 1, root, EvaluatePosition(game, outcomes, node.IsMaximising));
+            var newNode = new Node(node, copy, depth - 1, root, $"{from.ToStandardNotation()}{to.ToStandardNotation()}", EvaluatePosition(game, outcomes, node.IsMaximising));
                 
             Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
@@ -216,7 +216,7 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                var newNode = new Node(parent, copy, depth - 1, root, EvaluatePosition(game, outcomes, parent.IsMaximising));
+                var newNode = new Node(parent, copy, depth - 1, root, $"{from.ToStandardNotation()}{to.ToStandardNotation()}", EvaluatePosition(game, outcomes, parent.IsMaximising));
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
