@@ -81,11 +81,6 @@ public class Node
                 }
             }
 
-            if (node.Alpha >= node.Beta)
-            {
-                break;
-            }
-
             node = node._parent;
         }
     }
