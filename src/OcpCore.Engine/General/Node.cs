@@ -25,6 +25,15 @@ public class Node
         Root = root;
 
         IsMaximising = isMaximising;
+
+        if (isMaximising)
+        {
+            Score = int.MinValue;
+        }
+        else
+        {
+            Score = int.MaxValue;
+        }
     }
     
     public Node(Node parent, Game game, int depth, int root, int score)
