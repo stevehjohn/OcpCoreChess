@@ -18,7 +18,7 @@ public sealed class Core : IDisposable
 
     private readonly PieceCache _pieceCache = PieceCache.Instance;
     
-    private readonly PerftCollector _perftCollector;
+    private readonly PerfTestCollector _perftCollector;
 
     private Game _game;
 
@@ -50,7 +50,7 @@ public sealed class Core : IDisposable
 
         if (collectPerft)
         {
-            _perftCollector = new PerftCollector();
+            _perftCollector = new PerfTestCollector();
         }
 
         _game = new Game();
@@ -64,7 +64,7 @@ public sealed class Core : IDisposable
 
         if (collectPerft)
         {
-            _perftCollector = new PerftCollector();
+            _perftCollector = new PerfTestCollector();
         }
 
         _game = new Game();

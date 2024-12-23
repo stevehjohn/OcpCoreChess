@@ -42,7 +42,7 @@ public sealed class Coordinator : IDisposable
 
     public string BestMove => $"{(_rootNode.Root >> 8).ToStandardNotation()}{(_rootNode.Root & 0xFF).ToStandardNotation()}";
 
-    public Coordinator(PerftCollector perftCollector = null, int parallelDepthThreshold = 6)
+    public Coordinator(PerfTestCollector perftCollector = null, int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;
         

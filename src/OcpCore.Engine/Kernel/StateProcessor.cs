@@ -17,7 +17,7 @@ public class StateProcessor
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
-    private readonly PerftCollector _perftCollector;
+    private readonly PerfTestCollector _perftCollector;
     
     private int _maxDepth;
 
@@ -31,7 +31,7 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerftCollector perftCollector = null)
+    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerfTestCollector perftCollector = null)
     {
         _centralQueue = centralQueue;
 
