@@ -177,7 +177,7 @@ public class StateProcessor
 
         if ((outcomes & MoveOutcome.CheckMate) > 0)
         {
-            score = game.State.Player == Colour.White ? int.MaxValue : int.MinValue;
+            score = isMaximising ? int.MaxValue : int.MinValue;
         }
 
         return score;
