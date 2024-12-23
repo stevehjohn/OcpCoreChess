@@ -7,8 +7,6 @@ public class Node
 {
     private readonly Node _parent;
 
-    private readonly string _move;
-    
     public Game Game { get; }
 
     public int Depth { get; }
@@ -18,8 +16,6 @@ public class Node
     public int Score { get; private set; }
 
     public bool IsMaximising { get; }
-    
-    public string Moves { get; private set; }
 
     public Node(Game game, int depth, int root, bool isMaximising)
     {
@@ -34,7 +30,7 @@ public class Node
         Score = isMaximising ? int.MinValue : int.MaxValue;
     }
     
-    public Node(Node parent, Game game, int depth, int root, string move, int score)
+    public Node(Node parent, Game game, int depth, int root, int score)
     {
         _parent = parent;
         
@@ -44,33 +40,22 @@ public class Node
         
         Root = root;
 
-        _move = move;
-        
         Score = score;
 
         IsMaximising = ! parent.IsMaximising;
     }
 
-    public void PropagateScore(string move, int score)
+    public void PropagateScore(int score)
     {
         var node = this;
-
-        var builder = new StringBuilder(move);
         
         while (node != null)
         {
-            if (node._move != null)
-            {
-                builder.Insert(0, $"{node._move} ");
-            }
-
             if (node.IsMaximising)
             {
                 if (score > node.Score)
                 {
                     node.Score = score;
-
-                    node.Moves = builder.ToString();
                 }
             }
             else
@@ -78,8 +63,6 @@ public class Node
                 if (score < node.Score)
                 {
                     node.Score = score;
-
-                    node.Moves = builder.ToString();
                 }
             }
 

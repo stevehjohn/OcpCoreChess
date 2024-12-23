@@ -39,8 +39,6 @@ public sealed class Coordinator : IDisposable
 
     public int BestScore => _rootNode.Score;
 
-    public string BestMoves => _rootNode.Moves;
-
     public Coordinator(PerftCollector perftCollector = null, int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;

@@ -153,18 +153,16 @@ public class StateProcessor
         }
 
         IncrementOutcomes(ply, outcomes);
-
-        var move = $"{from.ToStandardNotation()}{to.ToStandardNotation()}";
         
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            var newNode = new Node(node, copy, depth - 1, root, move, EvaluatePosition(game, outcomes, node.IsMaximising));
+            var newNode = new Node(node, copy, depth - 1, root, EvaluatePosition(game, outcomes, node.IsMaximising));
                 
             Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
         else
         {
-            node.PropagateScore(move, EvaluatePosition(game, outcomes, node.IsMaximising));
+            node.PropagateScore(EvaluatePosition(game, outcomes, node.IsMaximising));
         }
     }
 
@@ -228,18 +226,16 @@ public class StateProcessor
             {
                 promotion = char.ToUpper(promotion);
             }
-
-            var move = $"{from.ToStandardNotation()}{to.ToStandardNotation()}{promotion}";
         
             if (depth > 1)
             {
-                var newNode = new Node(parent, copy, depth - 1, root, move, EvaluatePosition(game, outcomes, parent.IsMaximising));
+                var newNode = new Node(parent, copy, depth - 1, root, EvaluatePosition(game, outcomes, parent.IsMaximising));
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
             else
             {
-                parent.PropagateScore(move, EvaluatePosition(game, outcomes, parent.IsMaximising));
+                parent.PropagateScore(EvaluatePosition(game, outcomes, parent.IsMaximising));
             }
         }
         

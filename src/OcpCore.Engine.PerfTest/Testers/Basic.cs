@@ -260,8 +260,6 @@ public static class Basic
         Console.WriteLine(score is int.MinValue or int.MaxValue
             ? $"      Best Score:            {(score == int.MinValue ? "-" : " ")}∞"
             : $"      Best Score: {score,13:N0}");
-        
-        Console.WriteLine($"      {core.BestMoves}");
 
         Console.WriteLine();
         
