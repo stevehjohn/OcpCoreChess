@@ -41,6 +41,8 @@ public sealed class Core : IDisposable
     public IReadOnlyDictionary<string, long> PerftData => _perftCollector?.Counts;
 
     public int BestScore => _coordinator.BestScore;
+
+    public string BestMove => _coordinator.BestMove;
     
     public Core(Colour engineColour, bool collectPerft = false)
     {

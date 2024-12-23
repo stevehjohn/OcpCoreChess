@@ -1,5 +1,6 @@
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 
@@ -38,6 +39,18 @@ public sealed class Coordinator : IDisposable
     public bool IsParallel => _countdownEvent != null;
 
     public int BestScore => _rootNode.Score;
+
+    public string BestMove
+    {
+        get
+        {
+            var from = _rootNode.Root >> 8;
+
+            var to = _rootNode.Root & 0xFF;
+
+            return $"{from.ToStandardNotation()}{to.ToStandardNotation()}";
+        }
+    }
 
     public Coordinator(PerftCollector perftCollector = null, int parallelDepthThreshold = 6)
     {
