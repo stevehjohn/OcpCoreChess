@@ -34,7 +34,7 @@ public class Node
 
         Alpha = int.MinValue;
 
-        Beta = int.MinValue;
+        Beta = int.MaxValue;
     }
     
     public Node(Node parent, Game game, int depth, int root, int score)
@@ -48,6 +48,10 @@ public class Node
         Root = root;
 
         Score = score;
+
+        Alpha = parent.Alpha;
+
+        Beta = parent.Beta;
 
         IsMaximising = ! parent.IsMaximising;
     }
