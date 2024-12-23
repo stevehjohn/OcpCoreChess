@@ -18,7 +18,7 @@ public class CoordinatorTests
         
         game.ParseFen(Constants.InitialBoardFen);
 
-        coordinator.StartProcessing(game, requestedDepth);
+        coordinator.StartProcessing(game, requestedDepth, false);
         
         Assert.Equal(expectParallelisation, coordinator.IsParallel);
     }

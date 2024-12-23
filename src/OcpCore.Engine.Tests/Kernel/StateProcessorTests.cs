@@ -17,7 +17,7 @@ public class StateProcessorTests
         
         var queue = new PriorityQueue<Node, int>();
 
-        queue.Enqueue(new Node(game, 1, -1), 0);
+        queue.Enqueue(new Node(game, 1, -1, false), 0);
         
         var processor = new StateProcessor(queue);
         
@@ -48,7 +48,7 @@ public class StateProcessorTests
         
         var queue = new PriorityQueue<Node, int>();
 
-        queue.Enqueue(new Node(game, 2, -1), 0);
+        queue.Enqueue(new Node(game, 2, -1, false), 0);
         
         var processor = new StateProcessor(queue);
         

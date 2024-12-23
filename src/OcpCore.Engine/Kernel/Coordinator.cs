@@ -51,7 +51,7 @@ public sealed class Coordinator : IDisposable
         }
     }
 
-    public void StartProcessing(Game game, int maxDepth)
+    public void StartProcessing(Game game, int maxDepth, bool isMaximising)
     {
         _maxDepth = maxDepth;
         
@@ -68,7 +68,7 @@ public sealed class Coordinator : IDisposable
 
         _queue.Clear();
 
-        _rootNode = new Node(game, _maxDepth, -1);
+        _rootNode = new Node(game, _maxDepth, -1, isMaximising);
         
         _queue.Enqueue(_rootNode, 0);
 

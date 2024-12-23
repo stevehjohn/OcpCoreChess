@@ -154,7 +154,7 @@ public sealed class Core : IDisposable
     {
         _coordinator = new Coordinator(_perftCollector);
         
-        _coordinator.StartProcessing(_game, depth);
+        _coordinator.StartProcessing(_game, depth, _game.State.Player == _engineColour);
 
         callback?.Invoke();
     }
