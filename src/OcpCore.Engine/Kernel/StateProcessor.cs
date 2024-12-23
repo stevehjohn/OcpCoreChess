@@ -216,7 +216,20 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                var newNode = new Node(parent, copy, depth - 1, root, $"{from.ToStandardNotation()}{to.ToStandardNotation()}", EvaluatePosition(game, outcomes, parent.IsMaximising));
+                var promotion = kind switch
+                {
+                    Kind.Rook => 'r',
+                    Kind.Knight => 'n',
+                    Kind.Bishop => 'b',
+                    _ => 'q'
+                };
+
+                if (game.State.Player == Colour.White)
+                {
+                    promotion = char.ToUpper(promotion);
+                }
+
+                var newNode = new Node(parent, copy, depth - 1, root, $"{from.ToStandardNotation()}{to.ToStandardNotation()}{promotion}", EvaluatePosition(game, outcomes, parent.IsMaximising));
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }

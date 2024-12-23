@@ -1,3 +1,4 @@
+using System.Text;
 using OcpCore.Engine.Bitboards;
 
 namespace OcpCore.Engine.General;
@@ -61,13 +62,19 @@ public class Node
     {
         var node = this;
 
+        var builder = new StringBuilder();
+        
         while (node != null)
         {
+            builder.Insert(0, $"{_move} ");
+                
             if (node.IsMaximising)
             {
                 if (score > node.Score)
                 {
                     node.Score = score;
+
+                    Moves = builder.ToString();
                 }
             }
             else
@@ -75,6 +82,8 @@ public class Node
                 if (score < node.Score)
                 {
                     node.Score = score;
+
+                    Moves = builder.ToString();
                 }
             }
 
