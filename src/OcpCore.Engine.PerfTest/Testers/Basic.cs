@@ -253,6 +253,17 @@ public static class Basic
             {
                 Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
             }
+
+            var score = core.BestScore;
+            
+            if (score is int.MinValue or int.MaxValue)
+            {
+                Console.WriteLine($"      Best Score:            {(score == int.MinValue ? "-" : " ")}∞");
+            }
+            else
+            {
+                Console.WriteLine($"      Best Score: {score,13:N0}");
+            }
         }
 
         Console.WriteLine();
