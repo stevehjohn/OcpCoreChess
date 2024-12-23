@@ -216,23 +216,23 @@ public class StateProcessor
                 }
             }
 
-            var move = $"{from.ToStandardNotation()}{to.ToStandardNotation()}";
+            var promotion = kind switch
+            {
+                Kind.Rook => 'r',
+                Kind.Knight => 'n',
+                Kind.Bishop => 'b',
+                _ => 'q'
+            };
+
+            if (game.State.Player == Colour.White)
+            {
+                promotion = char.ToUpper(promotion);
+            }
+
+            var move = $"{from.ToStandardNotation()}{to.ToStandardNotation()}{promotion}";
         
             if (depth > 1)
             {
-                var promotion = kind switch
-                {
-                    Kind.Rook => 'r',
-                    Kind.Knight => 'n',
-                    Kind.Bishop => 'b',
-                    _ => 'q'
-                };
-
-                if (game.State.Player == Colour.White)
-                {
-                    promotion = char.ToUpper(promotion);
-                }
-
                 var newNode = new Node(parent, copy, depth - 1, root, move, EvaluatePosition(game, outcomes, parent.IsMaximising));
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
