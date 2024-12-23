@@ -254,16 +254,21 @@ public class GameTests
     }
 
     [Theory]
-    [InlineData(Constants.InitialBoardFen, null, Scores.Initial, Scores.Initial)]
-    [InlineData("rnbqkbnr/ppp1pppp/8/3p4/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 1", "c4d5", Scores.Initial, Scores.Initial - Scores.Pawn)]
-    [InlineData("rnbqkbnr/ppp1pppp/8/3p4/2P1P3/8/PP1P1PPP/RNBQKBNR b KQkq - 0 1", "d5c4", Scores.Initial - Scores.Pawn, Scores.Initial)]
-    [InlineData("rnbqkbnr/ppp1pppp/8/2Pp4/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 1", "c5d6", Scores.Initial, Scores.Initial - Scores.Pawn)]
-    [InlineData("rnbqkbnr/ppp1pppp/8/8/2Pp4/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 1", "d4c3", Scores.Initial - Scores.Pawn, Scores.Initial)]
-    public void HandlesScoringCorrectly(string fen, string move, int expectedWhiteScore, int expectedBlackScore)
+    [InlineData(Constants.InitialBoardFen, null, Scores.Initial, Scores.Initial, Scores.Initial, Scores.Initial)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/3p4/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 1", "c4d5", Scores.Initial, Scores.Initial, Scores.Initial, Scores.Initial - Scores.Pawn)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/3p4/2P1P3/8/PP1P1PPP/RNBQKBNR b KQkq - 0 1", "d5c4", Scores.Initial, Scores.Initial, Scores.Initial - Scores.Pawn, Scores.Initial)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/2Pp4/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 1", "c5d6", Scores.Initial, Scores.Initial, Scores.Initial, Scores.Initial - Scores.Pawn)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/2Pp4/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 1", "d4c3", Scores.Initial, Scores.Initial, Scores.Initial - Scores.Pawn, Scores.Initial)]
+    [InlineData("4k3/8/8/4r3/3P4/8/8/4K3 w - - 0 1", "d4e5", Scores.Pawn, Scores.Rook, Scores.Pawn, 0)]
+    public void HandlesScoringCorrectly(string fen, string move, int initialWhiteScore, int initialBlackScore, int expectedWhiteScore, int expectedBlackScore)
     {
         var game = new Game();
         
         game.ParseFen(fen);
+        
+        Assert.Equal(initialWhiteScore, game.State.WhiteScore);
+        
+        Assert.Equal(initialBlackScore, game.State.BlackScore);
 
         if (move != null)
         {
