@@ -66,8 +66,11 @@ public class Node
         
         while (node != null)
         {
-            builder.Insert(0, $"{node._move} ");
-                
+            if (node._move != null)
+            {
+                builder.Insert(0, $"{node._move} ");
+            }
+
             if (node.IsMaximising)
             {
                 if (score > node.Score)
