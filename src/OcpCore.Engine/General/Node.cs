@@ -42,9 +42,19 @@ public class Node
 
         while (node != null)
         {
-            if (score > node.Score)
+            if (node.Game.State.Player == Colour.White)
             {
-                node.Score = score;
+                if (score > node.Score)
+                {
+                    node.Score = score;
+                }
+            }
+            else
+            {
+                if (score < node.Score)
+                {
+                    node.Score = score;
+                }
             }
 
             node = node.Parent;

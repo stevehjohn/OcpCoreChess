@@ -220,6 +220,10 @@ public class StateProcessor
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
+            else
+            {
+                parent.PropagateScore(EvaluatePosition(game, outcomes));
+            }
         }
         
         IncrementCounts(ply, 4, ref root, from, to);
