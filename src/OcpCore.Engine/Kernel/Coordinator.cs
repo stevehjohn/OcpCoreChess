@@ -40,17 +40,7 @@ public sealed class Coordinator : IDisposable
 
     public int BestScore => _rootNode.Score;
 
-    public string BestMove
-    {
-        get
-        {
-            var from = _rootNode.Root >> 8;
-
-            var to = _rootNode.Root & 0xFF;
-
-            return $"{from.ToStandardNotation()}{to.ToStandardNotation()}";
-        }
-    }
+    public string BestMove => $"{(_rootNode.Root >> 8).ToStandardNotation()}{(_rootNode.Root & 0xFF).ToStandardNotation()}";
 
     public Coordinator(PerftCollector perftCollector = null, int parallelDepthThreshold = 6)
     {
