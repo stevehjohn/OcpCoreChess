@@ -255,15 +255,10 @@ public static class Basic
             }
 
             var score = core.BestScore;
-            
-            if (score is int.MinValue or int.MaxValue)
-            {
-                Console.WriteLine($"      Best Score:            {(score == int.MinValue ? "-" : " ")}∞");
-            }
-            else
-            {
-                Console.WriteLine($"      Best Score: {score,13:N0}");
-            }
+
+            Console.WriteLine(score is int.MinValue or int.MaxValue
+                ? $"      Best Score:            {(score == int.MinValue ? "-" : " ")}∞"
+                : $"      Best Score: {score,13:N0}");
         }
 
         Console.WriteLine();
