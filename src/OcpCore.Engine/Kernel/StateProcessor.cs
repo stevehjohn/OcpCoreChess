@@ -172,7 +172,7 @@ public class StateProcessor
 
         if ((outcomes & MoveOutcome.Check) > 0)
         {
-            score += 50;
+            score += game.State.Player == Colour.White ? 50 : -50;
         }
 
         if ((outcomes & MoveOutcome.CheckMate) > 0)
