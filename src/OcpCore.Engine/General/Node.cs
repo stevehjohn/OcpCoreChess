@@ -70,8 +70,6 @@ public class Node
                     
                     node.Score = score;
                 }
-
-                node.Alpha = Math.Max(Alpha, score);
             }
             else
             {
@@ -81,8 +79,6 @@ public class Node
                     
                     node.Score = score;
                 }
-
-                node.Beta = Math.Min(Beta, score);
             }
 
             if (node.Alpha >= node.Beta)
