@@ -53,11 +53,11 @@ public class Node
 
     public void PropagateScore(int score)
     {
-        var node = _parent;
+        var node = this;
 
         while (node != null)
         {
-            if (IsMaximising)
+            if (node.IsMaximising)
             {
                 if (score > node.Score)
                 {
