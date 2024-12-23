@@ -4,7 +4,7 @@ namespace OcpCore.Engine.General;
 
 public class Node
 {
-    public Node Parent { get; }
+    private readonly Node _parent;
     
     public Game Game { get; }
 
@@ -25,7 +25,7 @@ public class Node
     
     public Node(Node parent, Game game, int depth, int root, int score)
     {
-        Parent = parent;
+        _parent = parent;
         
         Game = game;
         
@@ -38,7 +38,7 @@ public class Node
 
     public void PropagateScore(int score)
     {
-        var node = Parent;
+        var node = _parent;
 
         while (node != null)
         {
@@ -57,7 +57,7 @@ public class Node
                 }
             }
 
-            node = node.Parent;
+            node = node._parent;
         }
     }
 }
