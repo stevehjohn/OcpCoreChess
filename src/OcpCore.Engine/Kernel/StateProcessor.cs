@@ -156,6 +156,20 @@ public class StateProcessor
 
         var score = EvaluatePosition(game, outcomes, node.IsMaximising);
         
+        if (node.IsMaximising)
+        {
+            node.Alpha = Math.Max(node.Alpha, score);
+        }
+        else
+        {
+            node.Beta = Math.Min(node.Beta, score);
+        }
+
+        if (node.Alpha >= node.Beta)
+        {
+            return;
+        }
+        
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
             var newNode = new Node(node, copy, depth - 1, root, score);

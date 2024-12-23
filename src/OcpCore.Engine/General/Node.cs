@@ -10,9 +10,9 @@ public class Node
 
     public int Depth { get; }
     
-    public int Alpha { get; private set; }
+    public int Alpha { get; set; }
     
-    public int Beta { get; private set; }
+    public int Beta { get; set; }
 
     public int Root { get; private set; }
     
