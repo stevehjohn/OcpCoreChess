@@ -156,17 +156,17 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            var newNode = new Node(node, copy, depth - 1, root, EvaluatePosition(game, outcomes));
+            var newNode = new Node(node, copy, depth - 1, root, EvaluatePosition(game, outcomes, node.IsMaximising));
                 
             Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
         else
         {
-            node.PropagateScore(EvaluatePosition(game, outcomes));
+            node.PropagateScore(EvaluatePosition(game, outcomes, node.IsMaximising));
         }
     }
 
-    private static int EvaluatePosition(Game game, MoveOutcome outcomes)
+    private static int EvaluatePosition(Game game, MoveOutcome outcomes, bool isMaximising)
     {
         var score = game.State.WhiteScore - game.State.BlackScore;
 
@@ -216,13 +216,13 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                var newNode = new Node(parent, copy, depth - 1, root, EvaluatePosition(game, outcomes));
+                var newNode = new Node(parent, copy, depth - 1, root, EvaluatePosition(game, outcomes, parent.IsMaximising));
                 
                 Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
             else
             {
-                parent.PropagateScore(EvaluatePosition(game, outcomes));
+                parent.PropagateScore(EvaluatePosition(game, outcomes, parent.IsMaximising));
             }
         }
         

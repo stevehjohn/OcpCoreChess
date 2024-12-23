@@ -5,8 +5,6 @@ namespace OcpCore.Engine.General;
 public class Node
 {
     private readonly Node _parent;
-
-    private readonly bool _isMaximising;
     
     public Game Game { get; }
 
@@ -16,6 +14,8 @@ public class Node
     
     public int Score { get; private set; }
 
+    public bool IsMaximising { get; }
+
     public Node(Game game, int depth, int root, bool isMaximising)
     {
         Game = game;
@@ -24,7 +24,7 @@ public class Node
         
         Root = root;
 
-        _isMaximising = isMaximising;
+        IsMaximising = isMaximising;
     }
     
     public Node(Node parent, Game game, int depth, int root, int score)
@@ -39,7 +39,7 @@ public class Node
 
         Score = score;
 
-        _isMaximising = ! parent._isMaximising;
+        IsMaximising = ! parent.IsMaximising;
     }
 
     public void PropagateScore(int score)
@@ -48,7 +48,7 @@ public class Node
 
         while (node != null)
         {
-            if (_isMaximising)
+            if (IsMaximising)
             {
                 if (score > node.Score)
                 {
