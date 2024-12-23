@@ -165,7 +165,7 @@ public class StateProcessor
             node.Beta = Math.Min(node.Beta, score);
         }
 
-        if (node.Alpha >= node.Beta)
+        if (node.Alpha > node.Beta)
         {
             return;
         }
