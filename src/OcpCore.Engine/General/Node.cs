@@ -10,9 +10,9 @@ public class Node
 
     public int Depth { get; }
     
-    public int Alpha { get; }
+    public int Alpha { get; private set; }
     
-    public int Beta { get; }
+    public int Beta { get; private set; }
 
     public int Root { get; private set; }
     
@@ -70,6 +70,8 @@ public class Node
                     
                     node.Score = score;
                 }
+
+                node.Alpha = Math.Max(Alpha, score);
             }
             else
             {
@@ -79,6 +81,8 @@ public class Node
                     
                     node.Score = score;
                 }
+
+                node.Beta = Math.Min(Beta, score);
             }
 
             node = node._parent;
