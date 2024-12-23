@@ -252,7 +252,29 @@ public class GameTests
             Assert.False((outcome & MoveOutcome.Promotion) > 0);
         }
     }
-    
+
+    [Theory]
+    [InlineData(Constants.InitialBoardFen, null, Scores.Initial, Scores.Initial)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/3p4/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 1", "c4d5", Scores.Initial, Scores.Initial - Scores.Pawn)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/3p4/2P1P3/8/PP1P1PPP/RNBQKBNR b KQkq - 0 1", "d5c4", Scores.Initial - Scores.Pawn, Scores.Initial)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/2Pp4/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 1", "c5d6", Scores.Initial, Scores.Initial - Scores.Pawn)]
+    [InlineData("rnbqkbnr/ppp1pppp/8/8/2Pp4/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 1", "d4c3", Scores.Initial - Scores.Pawn, Scores.Initial)]
+    public void HandlesScoringCorrectly(string fen, string move, int expectedWhiteScore, int expectedBlackScore)
+    {
+        var game = new Game();
+        
+        game.ParseFen(fen);
+
+        if (move != null)
+        {
+            game.MakeMove(move[..2].FromStandardNotation(), move[2..].FromStandardNotation());
+        }
+        
+        Assert.Equal(expectedWhiteScore, game.State.WhiteScore);
+        
+        Assert.Equal(expectedBlackScore, game.State.BlackScore);
+    }
+
     [Fact]
     public void ThrowsExceptionOnMoveIfNoPieceInFromCell()
     {
