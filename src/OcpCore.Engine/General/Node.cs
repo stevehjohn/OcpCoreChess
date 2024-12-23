@@ -49,10 +49,6 @@ public class Node
 
         Score = score;
 
-        Alpha = parent.Alpha;
-
-        Beta = parent.Beta;
-
         IsMaximising = ! parent.IsMaximising;
     }
 

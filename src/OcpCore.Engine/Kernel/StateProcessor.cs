@@ -156,27 +156,34 @@ public class StateProcessor
 
         var score = EvaluatePosition(game, outcomes, node.IsMaximising);
 
-        if (node.IsMaximising)
+        if (depth <= 1 || (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) != 0)
         {
-            node.Alpha = Math.Max(node.Alpha, score);
-        }
-        else
-        {
-            node.Beta = Math.Min(node.Beta, score);
-        }
-
-        if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
-        {
-            var newNode = new Node(node, copy, depth - 1, root, score);
-
-            if (node.Alpha <= node.Beta)
+            if (node.IsMaximising)
             {
-                Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
+                if (score > node.Alpha)
+                {
+                    node.Alpha = score;
+                    node.PropagateScore(root, score);
+                }
+            }
+            else
+            {
+                if (score < node.Beta)
+                {
+                    node.Beta = score;
+                    node.PropagateScore(root, score);
+                }
             }
         }
-        else
+        else if (node.Alpha < node.Beta)
         {
-            node.PropagateScore(root, score);
+            var newNode = new Node(node, copy, depth - 1, root, score)
+            {
+                Alpha = node.Alpha,
+                Beta = node.Beta
+            };
+
+            Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
     }
 
