@@ -156,7 +156,9 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+            var newNode = new Node(node, copy, depth - 1, root);
+                
+            Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
         }
     }
 
@@ -193,7 +195,9 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                Enqueue(parent, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                var newNode = new Node(parent, copy, depth - 1, root);
+                
+                Enqueue(newNode, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
         }
         
@@ -324,19 +328,19 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Enqueue(Node parent, Game game, int depth, int root, int priority)
+    private void Enqueue(Node node, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
             lock (_centralQueue)
             {
-                _centralQueue.Enqueue(new Node(parent, game, depth, root), priority);
+                _centralQueue.Enqueue(node, priority);
             }
         }
         else
         {
-            _localQueue.Enqueue(new Node(parent, game, depth, root), priority);
+            _localQueue.Enqueue(node, priority);
         }
     }
 }
