@@ -163,6 +163,16 @@ public class CoreTests
     }
 
     [Fact]
+    public void CanHandleStaleMates()
+    {
+        var core = new Core(Colour.White, "7k/5Q2/6KP/8/8/8/8/8 b - - 0 1");
+
+        core.GetMove(2);
+        
+        Assert.Equal(0, core.GetDepthCount(1));
+    }
+
+    [Fact]
     public void ReportsPerftResultsWhenEnabled()
     {
         using var core = new Core(Colour.White, true);
