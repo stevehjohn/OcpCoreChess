@@ -34,6 +34,31 @@ public class StateProcessorTests
         Assert.Equal(0, processor.GetDepthCount(1));
     }
 
+    [Fact]
+    public void DequeuesExpectedQuantity()
+    {
+        var queue = new PriorityQueue<Node, int>();
+
+        var game = new Game();
+        
+        for (var i = 0; i < 140; i++)
+        {
+            queue.Enqueue(new Node(game, 1, -1), 0);
+        }
+
+        var processor = new StateProcessor(queue);
+        
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        var cancellationToken = cancellationTokenSource.Token;
+        
+        cancellationTokenSource.Cancel();
+        
+        processor.StartProcessing(2, (_, _) => { }, cancellationToken);
+        
+        Assert.Equal(131, queue.Count);
+    }
+
     [Theory]
     [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0, 0, 0, 0)]
     [InlineData("6pk/2P5/8/8/8/8/8/8 w - - 0 1", 4, 4, 0, 0, 0)]
