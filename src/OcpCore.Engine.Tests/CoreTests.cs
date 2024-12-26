@@ -106,6 +106,42 @@ public class CoreTests
 
     [Theory]
     [InlineData("8/8/8/8/1k1PpN1R/8/8/4K3 b - d3 0 1", 9, 193)]
+    [InlineData("8/8/8/8/1k1Ppn1R/8/8/4K3 b - d3 0 1", 17, 220)]
+    [InlineData("4k3/8/8/2PpP3/8/8/8/4K3 w - d6 0 1", 9, 47, 376)]
+    [InlineData("4k3/8/8/8/2pPp3/8/8/4K3 b - d3 0 1", 9, 47, 376)]
+    [InlineData("4k3/b7/8/2Pp4/8/8/8/6K1 w - d6 0 1", 5, 45)]
+    [InlineData("4k3/7b/8/4pP2/8/8/8/1K6 w - e6 0 1", 5, 45)]
+    [InlineData("6k1/8/8/8/2pP4/8/B7/3K4 b - d3 0 1", 5, 45)]
+    [InlineData("1k6/8/8/8/4Pp2/8/7B/4K3 b - e3 0 1", 5, 45)]
+    [InlineData("4k3/b7/8/1pP5/8/8/8/6K1 w - b6 0 1", 6, 52)]
+    [InlineData("4k3/7b/8/5Pp1/8/8/8/1K6 w - g6 0 1", 6, 51)]
+    [InlineData("6k1/8/8/8/1Pp5/8/B7/4K3 b - b3 0 1", 6, 52)]
+    [InlineData("1k6/8/8/8/5pP1/8/7B/4K3 b - g3 0 1", 6, 51)]
+    [InlineData("4k3/K7/8/1pP5/8/8/8/6b1 w - b6 0 1", 6, 66)]
+    [InlineData("4k3/7K/8/5Pp1/8/8/8/1b6 w - g6 0 1", 6, 60)]
+    [InlineData("6B1/8/8/8/1Pp5/8/k7/4K3 b - b3 0 1", 6, 66)]
+    [InlineData("1B6/8/8/8/5pP1/8/7k/4K3 b - g3 0 1", 6, 60)]
+    [InlineData("4k3/b7/8/2Pp4/3K4/8/8/8 w - d6 0 1", 5, 44)]
+    [InlineData("4k3/8/1b6/2Pp4/3K4/8/8/8 w - d6 0 1", 6, 59)]
+    [InlineData("4k3/8/b7/1Pp5/2K5/8/8/8 w - c6 0 1", 6, 49)]
+    [InlineData("4k3/8/7b/5pP1/5K2/8/8/8 w - f6 0 1", 6, 49)]
+    [InlineData("4k3/7b/8/4pP2/4K3/8/8/8 w - e6 0 1", 5, 44)]
+    [InlineData("4k3/8/6b1/4pP2/4K3/8/8/8 w - e6 0 1", 6, 53)]
+    [InlineData("4k3/8/3K4/1pP5/8/q7/8/8 w - b6 0 1", 5, 114)]
+    [InlineData("7k/4K3/8/1pP5/8/q7/8/8 w - b6 0 1", 8, 171)]
+    [InlineData("4k3/2rn4/8/2K1pP2/8/8/8/8 w - e6 0 1", 4, 75)]
+    [InlineData("4k3/8/8/K2pP2r/8/8/8/8 w - d6 0 1", 6, 94)]
+    [InlineData("4k3/8/8/K2pP2q/8/8/8/8 w - d6 0 1", 6, 130)]
+    [InlineData("4k3/8/8/r2pP2K/8/8/8/8 w - d6 0 1", 6, 87)]
+    [InlineData("4k3/8/8/q2pP2K/8/8/8/8 w - d6 0 1", 6, 129)]
+    [InlineData("8/8/8/8/1k1Pp2R/8/8/4K3 b - d3 0 1", 8, 125)]
+    [InlineData("8/8/8/8/1R1Pp2k/8/8/4K3 b - d3 0 1", 6, 87)]
+    [InlineData("k7/8/4r3/3pP3/8/8/8/4K3 w - d6 0 1", 5, 70)]
+    [InlineData("k3K3/8/8/3pP3/8/8/8/4r3 w - d6 0 1", 6, 91)]
+    [InlineData("4k3/8/8/4pP2/3K4/8/8/8 w - e6 0 1", 9, 49)]
+    [InlineData("8/8/8/4k3/5Pp1/8/8/3K4 b - f3 0 1", 9, 50)]
+    [InlineData("4k3/8/K6r/3pP3/8/8/8/8 w - d6 0 1", 6, 109)]
+    [InlineData("4k3/8/K6q/3pP3/8/8/8/8 w - d6 0 1", 6, 151)]
     public void EdgeCaseTests(string fen, params int[] depths)
     {
         using var core = new Core(Colour.White, fen);
@@ -113,7 +149,7 @@ public class CoreTests
         for (var d = 0; d < depths.Length; d++)
         {
             core.GetMove(d + 1);
-            
+
             Assert.Equal(depths[d], core.GetDepthCount(d + 1));
         }
     }
