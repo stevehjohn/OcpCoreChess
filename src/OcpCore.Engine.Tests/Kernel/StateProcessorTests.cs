@@ -41,7 +41,7 @@ public class StateProcessorTests
 
         var game = new Game();
         
-        for (var i = 0; i < 140; i++)
+        for (var i = 0; i < Coordinator.Threads * 10; i++)
         {
             queue.Enqueue(new Node(game, 1, -1), 0);
         }
@@ -56,7 +56,7 @@ public class StateProcessorTests
         
         processor.StartProcessing(2, (_, _) => { }, cancellationToken);
         
-        Assert.Equal(131, queue.Count);
+        Assert.Equal((Coordinator.Threads - 1) * 10 + 1, queue.Count);
     }
 
     [Theory]
