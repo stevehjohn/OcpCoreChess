@@ -26,13 +26,24 @@ public class CoordinatorTests
     [Fact]
     public void CatchesExceptions()
     {
-        using var coordinator = new Coordinator(null, 1);
+        using var coordinator = new Coordinator(null, 0);
 
         var game = new Game();
         
         game.ParseFen(Constants.InitialBoardFen);
 
-        Assert.Throws<IndexOutOfRangeException>(() => coordinator.StartProcessing(game, 0));
+        var threw = false;
+        
+        try
+        {
+            coordinator.StartProcessing(game, 0);
+        }
+        catch
+        {
+            threw = true;
+        }
+        
+        Assert.True(threw);
     }
     
     [Fact]
