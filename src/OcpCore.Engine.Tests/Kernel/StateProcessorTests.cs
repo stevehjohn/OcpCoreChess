@@ -58,6 +58,29 @@ public class StateProcessorTests
         
         Assert.True(queue.Count > Coordinator.Threads * 5);
     }
+    
+    [Fact]
+    public void DoesNotFreezeIfQueueIsLocked()
+    {
+        var queue = new PriorityQueue<Node, int>();
+
+        var processor = new StateProcessor(queue);
+        
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        var cancellationToken = cancellationTokenSource.Token;
+        
+        cancellationTokenSource.Cancel();
+
+        var called = false;
+        
+        lock (queue)
+        {
+            processor.StartProcessing(2, (_, _) => called = true, cancellationToken);
+        }
+        
+        Assert.True(called);
+    }
 
     [Theory]
     [InlineData("8/8/2P5/8/8/8/8/8 w - - 0 1", 1, 0, 0, 0, 0)]

@@ -32,18 +32,9 @@ public class CoordinatorTests
         
         game.ParseFen(Constants.InitialBoardFen);
 
-        var threw = false;
+        var exception = Assert.Throws<AggregateException>(() => coordinator.StartProcessing(game, 0));
         
-        try
-        {
-            coordinator.StartProcessing(game, 0);
-        }
-        catch
-        {
-            threw = true;
-        }
-        
-        Assert.True(threw);
+        Assert.Contains("Index was outside the bounds of the array", exception.Message);
     }
     
     [Fact]
