@@ -24,6 +24,18 @@ public class CoordinatorTests
     }
 
     [Fact]
+    public void CatchesExceptions()
+    {
+        using var coordinator = new Coordinator(null, 1);
+
+        var game = new Game();
+        
+        game.ParseFen(Constants.InitialBoardFen);
+
+        Assert.Throws<IndexOutOfRangeException>(() => coordinator.StartProcessing(game, 0));
+    }
+    
+    [Fact]
     public void ReportsEmptyQueueSize()
     {
         using var coordinator = new Coordinator();
