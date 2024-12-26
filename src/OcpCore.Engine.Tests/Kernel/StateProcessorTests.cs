@@ -54,7 +54,7 @@ public class StateProcessorTests
         
         cancellationTokenSource.Cancel();
         
-        processor.StartProcessing(2, (_, _) => { }, cancellationToken);
+        processor.StartProcessing(2, null, cancellationToken);
         
         Assert.Equal((Coordinator.Threads - 1) * 10 + 1, queue.Count);
     }
