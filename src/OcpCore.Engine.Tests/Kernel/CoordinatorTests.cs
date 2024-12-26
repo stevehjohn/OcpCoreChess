@@ -12,7 +12,7 @@ public class CoordinatorTests
     [InlineData(5, 3, true)]
     public void ParallelisesAtGivenLevel(int requestedDepth, int parallelisationDepth, bool expectParallelisation)
     {
-        var coordinator = new Coordinator(null, parallelisationDepth);
+        using var coordinator = new Coordinator(null, parallelisationDepth);
 
         var game = new Game();
         
@@ -26,7 +26,7 @@ public class CoordinatorTests
     [Fact]
     public void ReportsEmptyQueueSize()
     {
-        var coordinator = new Coordinator();
+        using var coordinator = new Coordinator();
         
         Assert.Equal(0, coordinator.QueueSize);
     }

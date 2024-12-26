@@ -165,7 +165,7 @@ public class CoreTests
     [Fact]
     public void ReportsPerftResultsWhenEnabled()
     {
-        var core = new Core(Colour.White, true);
+        using var core = new Core(Colour.White, true);
 
         core.GetMove(2);
 
@@ -178,7 +178,7 @@ public class CoreTests
     
     public void ReportsPerftResultsFromFenWhenEnabled()
     {
-        var core = new Core(Colour.White, Constants.InitialBoardFen, true);
+        using var core = new Core(Colour.White, Constants.InitialBoardFen, true);
 
         core.GetMove(2);
 
