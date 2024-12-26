@@ -70,8 +70,11 @@ public class StateProcessorTests
 
         var cancellationToken = cancellationTokenSource.Token;
         
-        processor.StartProcessing(2, null, cancellationToken);
-    }
+        var called = false;
+        
+        processor.StartProcessing(2, (_, _) => called = true, cancellationToken);
+        
+        Assert.True(called);    }
     
     [Fact]
     public void DoesNotFreezeIfQueueIsLocked()
