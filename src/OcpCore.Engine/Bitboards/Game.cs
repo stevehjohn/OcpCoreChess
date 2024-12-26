@@ -302,11 +302,6 @@ public struct Game
 
     public void PromotePawn(int cell, Kind kind)
     {
-        if (! IsKind(Kind.Pawn, cell))
-        {
-            throw new InvalidMoveException($"There isn't a Pawn at {cell.ToStandardNotation()}.");
-        }
-
         var cellBit = 1ul << cell;
 
         this[Kind.Pawn] &= ~cellBit;
