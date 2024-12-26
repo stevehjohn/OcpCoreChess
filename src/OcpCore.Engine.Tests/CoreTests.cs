@@ -142,6 +142,14 @@ public class CoreTests
     [InlineData("8/8/8/4k3/5Pp1/8/8/3K4 b - f3 0 1", 9, 50)]
     [InlineData("4k3/8/K6r/3pP3/8/8/8/8 w - d6 0 1", 6, 109)]
     [InlineData("4k3/8/K6q/3pP3/8/8/8/8 w - d6 0 1", 6, 151)]
+    [InlineData("4k3/8/4r3/8/8/8/3p4/4K3 w - - 0 1", 4, 80, 320)]
+    [InlineData("4k3/8/4q3/8/8/8/3b4/4K3 w - - 0 1", 4, 143, 496)]
+    [InlineData("4k3/8/8/8/1b5b/8/3Q4/4K3 w - - 0 1", 3, 54, 1256)]
+    [InlineData("4k3/8/8/8/1b5b/8/3R4/4K3 w - - 0 1", 3, 54, 836)]
+    [InlineData("4k3/8/8/8/1b5b/2Q5/5P2/4K3 w - - 0 1", 6, 98, 2274)]
+    [InlineData("4k3/8/8/8/1b5b/2R5/5P2/4K3 w - - 0 1", 4, 72, 1300)]
+    [InlineData("4k3/8/8/8/1b2r3/8/3Q4/4K3 w - - 0 1", 3, 66, 1390)]
+    [InlineData("4k3/8/8/8/1b2r3/8/3QP3/4K3 w - - 0 1", 6, 119, 2074)]
     public void EdgeCaseTests(string fen, params int[] depths)
     {
         using var core = new Core(Colour.White, fen);
