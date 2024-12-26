@@ -60,6 +60,20 @@ public class StateProcessorTests
     }
     
     [Fact]
+    public void CanHandleAnEmptyQueueGracefully()
+    {
+        var queue = new PriorityQueue<Node, int>();
+
+        var processor = new StateProcessor(queue);
+        
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        var cancellationToken = cancellationTokenSource.Token;
+        
+        processor.StartProcessing(2, null, cancellationToken);
+    }
+    
+    [Fact]
     public void DoesNotFreezeIfQueueIsLocked()
     {
         var queue = new PriorityQueue<Node, int>();
