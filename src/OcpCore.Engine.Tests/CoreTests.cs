@@ -104,6 +104,20 @@ public class CoreTests
         }
     }
 
+    [Theory]
+    [InlineData("8/8/8/8/1k1PpN1R/8/8/4K3 b - d3 0 1", 9, 193)]
+    public void EdgeCaseTests(string fen, params int[] depths)
+    {
+        using var core = new Core(Colour.White, fen);
+
+        for (var d = 0; d < depths.Length; d++)
+        {
+            core.GetMove(d + 1);
+            
+            Assert.Equal(depths[d], core.GetDepthCount(d + 1));
+        }
+    }
+
     [Fact]
     public void ReportsPerftResultsWhenEnabled()
     {
