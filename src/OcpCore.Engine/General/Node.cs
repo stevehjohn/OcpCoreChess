@@ -8,21 +8,20 @@ public class Node
 
     private readonly Node _parent;
 
-    private readonly bool _isMaximising;
-    
     public Game Game { get; private set; }
 
     public int Depth { get; private set; }
     
     public int Root { get; private set; }
     
-    public int Alpha { get; set; } = int.MinValue;
+    public int Alpha { get; private set; } = int.MinValue;
 
-    public int Beta { get; set; } = int.MaxValue;
-    
+    public int Beta { get; private set; } = int.MaxValue;
+
+    public bool IsMaximising { get; }
+
     public int Score
     {
-        get => _score;
         set => PropagateScore(value);
     }
 
@@ -34,14 +33,14 @@ public class Node
         
         Root = root;
 
-        _isMaximising = isMaximising;
+        IsMaximising = isMaximising;
     }
     
     public Node(Node parent, Game game, int depth, int root)
     {
         _parent = parent;
 
-        _isMaximising = ! _parent._isMaximising;
+        IsMaximising = ! _parent.IsMaximising;
         
         Game = game;
         
@@ -62,11 +61,11 @@ public class Node
 
         while (node != null)
         {
-            node._score = node._isMaximising
+            node._score = node.IsMaximising
                 ? Math.Max(node._score, _score)
                 : Math.Min(node._score, _score);
 
-            if (node._isMaximising)
+            if (node.IsMaximising)
             {
                 node.Alpha = Math.Max(node.Alpha, score);
             }

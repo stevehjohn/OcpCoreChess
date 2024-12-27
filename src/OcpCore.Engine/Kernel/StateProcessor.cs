@@ -158,8 +158,10 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            // TODO: Only enqueue if score can be "better".
-            Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+            if (node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
+            {
+                Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+            }
         }
         else
         {
