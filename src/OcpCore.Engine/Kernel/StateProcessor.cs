@@ -171,7 +171,7 @@ public class StateProcessor
         {
             if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
             {
-                Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+                Enqueue(node, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
             
             if (node.IsMaximising)
