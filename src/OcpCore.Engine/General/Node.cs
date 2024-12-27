@@ -67,10 +67,6 @@ public class Node
 
         while (node != null)
         {
-            // node._score = node.IsMaximising
-            //     ? Math.Max(node._score, _score)
-            //     : Math.Min(node._score, _score);
-
             if ((node.IsMaximising && score > node._score) || (! node.IsMaximising && score < node._score))
             {
                 node._score = score;
