@@ -154,14 +154,15 @@ public class StateProcessor
 
         IncrementOutcomes(ply, outcomes);
 
+        var score = EvaluatePosition(copy, outcomes, player);
+
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
+            // TODO: Only enqueue if score can be "better".
             Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
         }
         else
         {
-            var score = EvaluatePosition(copy, outcomes, player);
-
             node.Score = score;
         }
     }
