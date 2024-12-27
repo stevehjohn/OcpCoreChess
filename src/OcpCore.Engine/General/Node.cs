@@ -8,7 +8,7 @@ public class Node
 
     private Node _parent;
 
-    private bool _isMaximising;
+    private readonly bool _isMaximising;
     
     public Game Game { get; private set; }
 
@@ -48,6 +48,17 @@ public class Node
 
     private void PropagateScore(int score)
     {
-        _score = score;
+        _score = _isMaximising ? score : -score;
+
+        var node = _parent;
+
+        while (node != null)
+        {
+            node._score = node._isMaximising
+                ? Math.Max(node._score, _score)
+                : Math.Min(node._score, _score);
+
+            node = node._parent;
+        }
     }
 }

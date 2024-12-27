@@ -160,15 +160,17 @@ public class StateProcessor
         }
         else
         {
-            var score = EvaluatePosition(copy, outcomes);
+            var score = EvaluatePosition(copy, outcomes, player);
 
             node.Score = score;
         }
     }
 
-    private static int EvaluatePosition(Game game, MoveOutcome outcomes)
+    private static int EvaluatePosition(Game game, MoveOutcome outcomes, Colour player)
     {
-        var score = Math.Abs(game.State.WhiteScore - game.State.BlackScore);
+        var score = player == Colour.White
+            ? game.State.WhiteScore - game.State.BlackScore
+            : game.State.BlackScore - game.State.WhiteScore;
 
         if ((outcomes & MoveOutcome.Check) > 0)
         {
