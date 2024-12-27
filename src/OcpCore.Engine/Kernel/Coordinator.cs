@@ -37,6 +37,8 @@ public sealed class Coordinator : IDisposable
 
     public bool IsParallel => _countdownEvent != null;
 
+    public string BestMove => _rootNode.BestMove;
+
     public Coordinator(PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;

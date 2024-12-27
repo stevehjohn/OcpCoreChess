@@ -7,6 +7,8 @@ public class Node
 {
     private int _score;
 
+    private int _move;
+
     private readonly Node _parent;
 
     public Game Game { get; private set; }
@@ -20,6 +22,8 @@ public class Node
     public int Beta { get; set; } = int.MaxValue;
 
     public bool IsMaximising { get; }
+
+    public string BestMove => $"{(_move >> 8).ToStandardNotation()}{(_move & 0xFF).ToStandardNotation()}";
 
     public Node(Game game, int depth, bool isMaximising)
     {
