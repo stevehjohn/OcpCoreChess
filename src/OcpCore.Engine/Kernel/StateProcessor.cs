@@ -143,7 +143,7 @@ public class StateProcessor
         {
             root = from << 8 | to;
 
-            //node.Root = root;
+            node.Root = root;
         }
 
         if (HandlePromotion(ref outcomes, node, copy, ply, root, to, depth, player))
