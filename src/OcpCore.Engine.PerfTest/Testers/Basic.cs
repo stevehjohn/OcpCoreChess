@@ -265,9 +265,9 @@ public static class Basic
             }
         }
         
-        Console.WriteLine();
-        
-        Console.WriteLine($"      {core.BestMove}");
+        // Console.WriteLine();
+        //
+        // Console.WriteLine($"      {core.BestMove}");
 
         Console.WriteLine();
         

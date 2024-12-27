@@ -40,8 +40,6 @@ public sealed class Core : IDisposable
 
     public IReadOnlyDictionary<string, long> PerftData => _perfTestCollector?.Counts;
 
-    public string BestMove => _coordinator.BestMove;
-
     public Core(Colour engineColour, bool collectPerft = false)
     {
         _engineColour = engineColour;

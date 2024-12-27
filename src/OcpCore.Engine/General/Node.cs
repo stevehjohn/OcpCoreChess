@@ -21,8 +21,6 @@ public class Node
 
     public bool IsMaximising { get; }
 
-    public string Move => $"{(Root >> 8).ToStandardNotation()}{(Root & 0xFF).ToStandardNotation()}";
-
     public Node(Game game, int depth, bool isMaximising)
     {
         Game = game;
