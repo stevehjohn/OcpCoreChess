@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.Extensions;
 
 namespace OcpCore.Engine.General;
 
@@ -19,11 +20,8 @@ public class Node
     public int Beta { get; set; } = int.MaxValue;
 
     public bool IsMaximising { get; }
-
-    public int Score
-    {
-        set => PropagateScore(value);
-    }
+    
+    public string Move { get; private set; }
 
     public Node(Game game, int depth, int root, bool isMaximising)
     {
@@ -53,9 +51,11 @@ public class Node
         Beta = _parent.Beta;
     }
 
-    private void PropagateScore(int score)
+    public void PropagateScore(int score, int from, int to)
     {
         _score = score;
+
+        Move = $"{from.ToStandardNotation()}{to.ToStandardNotation()}";
 
         var node = _parent;
 
@@ -78,6 +78,8 @@ public class Node
             {
                 break;
             }
+
+            node.Move = Move;
 
             node = node._parent;
         }

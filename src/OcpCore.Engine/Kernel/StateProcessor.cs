@@ -174,7 +174,7 @@ public class StateProcessor
         }
         else
         {
-            node.Score = score;
+            node.PropagateScore(score, from, to);
         }
     }
 
@@ -250,7 +250,7 @@ public class StateProcessor
             }
             else
             {
-                node.Score = score;
+                node.PropagateScore(score, from, to);
             }
         }
         
