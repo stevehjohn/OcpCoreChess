@@ -129,24 +129,34 @@ public static class Basic
                 if (core.IsBusy)
                 {
                     var depthCount = core.GetDepthCount(maxDepth);
-                    
-                    var percent = (float) depthCount / ExpectedCombinations[maxDepth - 1] * 100;
 
-                    var averagePerSecond = stopwatch.Elapsed.TotalSeconds / depthCount;
-
-                    var remaining = ExpectedCombinations[maxDepth - 1] - depthCount;
-
-                    try
+                    if (maxDepth < 11)
                     {
-                        var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
+                        var percent = (float) depthCount / ExpectedCombinations[maxDepth - 1] * 100;
 
-                        var etr = $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
+                        var averagePerSecond = stopwatch.Elapsed.TotalSeconds / depthCount;
 
-                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: {etr}          ");
+                        var remaining = ExpectedCombinations[maxDepth - 1] - depthCount;
+
+                        try
+                        {
+                            var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
+
+                            var etr =
+                                $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
+
+                            Console.Write(
+                                $"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: {etr}          ");
+                        }
+                        catch
+                        {
+                            Console.Write(
+                                $"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: ∞     ");
+                        }
                     }
-                    catch
+                    else
                     {
-                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {ExpectedCombinations[maxDepth - 1]:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: ∞     ");
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} Queue: {core.QueueSize:N0}         ");
                     }
 
                     Console.CursorLeft = y;
@@ -168,7 +178,7 @@ public static class Basic
         {
             var count = core.GetDepthCount(depth);
 
-            var expected = depth >= 10 ? 0 : ExpectedCombinations[depth - 1];
+            var expected = depth > 10 ? 0 : ExpectedCombinations[depth - 1];
 
             var pass = count == expected;
 
