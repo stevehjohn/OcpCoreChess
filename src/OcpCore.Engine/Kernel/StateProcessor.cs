@@ -135,7 +135,7 @@ public class StateProcessor
 
         var ply = _maxDepth - depth + 1;
 
-        if (HandlePromotion(ref outcomes, node, copy, ply, root, from, to, depth, opponent))
+        if (HandlePromotion(ref outcomes, node, copy, ply, root, from, to, depth, player))
         {
             return;
         }
@@ -188,7 +188,7 @@ public class StateProcessor
         return score;
     }
 
-    private bool HandlePromotion(ref MoveOutcome outcomes, Node parent, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
+    private bool HandlePromotion(ref MoveOutcome outcomes, Node node, Game game, int ply, int root, int from, int to, int depth, Colour player)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
@@ -198,6 +198,8 @@ public class StateProcessor
         var checks = 0;
 
         var checkmates = 0;
+
+        var opponent = player.Invert();
 
         for (var kind = Kind.Rook; kind < Kind.King; kind++)
         {
@@ -218,10 +220,19 @@ public class StateProcessor
                     checkmates++;
                 }
             }
+            
+            var score = EvaluatePosition(copy, outcomes, player);
 
-            if (depth > 1)
+            if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
             {
-                Enqueue(parent, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                if (node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
+                {
+                    Enqueue(node, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                }
+            }
+            else
+            {
+                node.Score = score;
             }
         }
         
