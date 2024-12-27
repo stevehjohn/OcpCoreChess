@@ -58,7 +58,7 @@ public static class Stockfish
 
         Console.WriteLine("");
         
-        Console.WriteLine("            StockFish         OcpCore            Delta");
+        Console.WriteLine("            StockFish          OcpCore           Delta");
 
         var colour = Console.ForegroundColor;
         
