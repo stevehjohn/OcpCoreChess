@@ -39,7 +39,7 @@ public sealed class Coordinator : IDisposable
 
     public string BestMove => _rootNode.BestMove;
 
-    public Coordinator(PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
+    public Coordinator(bool useMinimax = false, PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;
         
@@ -47,7 +47,7 @@ public sealed class Coordinator : IDisposable
 
         for (var i = 0; i < Threads; i++)
         {
-            _processors[i] = new StateProcessor(_queue, perfTestCollector);
+            _processors[i] = new StateProcessor(_queue, useMinimax, perfTestCollector);
         }
     }
 

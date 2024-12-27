@@ -18,6 +18,8 @@ public class StateProcessor
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private readonly PerfTestCollector _perfTestCollector;
+
+    private readonly bool _useMinimax;
     
     private int _maxDepth;
 
@@ -31,10 +33,12 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
+    public StateProcessor(PriorityQueue<Node, int> centralQueue, bool useMinimax = false, PerfTestCollector perfTestCollector = null)
     {
         _centralQueue = centralQueue;
 
+        _useMinimax = useMinimax;
+        
         _perfTestCollector = perfTestCollector;
     }
 
@@ -165,7 +169,7 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            if (node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
+            if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
             {
                 Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
             }
@@ -241,7 +245,7 @@ public class StateProcessor
 
             if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
             {
-                if (node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
+                if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
                 {
                     Enqueue(node, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
                 }

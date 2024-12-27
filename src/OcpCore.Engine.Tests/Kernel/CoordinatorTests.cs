@@ -12,7 +12,7 @@ public class CoordinatorTests
     [InlineData(5, 3, true)]
     public void ParallelisesAtGivenLevel(int requestedDepth, int parallelisationDepth, bool expectParallelisation)
     {
-        using var coordinator = new Coordinator(null, parallelisationDepth);
+        using var coordinator = new Coordinator(false, null, parallelisationDepth);
 
         var game = new Game();
         
@@ -26,7 +26,7 @@ public class CoordinatorTests
     [Fact]
     public void CatchesExceptions()
     {
-        using var coordinator = new Coordinator(null, 0);
+        using var coordinator = new Coordinator(false, null, 0);
 
         var game = new Game();
         

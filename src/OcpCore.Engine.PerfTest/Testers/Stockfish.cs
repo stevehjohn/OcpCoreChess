@@ -93,7 +93,7 @@ public static class Stockfish
 
     private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth, List<string> moves)
     {
-        var core = new Core(Colour.White, fen, true);
+        var core = new Core(Colour.White, fen, Options.CollectPerfTestData);
 
         foreach (var move in moves)
         {
