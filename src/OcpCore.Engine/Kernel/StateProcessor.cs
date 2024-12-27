@@ -264,8 +264,7 @@ public class StateProcessor
             priority += _pieceCache[player].Value;
         }
 
-        // TODO: Add this when minimaxing
-        // priority += game.CellHasAttackers(target, opponent) ? 10_000 : 0;
+        priority += game.CellHasAttackers(target, opponent) ? 10_000 : 0;
         
         return priority;
     }
