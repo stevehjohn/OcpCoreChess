@@ -53,16 +53,16 @@ public class Node
 
     public void PropagateScore(int score)
     {
-        if ((IsMaximising && score > _score) || (!IsMaximising && score < _score))
+        if ((IsMaximising && score > _score) || (! IsMaximising && score < _score))
         {
             _score = score;
-            
+
             if (_parent == null)
             {
                 _move = Root;
             }
         }
-        
+
         var node = _parent;
 
         while (node != null)
