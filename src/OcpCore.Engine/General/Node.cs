@@ -13,15 +13,15 @@ public class Node
 
     public int Depth { get; private set; }
     
-    public int Root { get; private set; }
+    public int Root { get; }
     
     public int Alpha { get; set; } = int.MinValue;
 
     public int Beta { get; set; } = int.MaxValue;
 
     public bool IsMaximising { get; }
-    
-    public string Move { get; private set; }
+
+    public string Move => $"{(Root >> 8).ToStandardNotation()}{(Root & 0xFF).ToStandardNotation()}";
 
     public Node(Game game, int depth, int root, bool isMaximising)
     {
@@ -51,11 +51,9 @@ public class Node
         Beta = _parent.Beta;
     }
 
-    public void PropagateScore(int score, int from, int to)
+    public void PropagateScore(int score)
     {
         _score = score;
-
-        Move = $"{from.ToStandardNotation()}{to.ToStandardNotation()}";
 
         var node = _parent;
 
@@ -78,8 +76,6 @@ public class Node
             {
                 break;
             }
-
-            node.Move = Move;
 
             node = node._parent;
         }

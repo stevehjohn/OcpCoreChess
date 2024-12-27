@@ -134,13 +134,18 @@ public class StateProcessor
         var opponent = player.Invert();
 
         var ply = _maxDepth - depth + 1;
+        
+        if (ply == 1)
+        {
+            root = from << 8 | to;
+        }
 
         if (HandlePromotion(ref outcomes, node, copy, ply, root, from, to, depth, player))
         {
             return;
         }
 
-        IncrementCounts(ply, 1, ref root, from, to);
+        IncrementCounts(ply, 1, root);
 
         if (copy.IsKingInCheck(opponent))
         {
@@ -174,7 +179,7 @@ public class StateProcessor
         }
         else
         {
-            node.PropagateScore(score, from, to);
+            node.PropagateScore(score);
         }
     }
 
@@ -250,11 +255,11 @@ public class StateProcessor
             }
             else
             {
-                node.PropagateScore(score, from, to);
+                node.PropagateScore(score);
             }
         }
         
-        IncrementCounts(ply, 4, ref root, from, to);
+        IncrementCounts(ply, 4, root);
 
         IncrementPromotionOutcomes(ply, outcomes, checks, checkmates);
 
@@ -324,7 +329,7 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IncrementCounts(int ply, int count, ref int root, int from, int to)
+    private void IncrementCounts(int ply, int count, int root)
     {
         _depthCounts[ply] += count;
 
@@ -337,16 +342,8 @@ public class StateProcessor
                 _depthCounts[i] = 0;
             }
         }
-        
-        if (_perfTestCollector != null)
-        {
-            if (ply == 1)
-            {
-                root = from << 8 | to;
-            }
 
-            _perfTestCollector.AddCount(ply, _maxDepth, root, count);
-        }
+        _perfTestCollector?.AddCount(ply, _maxDepth, root, count);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
