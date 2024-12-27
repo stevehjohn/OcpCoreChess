@@ -6,7 +6,7 @@ public class Node
 {
     private int _score;
 
-    private Node _parent;
+    private readonly Node _parent;
 
     private readonly bool _isMaximising;
     
