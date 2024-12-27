@@ -48,6 +48,10 @@ public class Node
         Depth = depth;
         
         Root = root;
+
+        Alpha = _parent.Alpha;
+
+        Beta = _parent.Beta;
     }
 
     private void PropagateScore(int score)
