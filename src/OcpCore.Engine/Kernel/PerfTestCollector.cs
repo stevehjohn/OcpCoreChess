@@ -2,7 +2,7 @@ using OcpCore.Engine.Extensions;
 
 namespace OcpCore.Engine.Kernel;
 
-public class PerftCollector
+public class PerfTestCollector
 {
     private readonly Dictionary<string, long> _counts = [];
 

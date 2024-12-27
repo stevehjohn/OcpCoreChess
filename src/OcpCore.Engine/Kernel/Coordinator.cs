@@ -35,7 +35,7 @@ public sealed class Coordinator : IDisposable
 
     public bool IsParallel => _countdownEvent != null;
 
-    public Coordinator(PerftCollector perftCollector = null, int parallelDepthThreshold = 6)
+    public Coordinator(PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;
         
@@ -43,7 +43,7 @@ public sealed class Coordinator : IDisposable
 
         for (var i = 0; i < Threads; i++)
         {
-            _processors[i] = new StateProcessor(_queue, perftCollector);
+            _processors[i] = new StateProcessor(_queue, perfTestCollector);
         }
     }
 

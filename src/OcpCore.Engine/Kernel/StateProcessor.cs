@@ -17,7 +17,7 @@ public class StateProcessor
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
-    private readonly PerftCollector _perftCollector;
+    private readonly PerfTestCollector _perfTestCollector;
     
     private int _maxDepth;
 
@@ -31,11 +31,11 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerftCollector perftCollector = null)
+    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
     {
         _centralQueue = centralQueue;
 
-        _perftCollector = perftCollector;
+        _perfTestCollector = perfTestCollector;
     }
 
     public void StartProcessing(int maxDepth, Action<StateProcessor, bool> callback, CancellationToken cancellationToken)
@@ -282,14 +282,14 @@ public class StateProcessor
             }
         }
         
-        if (_perftCollector != null)
+        if (_perfTestCollector != null)
         {
             if (ply == 1)
             {
                 root = from << 8 | to;
             }
 
-            _perftCollector.AddCount(ply, _maxDepth, root, count);
+            _perfTestCollector.AddCount(ply, _maxDepth, root, count);
         }
     }
 

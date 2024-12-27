@@ -18,7 +18,7 @@ public sealed class Core : IDisposable
 
     private readonly PieceCache _pieceCache = PieceCache.Instance;
     
-    private readonly PerftCollector _perftCollector;
+    private readonly PerfTestCollector _perfTestCollector;
 
     private Game _game;
 
@@ -38,7 +38,7 @@ public sealed class Core : IDisposable
 
     public int QueueSize => _coordinator?.QueueSize ?? 0;
 
-    public IReadOnlyDictionary<string, long> PerftData => _perftCollector?.Counts;
+    public IReadOnlyDictionary<string, long> PerftData => _perfTestCollector?.Counts;
 
     public Core(Colour engineColour, bool collectPerft = false)
     {
@@ -46,7 +46,7 @@ public sealed class Core : IDisposable
 
         if (collectPerft)
         {
-            _perftCollector = new PerftCollector();
+            _perfTestCollector = new PerfTestCollector();
         }
 
         _game = new Game();
@@ -60,7 +60,7 @@ public sealed class Core : IDisposable
 
         if (collectPerft)
         {
-            _perftCollector = new PerftCollector();
+            _perfTestCollector = new PerfTestCollector();
         }
 
         _game = new Game();
@@ -150,7 +150,7 @@ public sealed class Core : IDisposable
 
     private void GetMoveInternal(int depth, Action callback = null)
     {
-        _coordinator = new Coordinator(_perftCollector);
+        _coordinator = new Coordinator(_perfTestCollector);
         
         _coordinator.StartProcessing(_game, depth);
 
