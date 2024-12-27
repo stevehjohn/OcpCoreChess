@@ -48,7 +48,7 @@ public class Node
 
     private void PropagateScore(int score)
     {
-        _score = _isMaximising ? score : -score;
+        _score = score;
 
         var node = _parent;
 
