@@ -27,6 +27,8 @@ public sealed class Coordinator : IDisposable
 
     private CountdownEvent _countdownEvent;
 
+    private Node _rootNode;
+
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
@@ -34,6 +36,8 @@ public sealed class Coordinator : IDisposable
     public int QueueSize { get; private set; }
 
     public bool IsParallel => _countdownEvent != null;
+
+    public string BestMove => _rootNode.Move;
 
     public Coordinator(PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
@@ -63,8 +67,10 @@ public sealed class Coordinator : IDisposable
         }
 
         _queue.Clear();
+
+        _rootNode = new Node(game, _maxDepth, -1, isMaximising);
         
-        _queue.Enqueue(new Node(game, _maxDepth, -1, isMaximising), 0);
+        _queue.Enqueue(_rootNode, 0);
 
         _cancellationTokenSource = new CancellationTokenSource();
 

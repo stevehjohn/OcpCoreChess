@@ -264,6 +264,10 @@ public static class Basic
                 Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
             }
         }
+        
+        Console.WriteLine();
+        
+        Console.WriteLine($"      {core.BestMove}");
 
         Console.WriteLine();
         

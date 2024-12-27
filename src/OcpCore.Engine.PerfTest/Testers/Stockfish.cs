@@ -114,6 +114,8 @@ public static class Stockfish
         }
         
         Console.WriteLine();
+        
+        Console.WriteLine($"  {core.BestMove}");
 
         return core.PerftData.Select(i => (i.Key, i.Value)).ToList();
     }
