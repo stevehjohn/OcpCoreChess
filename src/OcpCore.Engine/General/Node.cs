@@ -53,15 +53,30 @@ public class Node
 
     public void PropagateScore(int score)
     {
-        _score = score;
-
+        if ((IsMaximising && score > _score) || (!IsMaximising && score < _score))
+        {
+            _score = score;
+            
+            if (_parent == null)
+            {
+                _move = Root;
+            }
+        }
+        
         var node = _parent;
 
         while (node != null)
         {
-            node._score = node.IsMaximising
-                ? Math.Max(node._score, _score)
-                : Math.Min(node._score, _score);
+            // node._score = node.IsMaximising
+            //     ? Math.Max(node._score, _score)
+            //     : Math.Min(node._score, _score);
+
+            if ((node.IsMaximising && score > node._score) || (! node.IsMaximising && score < node._score))
+            {
+                node._score = score;
+                
+                node._move = node._parent == null ? Root : node.Root;
+            }
 
             if (node.IsMaximising)
             {
