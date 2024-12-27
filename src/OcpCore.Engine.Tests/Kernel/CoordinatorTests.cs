@@ -18,7 +18,7 @@ public class CoordinatorTests
         
         game.ParseFen(Constants.InitialBoardFen);
 
-        coordinator.StartProcessing(game, requestedDepth);
+        coordinator.StartProcessing(game, requestedDepth, false);
         
         Assert.Equal(expectParallelisation, coordinator.IsParallel);
     }
@@ -32,7 +32,7 @@ public class CoordinatorTests
         
         game.ParseFen(Constants.InitialBoardFen);
 
-        var exception = Assert.Throws<AggregateException>(() => coordinator.StartProcessing(game, 0));
+        var exception = Assert.Throws<AggregateException>(() => coordinator.StartProcessing(game, 0, false));
         
         Assert.Contains("Index was outside the bounds of the array", exception.Message);
     }

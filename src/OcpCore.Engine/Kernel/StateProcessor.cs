@@ -135,7 +135,7 @@ public class StateProcessor
 
         var ply = _maxDepth - depth + 1;
 
-        if (HandlePromotion(ref outcomes, copy, ply, root, from, to, depth, opponent))
+        if (HandlePromotion(ref outcomes, node, copy, ply, root, from, to, depth, opponent))
         {
             return;
         }
@@ -154,11 +154,15 @@ public class StateProcessor
 
         IncrementOutcomes(ply, outcomes);
 
-        var score = EvaluatePosition(copy, outcomes);
-
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
-            Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+            Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+        }
+        else
+        {
+            var score = EvaluatePosition(copy, outcomes);
+
+            node.Score = score;
         }
     }
 
@@ -179,7 +183,7 @@ public class StateProcessor
         return score;
     }
 
-    private bool HandlePromotion(ref MoveOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
+    private bool HandlePromotion(ref MoveOutcome outcomes, Node parent, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
@@ -212,7 +216,7 @@ public class StateProcessor
 
             if (depth > 1)
             {
-                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                Enqueue(parent, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
             }
         }
         
@@ -343,19 +347,19 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Enqueue(Game game, int depth, int root, int priority)
+    private void Enqueue(Node parent, Game game, int depth, int root, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
             lock (_centralQueue)
             {
-                _centralQueue.Enqueue(new Node(game, depth, root), priority);
+                _centralQueue.Enqueue(new Node(parent, game, depth, root), priority);
             }
         }
         else
         {
-            _localQueue.Enqueue(new Node(game, depth, root), priority);
+            _localQueue.Enqueue(new Node(parent, game, depth, root), priority);
         }
     }
 }

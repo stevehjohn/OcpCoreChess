@@ -47,7 +47,7 @@ public sealed class Coordinator : IDisposable
         }
     }
 
-    public void StartProcessing(Game game, int maxDepth)
+    public void StartProcessing(Game game, int maxDepth, bool isMaximising)
     {
         _maxDepth = maxDepth;
         
@@ -64,7 +64,7 @@ public sealed class Coordinator : IDisposable
 
         _queue.Clear();
         
-        _queue.Enqueue(new Node(game, _maxDepth, -1), 0);
+        _queue.Enqueue(new Node(game, _maxDepth, -1, isMaximising), 0);
 
         _cancellationTokenSource = new CancellationTokenSource();
 
