@@ -143,7 +143,7 @@ public class StateProcessor
         {
             root = from << 8 | to;
 
-            node.Root = root;
+            //node.Root = root;
         }
 
         if (HandlePromotion(ref outcomes, node, copy, ply, root, to, depth, player))
@@ -167,7 +167,7 @@ public class StateProcessor
 
         var score = EvaluatePosition(copy, outcomes, player);
 
-        if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
+        if (depth > 1)
         {
             if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
             {
@@ -243,7 +243,7 @@ public class StateProcessor
             
             var score = EvaluatePosition(copy, outcomes, player);
 
-            if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
+            if (depth > 1)
             {
                 if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
                 {
