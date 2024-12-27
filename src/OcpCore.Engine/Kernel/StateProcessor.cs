@@ -154,10 +154,29 @@ public class StateProcessor
 
         IncrementOutcomes(ply, outcomes);
 
+        var score = EvaluatePosition(copy, outcomes);
+
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
             Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
         }
+    }
+
+    private static int EvaluatePosition(Game game, MoveOutcome outcomes)
+    {
+        var score = Math.Abs(game.State.WhiteScore - game.State.BlackScore);
+
+        if ((outcomes & MoveOutcome.Check) > 0)
+        {
+            score += 50;
+        }
+
+        if ((outcomes & MoveOutcome.CheckMate) > 0)
+        {
+            score = int.MaxValue;
+        }
+
+        return score;
     }
 
     private bool HandlePromotion(ref MoveOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
