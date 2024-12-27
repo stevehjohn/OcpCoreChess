@@ -75,6 +75,11 @@ public class Node
                 node.Beta = Math.Min(node.Beta, score);
             }
 
+            if (node.Alpha >= node.Beta)
+            {
+                break;
+            }
+
             node = node._parent;
         }
     }
