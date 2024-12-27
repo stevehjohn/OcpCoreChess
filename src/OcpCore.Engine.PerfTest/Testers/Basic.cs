@@ -168,7 +168,7 @@ public static class Basic
         {
             var count = core.GetDepthCount(depth);
 
-            var expected = ExpectedCombinations[depth - 1];
+            var expected = depth >= 10 ? 0 : ExpectedCombinations[depth - 1];
 
             var pass = count == expected;
 
