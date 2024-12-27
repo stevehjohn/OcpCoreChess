@@ -163,6 +163,17 @@ public class CoreTests
         }
     }
 
+    [Theory]
+    [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N1Q3/PPPB1PpP/R2BK2R b KQkq - 1 2", "g2h1")]
+    public void DoesNotMakeMistakesIdentifiedInTesting(string fen, string expectedMove)
+    {
+        using var core = new Core(Colour.White, fen, Options.CollectPerfTestData);
+
+        core.GetMove(2);
+
+        Assert.Contains(expectedMove, core.PerftData);
+    }
+
     [Fact]
     public void CanHandleStaleMates()
     {
