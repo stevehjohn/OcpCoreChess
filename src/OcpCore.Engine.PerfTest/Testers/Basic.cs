@@ -7,7 +7,7 @@ namespace OcpCore.Engine.PerfTest.Testers;
 [ExcludeFromCodeCoverage]
 public static class Basic
 {
-        private static readonly List<long> ExpectedCombinations =
+    private static readonly List<long> ExpectedCombinations =
     [
         20,
         400,
