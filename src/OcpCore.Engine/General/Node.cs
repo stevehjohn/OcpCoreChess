@@ -16,6 +16,10 @@ public class Node
     
     public int Root { get; private set; }
     
+    public int Alpha { get; set; } = int.MinValue;
+
+    public int Beta { get; set; } = int.MaxValue;
+    
     public int Score
     {
         get => _score;
@@ -57,6 +61,15 @@ public class Node
             node._score = node._isMaximising
                 ? Math.Max(node._score, _score)
                 : Math.Min(node._score, _score);
+
+            if (node._isMaximising)
+            {
+                node.Alpha = Math.Max(node.Alpha, score);
+            }
+            else
+            {
+                node.Beta = Math.Min(node.Beta, score);
+            }
 
             node = node._parent;
         }
