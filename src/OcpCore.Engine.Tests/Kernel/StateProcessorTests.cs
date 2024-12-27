@@ -17,7 +17,7 @@ public class StateProcessorTests
         
         var queue = new PriorityQueue<Node, int>();
 
-        queue.Enqueue(new Node(game, 1, -1, false), 0);
+        queue.Enqueue(new Node(game, 1, false), 0);
         
         var processor = new StateProcessor(queue);
         
@@ -43,7 +43,7 @@ public class StateProcessorTests
         
         for (var i = 0; i < Coordinator.Threads * 10; i++)
         {
-            queue.Enqueue(new Node(game, 1, -1, false), 0);
+            queue.Enqueue(new Node(game, 1, false), 0);
         }
 
         var processor = new StateProcessor(queue);
@@ -113,7 +113,7 @@ public class StateProcessorTests
         
         var queue = new PriorityQueue<Node, int>();
 
-        queue.Enqueue(new Node(game, 2, -1, false), 0);
+        queue.Enqueue(new Node(game, 2, false), 0);
         
         var processor = new StateProcessor(queue);
         

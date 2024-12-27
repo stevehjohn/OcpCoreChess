@@ -138,9 +138,11 @@ public class StateProcessor
         if (ply == 1)
         {
             root = from << 8 | to;
+
+            node.Root = root;
         }
 
-        if (HandlePromotion(ref outcomes, node, copy, ply, root, from, to, depth, player))
+        if (HandlePromotion(ref outcomes, node, copy, ply, root, to, depth, player))
         {
             return;
         }
@@ -202,7 +204,7 @@ public class StateProcessor
         return score;
     }
 
-    private bool HandlePromotion(ref MoveOutcome outcomes, Node node, Game game, int ply, int root, int from, int to, int depth, Colour player)
+    private bool HandlePromotion(ref MoveOutcome outcomes, Node node, Game game, int ply, int root, int to, int depth, Colour player)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {

@@ -13,7 +13,7 @@ public class Node
 
     public int Depth { get; private set; }
     
-    public int Root { get; }
+    public int Root { get; set; }
     
     public int Alpha { get; set; } = int.MinValue;
 
@@ -23,13 +23,11 @@ public class Node
 
     public string Move => $"{(Root >> 8).ToStandardNotation()}{(Root & 0xFF).ToStandardNotation()}";
 
-    public Node(Game game, int depth, int root, bool isMaximising)
+    public Node(Game game, int depth, bool isMaximising)
     {
         Game = game;
         
         Depth = depth;
-        
-        Root = root;
 
         IsMaximising = isMaximising;
     }

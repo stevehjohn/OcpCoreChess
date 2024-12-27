@@ -68,7 +68,7 @@ public sealed class Coordinator : IDisposable
 
         _queue.Clear();
 
-        _rootNode = new Node(game, _maxDepth, -1, isMaximising);
+        _rootNode = new Node(game, _maxDepth, isMaximising);
         
         _queue.Enqueue(_rootNode, 0);
 
