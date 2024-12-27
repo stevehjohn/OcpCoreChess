@@ -158,6 +158,15 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
+            if (node.IsMaximising)
+            {
+                node.Alpha = Math.Max(node.Alpha, score);
+            }
+            else
+            {
+                node.Beta = Math.Min(node.Beta, score);
+            }
+
             if (node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
             {
                 Enqueue(node, copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
@@ -225,6 +234,15 @@ public class StateProcessor
 
             if (depth > 1 && (outcomes & MoveOutcome.CheckMate) == 0)
             {
+                if (node.IsMaximising)
+                {
+                    node.Alpha = Math.Max(node.Alpha, score);
+                }
+                else
+                {
+                    node.Beta = Math.Min(node.Beta, score);
+                }
+
                 if (node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
                 {
                     Enqueue(node, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));

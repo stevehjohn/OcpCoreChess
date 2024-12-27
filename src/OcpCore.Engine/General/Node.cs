@@ -14,9 +14,9 @@ public class Node
     
     public int Root { get; private set; }
     
-    public int Alpha { get; private set; } = int.MinValue;
+    public int Alpha { get; set; } = int.MinValue;
 
-    public int Beta { get; private set; } = int.MaxValue;
+    public int Beta { get; set; } = int.MaxValue;
 
     public bool IsMaximising { get; }
 
