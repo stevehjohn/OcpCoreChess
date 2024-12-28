@@ -20,6 +20,8 @@ public sealed class Core : IDisposable
     
     private readonly PerfTestCollector _perfTestCollector;
 
+    private readonly bool _useMinimax;
+
     private Game _game;
 
     private Coordinator _coordinator;
@@ -40,28 +42,34 @@ public sealed class Core : IDisposable
 
     public IReadOnlyDictionary<string, long> PerftData => _perfTestCollector?.Counts;
 
-    public Core(Colour engineColour, bool collectPerft = false)
+    public string BestMove => _coordinator.BestMove;
+    
+    public Core(Colour engineColour, Options options = Options.None)
     {
         _engineColour = engineColour;
 
-        if (collectPerft)
+        if ((options & Options.CollectPerfTestData) > 0)
         {
             _perfTestCollector = new PerfTestCollector();
         }
+
+        _useMinimax = (options & Options.UseMinimax) > 0;
 
         _game = new Game();
         
         _game.ParseFen(Constants.InitialBoardFen);
     }
 
-    public Core(Colour engineColour, string fen, bool collectPerft = false)
+    public Core(Colour engineColour, string fen, Options options = Options.None)
     {
         _engineColour = engineColour;
 
-        if (collectPerft)
+        if ((options & Options.CollectPerfTestData) > 0)
         {
             _perfTestCollector = new PerfTestCollector();
         }
+
+        _useMinimax = (options & Options.UseMinimax) > 0;
 
         _game = new Game();
         
@@ -150,9 +158,9 @@ public sealed class Core : IDisposable
 
     private void GetMoveInternal(int depth, Action callback = null)
     {
-        _coordinator = new Coordinator(_perfTestCollector);
+        _coordinator = new Coordinator(_useMinimax, _perfTestCollector);
         
-        _coordinator.StartProcessing(_game, depth);
+        _coordinator.StartProcessing(_game, depth, _engineColour == _game.State.Player);
 
         callback?.Invoke();
     }

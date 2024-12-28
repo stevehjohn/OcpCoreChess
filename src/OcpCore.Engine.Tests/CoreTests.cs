@@ -39,6 +39,7 @@ public class CoreTests
     [InlineData(Constants.InitialBoardFen, "a2b4", false, Kind.Pawn)]
     [InlineData(Constants.InitialBoardFen, "b1a3", true, Kind.Knight)]
     [InlineData(Constants.InitialBoardFen, "b1b3", false, Kind.Knight)]
+    [InlineData("r3k2r/p1ppqpb1/Bn2pnp1/3PN3/4P3/2p5/PPPB1PQP/R3K2R w KQkq - 0 3", "d2c3", true, Kind.Bishop)]
     public void ChecksMoveValidity(string fen, string move, bool isValid, Kind kind)
     {
         using var core = new Core(Colour.White, fen);
@@ -162,6 +163,17 @@ public class CoreTests
         }
     }
 
+    [Theory]
+    [InlineData("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N1Q3/PPPB1PpP/R2BK2R b KQkq - 1 2", "g2h1")]
+    public void DoesNotMakeMistakesIdentifiedInTesting(string fen, string expectedMove)
+    {
+        using var core = new Core(Colour.White, fen, Options.CollectPerfTestData);
+
+        core.GetMove(2);
+
+        Assert.Contains(expectedMove, core.PerftData);
+    }
+
     [Fact]
     public void CanHandleStaleMates()
     {
@@ -175,7 +187,7 @@ public class CoreTests
     [Fact]
     public void ReportsPerftResultsWhenEnabled()
     {
-        using var core = new Core(Colour.White, true);
+        using var core = new Core(Colour.White, Options.CollectPerfTestData);
 
         core.GetMove(2);
 
@@ -188,7 +200,7 @@ public class CoreTests
     
     public void ReportsPerftResultsFromFenWhenEnabled()
     {
-        using var core = new Core(Colour.White, Constants.InitialBoardFen, true);
+        using var core = new Core(Colour.White, Constants.InitialBoardFen, Options.CollectPerfTestData);
 
         core.GetMove(2);
 
