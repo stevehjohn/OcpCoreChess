@@ -19,7 +19,8 @@ public static class Basic
         84_998_978_956,
         2_439_530_234_167,
         69_352_859_712_417,
-        2_097_651_003_696_806
+        2_097_651_003_696_806,
+        62_854_969_236_701_747
     ];
     
     private static readonly Dictionary<(int Ply, MoveOutcome Outcome), long> ExpectedOutcomes = new()
@@ -164,6 +165,11 @@ public static class Basic
     private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch)
     {
         stopwatch.Stop();
+
+        if (maxDepth > 9)
+        {
+            return;
+        }
 
         for (var depth = 1; depth <= maxDepth; depth++)
         {
