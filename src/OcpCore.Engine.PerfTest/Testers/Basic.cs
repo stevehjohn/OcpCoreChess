@@ -166,11 +166,6 @@ public static class Basic
     {
         stopwatch.Stop();
 
-        if (maxDepth > 9)
-        {
-            return;
-        }
-
         for (var depth = 1; depth <= maxDepth; depth++)
         {
             var count = core.GetDepthCount(depth);
