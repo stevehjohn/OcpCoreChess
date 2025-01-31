@@ -3,7 +3,7 @@
 3rd attempt at making a chess playing engine.
 
 Passes:
-- All Perf tests up to ply 9.
+- All Perf tests up to ply 10.
 - All Etherial tests.
 
 ## Status
@@ -43,7 +43,6 @@ From an initial board state.
 
 - Attack bitboards are indexed `[moveSet][cell]`.
 - Diagonal: `(0, 0), (1, 1), (2, 2)...`. i.e. `/`. Anti-diagonal `(0, 7), (1, 6), (2, 5)...`. i.e. `\`.
-- `WhiteScore - BlackScore` will be positive if white has more material.
 - Move score is currently (remember `PriorityQueue` prefers lower values):
   - `(MoveOutcome.CheckMate - outcomes) * 100` (CheckMate == 0, Nothing but a simple move = 6,300).
   - `+ (10 - capturedPieceValue) * 10` (higher captured piece values will yield lower scores).
