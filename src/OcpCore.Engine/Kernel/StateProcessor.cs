@@ -18,6 +18,8 @@ public class StateProcessor
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private readonly PerfTestCollector _perfTestCollector;
+
+    private readonly bool _useMinimax;
     
     private int _maxDepth;
 
@@ -31,10 +33,12 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
+    public StateProcessor(PriorityQueue<Node, int> centralQueue, bool useMinimax = false, PerfTestCollector perfTestCollector = null)
     {
         _centralQueue = centralQueue;
 
+        _useMinimax = useMinimax;
+        
         _perfTestCollector = perfTestCollector;
     }
 
@@ -134,13 +138,20 @@ public class StateProcessor
         var opponent = player.Invert();
 
         var ply = _maxDepth - depth + 1;
+        
+        if (ply == 1)
+        {
+            root = from << 8 | to;
 
-        if (HandlePromotion(ref outcomes, copy, ply, root, from, to, depth, opponent))
+            node.Root = root;
+        }
+
+        if (HandlePromotion(ref outcomes, node, copy, ply, root, to, depth, player))
         {
             return;
         }
 
-        IncrementCounts(ply, 1, ref root, from, to);
+        IncrementCounts(ply, 1, root);
 
         if (copy.IsKingInCheck(opponent))
         {
@@ -154,13 +165,50 @@ public class StateProcessor
 
         IncrementOutcomes(ply, outcomes);
 
-        if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
+        var score = EvaluatePosition(copy, outcomes, player);
+
+        if (depth > 1)
         {
-            Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+            if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
+            {
+                Enqueue(node, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+            }
+            
+            if (node.IsMaximising)
+            {
+                node.Alpha = Math.Max(node.Alpha, score);
+            }
+            else
+            {
+                node.Beta = Math.Min(node.Beta, score);
+            }
+        }
+        else
+        {
+            node.PropagateScore(score);
         }
     }
 
-    private bool HandlePromotion(ref MoveOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
+    private static int EvaluatePosition(Game game, MoveOutcome outcomes, Colour player)
+    {
+        var score = player == Colour.White
+            ? game.State.WhiteScore - game.State.BlackScore
+            : game.State.BlackScore - game.State.WhiteScore;
+
+        if ((outcomes & MoveOutcome.Check) > 0)
+        {
+            score += 50;
+        }
+
+        if ((outcomes & MoveOutcome.CheckMate) > 0)
+        {
+            score = int.MaxValue;
+        }
+
+        return score;
+    }
+
+    private bool HandlePromotion(ref MoveOutcome outcomes, Node node, Game game, int ply, int root, int to, int depth, Colour player)
     {
         if ((outcomes & MoveOutcome.Promotion) == 0)
         {
@@ -170,6 +218,8 @@ public class StateProcessor
         var checks = 0;
 
         var checkmates = 0;
+
+        var opponent = player.Invert();
 
         for (var kind = Kind.Rook; kind < Kind.King; kind++)
         {
@@ -190,14 +240,32 @@ public class StateProcessor
                     checkmates++;
                 }
             }
+            
+            var score = EvaluatePosition(copy, outcomes, player);
 
             if (depth > 1)
             {
-                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                if (! _useMinimax || node.IsMaximising && score < node.Beta || ! node.IsMaximising && score > node.Alpha)
+                {
+                    Enqueue(node, copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                }
+                
+                if (node.IsMaximising)
+                {
+                    node.Alpha = Math.Max(node.Alpha, score);
+                }
+                else
+                {
+                    node.Beta = Math.Min(node.Beta, score);
+                }
+            }
+            else
+            {
+                node.PropagateScore(score);
             }
         }
         
-        IncrementCounts(ply, 4, ref root, from, to);
+        IncrementCounts(ply, 4, root);
 
         IncrementPromotionOutcomes(ply, outcomes, checks, checkmates);
 
@@ -225,9 +293,11 @@ public class StateProcessor
             priority += _pieceCache[player].Value;
         }
 
-        // TODO: Add this when minimaxing
-        // priority += game.CellHasAttackers(target, opponent) ? 10_000 : 0;
-        
+        if (_useMinimax)
+        {
+            priority += game.CellHasAttackers(target, opponent) ? 10_000 : 0;
+        }
+
         return priority;
     }
 
@@ -268,7 +338,7 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IncrementCounts(int ply, int count, ref int root, int from, int to)
+    private void IncrementCounts(int ply, int count, int root)
     {
         _depthCounts[ply] += count;
 
@@ -281,16 +351,8 @@ public class StateProcessor
                 _depthCounts[i] = 0;
             }
         }
-        
-        if (_perfTestCollector != null)
-        {
-            if (ply == 1)
-            {
-                root = from << 8 | to;
-            }
 
-            _perfTestCollector.AddCount(ply, _maxDepth, root, count);
-        }
+        _perfTestCollector?.AddCount(ply, _maxDepth, root, count);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -324,19 +386,19 @@ public class StateProcessor
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Enqueue(Game game, int depth, int root, int priority)
+    private void Enqueue(Node parent, Game game, int depth, int root, int priority)
     {
         // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
         if (_centralQueue.Count < CentralPoolMax)
         {
             lock (_centralQueue)
             {
-                _centralQueue.Enqueue(new Node(game, depth, root), priority);
+                _centralQueue.Enqueue(new Node(parent, game, depth, root), priority);
             }
         }
         else
         {
-            _localQueue.Enqueue(new Node(game, depth, root), priority);
+            _localQueue.Enqueue(new Node(parent, game, depth, root), priority);
         }
     }
 }

@@ -58,7 +58,7 @@ public static class Stockfish
 
         Console.WriteLine("");
         
-        Console.WriteLine("            StockFish         OcpCore            Delta");
+        Console.WriteLine("            StockFish          OcpCore           Delta");
 
         var colour = Console.ForegroundColor;
         
@@ -93,7 +93,7 @@ public static class Stockfish
 
     private static List<(string Move, long Count)> GetOcpPerft(string fen, int depth, List<string> moves)
     {
-        var core = new Core(Colour.White, fen, true);
+        var core = new Core(Colour.White, fen, Options.CollectPerfTestData | Options.UseMinimax);
 
         foreach (var move in moves)
         {
@@ -114,6 +114,8 @@ public static class Stockfish
         }
         
         Console.WriteLine();
+        
+        Console.WriteLine($"  {core.BestMove}");
 
         return core.PerftData.Select(i => (i.Key, i.Value)).ToList();
     }
