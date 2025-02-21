@@ -185,6 +185,8 @@ public static class Basic
 
             if (depth >= 10)
             {
+                Console.WriteLine();
+                
                 continue;
             }
 
@@ -192,6 +194,7 @@ public static class Basic
 
             Console.Write($"      Capture:  {core.GetOutcomeCount(depth, MoveOutcome.Capture),15:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetOutcomeCount(depth, MoveOutcome.Capture) ? "✓" : string.Empty)}");
+            
             if (ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetOutcomeCount(depth, MoveOutcome.Capture))
             {
                 Console.WriteLine();
@@ -203,6 +206,7 @@ public static class Basic
 
             Console.Write($"      En Passant: {core.GetOutcomeCount(depth, MoveOutcome.EnPassant),13:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetOutcomeCount(depth, MoveOutcome.EnPassant) ? "✓" : string.Empty)}");
+            
             if (ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetOutcomeCount(depth, MoveOutcome.EnPassant))
             {
                 Console.WriteLine();
@@ -214,6 +218,7 @@ public static class Basic
 
             Console.Write($"      Castle:     {core.GetOutcomeCount(depth, MoveOutcome.Castle),13:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetOutcomeCount(depth, MoveOutcome.Castle) ? "✓" : string.Empty)}");
+            
             if (ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetOutcomeCount(depth, MoveOutcome.Castle))
             {
                 Console.WriteLine();
@@ -225,6 +230,7 @@ public static class Basic
 
             Console.Write($"      Promotion:  {core.GetOutcomeCount(depth, MoveOutcome.Promotion),13:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetOutcomeCount(depth, MoveOutcome.Promotion) ? "✓" : string.Empty)}");
+            
             if (ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetOutcomeCount(depth, MoveOutcome.Promotion))
             {
                 Console.WriteLine();
@@ -236,6 +242,7 @@ public static class Basic
 
             Console.Write($"      Check:     {core.GetOutcomeCount(depth, MoveOutcome.Check),14:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetOutcomeCount(depth, MoveOutcome.Check) ? "✓" : string.Empty)}");
+            
             if (ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetOutcomeCount(depth, MoveOutcome.Check))
             {
                 Console.WriteLine();
@@ -247,6 +254,7 @@ public static class Basic
 
             Console.Write($"      Check Mate: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate),13:N0}");
             Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetOutcomeCount(depth, MoveOutcome.CheckMate) ? "✓" : string.Empty)}");
+            
             if (ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetOutcomeCount(depth, MoveOutcome.CheckMate))
             {
                 Console.WriteLine();
