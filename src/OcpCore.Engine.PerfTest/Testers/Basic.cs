@@ -20,7 +20,8 @@ public static class Basic
         2_439_530_234_167,
         69_352_859_712_417,
         2_097_651_003_696_806,
-        62_854_969_236_701_747
+        62_854_969_236_701_747,
+        1_981_066_775_000_396_239
     ];
 
     private static readonly Dictionary<(int Ply, MoveOutcome Outcome), long> ExpectedOutcomes = new()
