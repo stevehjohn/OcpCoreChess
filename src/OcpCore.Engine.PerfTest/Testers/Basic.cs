@@ -86,7 +86,14 @@ public static class Basic
         { (9, MoveOutcome.Castle), 1_784_356_000 },
         { (9, MoveOutcome.Promotion), 17_334_376 },
         { (9, MoveOutcome.Check), 36_095_901_903 },
-        { (9, MoveOutcome.CheckMate), 400_191_963 }
+        { (9, MoveOutcome.CheckMate), 400_191_963 },
+
+        { (9, MoveOutcome.Capture), 3_717_978_816_064 },
+        { (9, MoveOutcome.EnPassant), 1_180_218_978 },
+        { (9, MoveOutcome.Castle), 18_006_111_736 },
+        { (9, MoveOutcome.Promotion), 151_104_215 },
+        { (9, MoveOutcome.Check), 1_498_305_037_159 },
+        { (9, MoveOutcome.CheckMate), 16_362_105_050 }
     };
 
     public static void Test(int depth)
