@@ -89,12 +89,12 @@ public static class Basic
         { (9, MoveOutcome.Check), 36_095_901_903 },
         { (9, MoveOutcome.CheckMate), 400_191_963 },
 
-        { (9, MoveOutcome.Capture), 3_717_978_816_064 },
-        { (9, MoveOutcome.EnPassant), 1_180_218_978 },
-        { (9, MoveOutcome.Castle), 18_006_111_736 },
-        { (9, MoveOutcome.Promotion), 151_104_215 },
-        { (9, MoveOutcome.Check), 1_498_305_037_159 },
-        { (9, MoveOutcome.CheckMate), 16_362_105_050 }
+        { (10, MoveOutcome.Capture), 3_717_978_816_064 },
+        { (10, MoveOutcome.EnPassant), 1_180_218_978 },
+        { (10, MoveOutcome.Castle), 18_006_111_736 },
+        { (10, MoveOutcome.Promotion), 151_104_215 },
+        { (10, MoveOutcome.Check), 1_498_305_037_159 },
+        { (10, MoveOutcome.CheckMate), 16_362_105_050 }
     };
 
     public static void Test(int depth)
@@ -198,9 +198,9 @@ public static class Basic
             {
                 Console.WriteLine($"      Capture:  {core.GetOutcomeCount(depth, MoveOutcome.Capture),15:N0}");
                 Console.WriteLine($"      En Passant: {core.GetOutcomeCount(depth, MoveOutcome.EnPassant),13:N0}");
-                Console.WriteLine($"      Castle:     {core.GetOutcomeCount(depth, MoveOutcome.Castle),13:N0}");
+                Console.WriteLine($"      Castle: {core.GetOutcomeCount(depth, MoveOutcome.Castle),17:N0}");
                 Console.WriteLine($"      Promotion:  {core.GetOutcomeCount(depth, MoveOutcome.Promotion),13:N0}");
-                Console.WriteLine($"      Check:     {core.GetOutcomeCount(depth, MoveOutcome.Check),14:N0}");
+                Console.WriteLine($"      Check: {core.GetOutcomeCount(depth, MoveOutcome.Check),18:N0}");
                 Console.WriteLine($"      Check Mate: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate),13:N0}");
 
                 Console.WriteLine();
