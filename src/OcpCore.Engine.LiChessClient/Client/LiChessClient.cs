@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using OcpCore.Engine.General;
+using OcpCore.Engine.LiChessClient.Client.Models;
 using static OcpCore.Engine.LiChessClient.Infrastructure.Console;
 
 namespace OcpCore.Engine.LiChessClient.Client;
