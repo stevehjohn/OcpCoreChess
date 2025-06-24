@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using OcpCore.Engine.General;
 using OcpCore.Engine.LiChessClient.Client.Models;
+using OcpCore.Engine.LiChessClient.Exceptions;
 using static OcpCore.Engine.LiChessClient.Infrastructure.Console;
 
 namespace OcpCore.Engine.LiChessClient.Client;
