@@ -18,10 +18,10 @@ public sealed class LiChessClient : IDisposable
     private readonly HttpClient _client;
 
     private readonly JsonSerializerOptions _serializerOptions;
-    
-    private readonly Core _core;
 
     private readonly bool _logCommunications;
+    
+    private Core _core;
     
     public LiChessClient(bool logCommunications = false)
     {
@@ -161,8 +161,6 @@ public sealed class LiChessClient : IDisposable
 
         var engineIsWhite = true;
 
-        _core.Initialise();
-
         Process.Start("open", $"https://lichess.org/{id}");
 
         var opponentName = string.Empty;
@@ -193,6 +191,8 @@ public sealed class LiChessClient : IDisposable
                 opponentName = engineIsWhite ? game.Black.Name : game.White.Name;
 
                 state = game.State;
+
+                _core = new Core(Colour.White);
             }
             else
             {
@@ -204,6 +204,8 @@ public sealed class LiChessClient : IDisposable
                     
                     continue;
                 }
+
+                _core = new Core(Colour.Black);
             }
 
             if (state == null)
