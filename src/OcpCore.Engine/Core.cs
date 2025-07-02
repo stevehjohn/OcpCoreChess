@@ -173,13 +173,12 @@ public sealed class Core : IDisposable
 
         var bestMove = _coordinator.BestMoves.Count == 0 ? (Score: 0, Outcome: PlyOutcome.Null, Move: string.Empty) : _coordinator.BestMoves.Last().Value;
 
-#pragma warning disable CS8509
         var outcome = bestMove.Outcome switch
         {
             PlyOutcome.CheckMate => _engineColour == _game.State.Player ? MoveOutcome.EngineInCheckmate : MoveOutcome.OpponentInCheckmate,
+            PlyOutcome.Null => MoveOutcome.Stalemate,
             _ => MoveOutcome.Move
         };
-#pragma warning restore CS8509
         
         callback?.Invoke((outcome, bestMove.Move));
 
