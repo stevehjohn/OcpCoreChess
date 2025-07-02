@@ -88,12 +88,12 @@ public sealed class Core : IDisposable
         _game.MakeMove(position, target);
     }
 
-    public string GetMove(int depth)
+    public (MoveOutcome Outcome, string Move) GetMove(int depth)
     {
         return GetMoveInternal(depth);
     }
     
-    public Task GetMove(int depth, Action<string> callback)
+    public Task GetMove(int depth, Action<(MoveOutcome Outcome, string Move)> callback)
     {
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -150,7 +150,7 @@ public sealed class Core : IDisposable
         return allowedMoves;
     }
 
-    private string GetMoveInternal(int depth, Action<string> callback = null)
+    private string GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
     {
         _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
