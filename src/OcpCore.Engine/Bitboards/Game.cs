@@ -534,9 +534,9 @@ public struct Game
         {
             for (var file = 0; file < Constants.Files; file++)
             {
-                var position = rank * Constants.Ranks + file;
+                var position = rank * Constants.Files + file;
 
-                var bit = 1UL << (position - 1);
+                var bit = 1UL << position;
 
                 Kind? kind = null;
 

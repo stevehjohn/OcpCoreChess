@@ -316,4 +316,12 @@ public class GameTests
         
         Assert.Equal("No piece at a3.", exception.Message);
     }
+
+    [Fact]
+    public void ToStringWorksCorrectly()
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+        
+        Assert.Equal("RNBQKBNR|PPPPPPPP|        |        |        |        |pppppppp|rnbqkbnr", _game.ToString());
+    }
 }

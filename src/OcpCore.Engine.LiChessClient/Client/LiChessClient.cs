@@ -194,6 +194,10 @@ public sealed class LiChessClient : IDisposable
                 state = game.State;
 
                 _core = new Core(engineIsWhite ? Colour.White : Colour.Black);
+                
+                OutputLine();
+                
+                _core.OutputBoard();
             }
             else
             {
