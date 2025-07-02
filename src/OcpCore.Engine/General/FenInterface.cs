@@ -11,7 +11,7 @@ public static class FenInterface
     {
         var parts = fen.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        if (parts.Length < 6)
+        if (parts.Length < 4)
         {
             throw new FenParseException($"Invalid number of parts to FEN string: {parts.Length}.");
         }
@@ -144,14 +144,17 @@ public static class FenInterface
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
-        if (! int.TryParse(parts[4], out var halfmoves))
+        if (parts.Length == 6)
         {
-            throw new FenParseException($"Invalid value for halfmove counter: {parts[4]}.");
-        }
+            if (! int.TryParse(parts[4], out var halfmoves))
+            {
+                throw new FenParseException($"Invalid value for halfmove counter: {parts[4]}.");
+            }
 
-        if (! int.TryParse(parts[5], out var fullmoves))
-        {
-            throw new FenParseException($"Invalid value for fullmove counter: {parts[5]}.");
+            if (! int.TryParse(parts[5], out var fullmoves))
+            {
+                throw new FenParseException($"Invalid value for fullmove counter: {parts[5]}.");
+            }
         }
 
         return new State(player, castleAvailability, enPassantTarget, whiteScore, blackScore, whiteKingCell, blackKingCell, halfmoves, fullmoves);
