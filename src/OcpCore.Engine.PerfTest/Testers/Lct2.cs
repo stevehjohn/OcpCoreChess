@@ -27,13 +27,13 @@ public static class Lct2
 
             var depth = 6;
 
-            var bestMove = parts[1];
+            var expectedBestMove = parts[1];
 
-            bestMove = bestMove.Split(' ', StringSplitOptions.TrimEntries)[1];
+            expectedBestMove = expectedBestMove.Split(' ', StringSplitOptions.TrimEntries)[1];
         
             Console.WriteLine();
             
-            Console.WriteLine($"  Test: {i + 1,3}/{tests.Length,3}  Depth: {depth}  FEN: {parts[0]} Best move: {bestMove}");
+            Console.WriteLine($"  Test: {i + 1,3}/{tests.Length,3}  Depth: {depth}  FEN: {parts[0]} Best move: {expectedBestMove}");
             
             Console.WriteLine();
 
@@ -42,7 +42,7 @@ public static class Lct2
             var pass = false;
             
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(depth, bestMove => pass = TestComplete(core, depth, parts[1..], bestMove))
+            core.GetMove(depth, bestMove => pass = TestComplete(core, depth, parts[1..], expectedBestMove, bestMove))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
@@ -113,7 +113,7 @@ public static class Lct2
         Console.WriteLine();
     }
 
-    private static bool TestComplete(Core core, int depth, string[] test, string bestMove)
+    private static bool TestComplete(Core core, int depth, string[] test, string expectedBestMove, string bestMove)
     {
         Console.Write("                                                                          ");
 
