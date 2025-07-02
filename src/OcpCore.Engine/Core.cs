@@ -154,7 +154,7 @@ public sealed class Core : IDisposable
         
         _coordinator.StartProcessing(_game, depth);
 
-        var bestMove = _coordinator.BestMoves.Last().Value.Move;
+        var bestMove = _coordinator.BestMoves.Count == 0 ? string.Empty : _coordinator.BestMoves.Last().Value.Move;
 
         callback?.Invoke(bestMove);
 
