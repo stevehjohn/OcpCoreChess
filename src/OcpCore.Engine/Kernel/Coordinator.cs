@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General;
@@ -15,7 +16,7 @@ public sealed class Coordinator : IDisposable
 
     private readonly int _parallelDepthThreshold;
 
-    private readonly Dictionary<int, (int Score, string Move)> _bestMoves = [];
+    private readonly ConcurrentDictionary<int, (int Score, string Move)> _bestMoves = [];
 
     private int _maxDepth;
     
