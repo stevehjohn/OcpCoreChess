@@ -15,6 +15,8 @@ public sealed class Coordinator : IDisposable
 
     private readonly int _parallelDepthThreshold;
 
+    private readonly Dictionary<int, (int Score, string Move)> _bestMoves = [];
+
     private int _maxDepth;
     
     private long[] _depthCounts;
