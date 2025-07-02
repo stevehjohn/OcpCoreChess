@@ -285,7 +285,7 @@ public static class Basic
 
         Console.WriteLine();
         
-        Console.WriteLine($"Best move: {bestMove}.");
+        Console.WriteLine($"  Best move: {bestMove}.");
 
         Console.WriteLine();
 
