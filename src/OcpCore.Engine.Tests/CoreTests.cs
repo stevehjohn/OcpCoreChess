@@ -227,4 +227,46 @@ public class CoreTests
         
         Assert.True(called);
     }
+
+    [Theory]
+    // [InlineData(Colour.White, "")]
+    // [InlineData(Colour.White, "d7d6")]
+    // [InlineData(Colour.White, "d7d6,e7e6")]
+    // [InlineData(Colour.Black, "c2c3")]
+    [InlineData(Colour.Black, "c2c3,d2d3")]
+    public void EnginePlaysAsCorrectColour(Colour engineColour, string opponentMoves)
+    {
+        var core = new Core(engineColour);
+
+        string move;
+        
+        if (engineColour == Colour.White)
+        {
+            move = core.GetMove(3).Move;
+
+            Assert.Contains(move[1], new[] {'1', '2'});
+            
+            core.MakeMove(move);
+        }
+
+        var moves = opponentMoves.Split(",", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+        for (var i = 0; i < moves.Length; i++)
+        {
+            core.MakeMove(moves[i]);
+
+            move = core.GetMove(3).Move;
+
+            if (engineColour == Colour.White)
+            {
+                Assert.Contains(move[1], new[] { '1', '2' });
+            }
+            else
+            {
+                Assert.Contains(move[1], new[] { '7', '8' });
+            }
+            
+            core.MakeMove(move);
+        }
+    }
 }
