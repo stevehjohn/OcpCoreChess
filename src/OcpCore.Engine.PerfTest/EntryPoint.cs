@@ -26,6 +26,13 @@ public static class EntryPoint
                 return;
             }
             
+            if (arguments[0].StartsWith("lc", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Lct2.Test();
+                
+                return;
+            }
+            
             if (! int.TryParse(arguments[0], out depth))
             {
                 depth = 6;
