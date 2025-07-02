@@ -1,4 +1,5 @@
 using OcpCore.Engine.Exceptions;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using Xunit;
@@ -240,11 +241,13 @@ public class CoreTests
 
         string move;
         
+        core.OutputBoard();
+        
         if (engineColour == Colour.White)
         {
             move = core.GetMove(3).Move;
 
-            Assert.Contains(move[1], new[] {'1', '2'});
+            Assert.Equal(Colour.White, core[move[..2]].Colour);
             
             core.MakeMove(move);
         }
@@ -254,19 +257,16 @@ public class CoreTests
         for (var i = 0; i < moves.Length; i++)
         {
             core.MakeMove(moves[i]);
+        
+            core.OutputBoard();
 
             move = core.GetMove(3).Move;
-
-            if (engineColour == Colour.White)
-            {
-                Assert.Contains(move[1], new[] { '1', '2' });
-            }
-            else
-            {
-                Assert.Contains(move[1], new[] { '7', '8' });
-            }
             
             core.MakeMove(move);
+        
+            core.OutputBoard();
+
+            Assert.Equal(engineColour == Colour.White ? Colour.White : Colour.Black, core[move[..2]].Colour);
         }
     }
 }

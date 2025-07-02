@@ -111,7 +111,24 @@ public struct Game
     {
         return GetKindInternal(1ul << cell);
     }
-    
+
+    public Colour GetColour(int cell)
+    {
+        var bit = 1UL << cell - 1;
+        
+        if ((this[Colour.White] & bit) > 0)
+        {
+            return Colour.White;
+        }
+        
+        if ((this[Colour.Black] & bit) > 0)
+        {
+            return Colour.Black;
+        }
+
+        throw new GameStateException($"No piece at {cell.ToStandardNotation()}.");
+    }
+
     public PlyOutcome MakeMove(int from, int to)
     {
         var fromBit = 1ul << from;

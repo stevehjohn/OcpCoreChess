@@ -42,6 +42,20 @@ public sealed class Core : IDisposable
 
     // ReSharper disable once ConvertToAutoPropertyWhenPossible
     public Colour Player => _engineColour;
+    
+    public (Colour Colour, Kind Kind) this[string position] 
+    {
+        get
+        {
+            var cell = position.FromStandardNotation();
+
+            var colour = _game.GetColour(cell);
+
+            var kind = _game.GetKind(cell);
+
+            return (colour, kind);
+        }
+    }
 
     public Core(Colour engineColour, bool collectPerft = false)
     {
