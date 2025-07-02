@@ -151,7 +151,7 @@ public sealed class Core : IDisposable
         return allowedMoves;
     }
 
-    private (PlyOutcome OutCome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
+    private (MoveOutcome OutCome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
     {
         _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
@@ -159,9 +159,17 @@ public sealed class Core : IDisposable
 
         var bestMove = _coordinator.BestMoves.Count == 0 ? (Score: 0, Outcome: PlyOutcome.Null, Move: string.Empty) : _coordinator.BestMoves.Last().Value;
 
-        callback?.Invoke((bestMove.Outcome, bestMove.Move));
+#pragma warning disable CS8509
+        var outcome = bestMove.Outcome switch
+        {
+            PlyOutcome.CheckMate => _engineColour == _game.State.Player ? MoveOutcome.EngineInCheckmate : MoveOutcome.OpponentInCheckmate,
+            _ => MoveOutcome.Move
+        };
+#pragma warning restore CS8509
+        
+        callback?.Invoke((outcome, bestMove.Move));
 
-        return (bestMove.Outcome, bestMove.Move);
+        return (outcome, bestMove.Move);
     }
     
     private static int PopPiecePosition(ref ulong pieces)
