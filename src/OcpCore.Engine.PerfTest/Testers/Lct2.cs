@@ -25,7 +25,7 @@ public static class Lct2
             
             using var core = new Core(Colour.White, fen);
 
-            var depth = 6;
+            var depth = 5;
 
             var expectedBestMove = parts[1];
 
