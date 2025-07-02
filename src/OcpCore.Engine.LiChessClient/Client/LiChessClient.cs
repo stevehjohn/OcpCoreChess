@@ -14,7 +14,7 @@ public sealed class LiChessClient : IDisposable
 {
     private const int WaitAttempts = 6;
 
-    private const int Depth = 5;
+    private const int Depth = 3;
     
     private readonly HttpClient _client;
 
@@ -23,6 +23,8 @@ public sealed class LiChessClient : IDisposable
     private readonly bool _logCommunications;
     
     private Core _core;
+
+    private string _engineLastMove;
     
     public LiChessClient(bool logCommunications = false)
     {
@@ -238,11 +240,18 @@ public sealed class LiChessClient : IDisposable
             lastMove = moves[^1];
         }
 
+        if (lastMove == _engineLastMove)
+        {
+            return 0;
+        }
+
         if (_core.CurrentPlayer == _core.Player)
         {
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
             var engineMove = _core.GetMove(Depth);
+
+            _engineLastMove = engineMove.Move;
 
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
@@ -298,6 +307,8 @@ public sealed class LiChessClient : IDisposable
             OutputLine("&NL;  &Cyan;Thinking&White;...");
 
             var engineMove = _core.GetMove(Depth);
+
+            _engineLastMove = engineMove.Move;
 
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
