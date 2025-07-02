@@ -240,8 +240,6 @@ public sealed class LiChessClient : IDisposable
             
             var engineMove = _core.GetMove(Depth);
 
-            OutputBestScores();
-            
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
             {
@@ -291,8 +289,6 @@ public sealed class LiChessClient : IDisposable
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
             var engineMove = _core.GetMove(Depth);
-            
-            OutputBestScores();
 
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
@@ -310,8 +306,8 @@ public sealed class LiChessClient : IDisposable
                 
                 // case PlyOutcome.Stalemate:
                 //     OutputLine("&NL;  &Gray;Stalemate...");
-
-                    return 0;
+                //
+                //     return 0;
             }
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
@@ -331,16 +327,6 @@ public sealed class LiChessClient : IDisposable
         }
 
         return 0;
-    }
-
-    private void OutputBestScores()
-    {
-        OutputLine();
-        
-        for (var i = 0; i < Depth; i++)
-        {
-            //OutputLine($"  &Cyan;Ply&White;: {i + 1}  &Cyan;Best Score&White;: {_core.GetBestScore(i + 1)}");
-        }
     }
 
     private async Task<TResponse> Post<TRequest, TResponse>(string path, TRequest content) where TRequest : class
