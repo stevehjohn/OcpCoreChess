@@ -547,7 +547,7 @@ public struct Game
     {
         var builder = new StringBuilder();
             
-        for (var rank = 0; rank < Constants.Ranks; rank++)
+        for (var rank = Constants.Ranks - 1; rank >= 0; rank--)
         {
             for (var file = 0; file < Constants.Files; file++)
             {
@@ -612,7 +612,7 @@ public struct Game
                 builder.Append(character);
             }
 
-            if (rank < Constants.Ranks - 1)
+            if (rank > 0)
             {
                 builder.Append('|');
             }

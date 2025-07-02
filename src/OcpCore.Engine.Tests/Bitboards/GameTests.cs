@@ -322,6 +322,6 @@ public class GameTests
     {
         _game.ParseFen(Constants.InitialBoardFen);
         
-        Assert.Equal("RNBQKBNR|PPPPPPPP|        |        |        |        |pppppppp|rnbqkbnr", _game.ToString());
+        Assert.Equal("rnbqkbnr|pppppppp|        |        |        |        |PPPPPPPP|RNBQKBNR", _game.ToString());
     }
 }
