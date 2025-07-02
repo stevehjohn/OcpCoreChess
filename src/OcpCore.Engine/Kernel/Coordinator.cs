@@ -15,8 +15,6 @@ public sealed class Coordinator : IDisposable
 
     private readonly int _parallelDepthThreshold;
 
-    private readonly Colour _engineColour;
-    
     private int _maxDepth;
     
     private long[] _depthCounts;
@@ -39,15 +37,13 @@ public sealed class Coordinator : IDisposable
 
     public Coordinator(Colour engineColour, PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
-        _engineColour = engineColour;
-        
         _parallelDepthThreshold = parallelDepthThreshold;
         
         _processors = new StateProcessor[Threads];
 
         for (var i = 0; i < Threads; i++)
         {
-            _processors[i] = new StateProcessor(_engineColour, _queue, perfTestCollector);
+            _processors[i] = new StateProcessor(engineColour, _queue, perfTestCollector);
         }
     }
 
