@@ -141,7 +141,7 @@ public static class Etherial
 
             Console.WriteLine();
 
-            Console.WriteLine($"  Best move: {bestMove}.");
+            Console.WriteLine($"    Best move: {bestMove}.");
             
             part++;
         }
