@@ -19,7 +19,7 @@ public class StateProcessorTests
 
         queue.Enqueue(new Node(game, 1, -1), 0);
         
-        var processor = new StateProcessor(queue);
+        var processor = new StateProcessor(Colour.White, queue);
         
         using var cancellationTokenSource = new CancellationTokenSource();
 
@@ -46,7 +46,7 @@ public class StateProcessorTests
             queue.Enqueue(new Node(game, 1, -1), 0);
         }
 
-        var processor = new StateProcessor(queue);
+        var processor = new StateProcessor(Colour.White, queue);
         
         using var cancellationTokenSource = new CancellationTokenSource();
 
@@ -64,7 +64,7 @@ public class StateProcessorTests
     {
         var queue = new PriorityQueue<Node, int>();
 
-        var processor = new StateProcessor(queue);
+        var processor = new StateProcessor(Colour.White, queue);
         
         using var cancellationTokenSource = new CancellationTokenSource();
 
@@ -81,7 +81,7 @@ public class StateProcessorTests
     {
         var queue = new PriorityQueue<Node, int>();
 
-        var processor = new StateProcessor(queue);
+        var processor = new StateProcessor(Colour.White, queue);
         
         using var cancellationTokenSource = new CancellationTokenSource();
 
@@ -115,7 +115,7 @@ public class StateProcessorTests
 
         queue.Enqueue(new Node(game, 2, -1), 0);
         
-        var processor = new StateProcessor(queue);
+        var processor = new StateProcessor(Colour.White, queue);
         
         using var cancellationTokenSource = new CancellationTokenSource();
 

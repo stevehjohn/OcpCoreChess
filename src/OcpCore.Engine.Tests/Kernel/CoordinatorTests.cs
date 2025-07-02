@@ -1,4 +1,5 @@
 using OcpCore.Engine.Bitboards;
+using OcpCore.Engine.General;
 using OcpCore.Engine.General.StaticData;
 using OcpCore.Engine.Kernel;
 using Xunit;
@@ -12,7 +13,7 @@ public class CoordinatorTests
     [InlineData(5, 3, true)]
     public void ParallelisesAtGivenLevel(int requestedDepth, int parallelisationDepth, bool expectParallelisation)
     {
-        using var coordinator = new Coordinator(null, parallelisationDepth);
+        using var coordinator = new Coordinator(Colour.White, null, parallelisationDepth);
 
         var game = new Game();
         
@@ -26,7 +27,7 @@ public class CoordinatorTests
     [Fact]
     public void CatchesExceptions()
     {
-        using var coordinator = new Coordinator(null, 0);
+        using var coordinator = new Coordinator(Colour.White, null, 0);
 
         var game = new Game();
         
@@ -40,7 +41,7 @@ public class CoordinatorTests
     [Fact]
     public void ReportsEmptyQueueSize()
     {
-        using var coordinator = new Coordinator();
+        using var coordinator = new Coordinator(Colour.White);
         
         Assert.Equal(0, coordinator.QueueSize);
     }
