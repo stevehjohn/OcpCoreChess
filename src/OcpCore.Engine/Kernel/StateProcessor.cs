@@ -31,6 +31,8 @@ public class StateProcessor
 
     private Action<StateProcessor, bool> _callback;
 
+    public IReadOnlyDictionary<int, (int Score, string Move)> BestMoves => _bestMoves;
+
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
