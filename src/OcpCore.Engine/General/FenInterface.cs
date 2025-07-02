@@ -144,14 +144,18 @@ public static class FenInterface
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
+        int halfmoves;
+
+        int fullmoves;
+
         if (parts.Length == 6)
         {
-            if (! int.TryParse(parts[4], out var halfmoves))
+            if (! int.TryParse(parts[4], out halfmoves))
             {
                 throw new FenParseException($"Invalid value for halfmove counter: {parts[4]}.");
             }
 
-            if (! int.TryParse(parts[5], out var fullmoves))
+            if (! int.TryParse(parts[5], out fullmoves))
             {
                 throw new FenParseException($"Invalid value for fullmove counter: {parts[5]}.");
             }
