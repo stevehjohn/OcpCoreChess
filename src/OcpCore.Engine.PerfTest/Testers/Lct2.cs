@@ -53,8 +53,6 @@ public static class Lct2
                     }
                 });
 
-            var expected = long.Parse(parts[^1][3..]);
-
             var y = Console.CursorLeft;
 
             while (core.IsBusy && !exception)
@@ -65,23 +63,13 @@ public static class Lct2
                 {
                     var depthCount = core.GetDepthCount(depth);
 
-                    var percent = (float) depthCount / expected * 100;
-
-                    var averagePerSecond = stopwatch.Elapsed.TotalSeconds / depthCount;
-
-                    var remaining = expected - depthCount;
-
                     try
                     {
-                        var timeRemaining = TimeSpan.FromSeconds(remaining * averagePerSecond);
-
-                        var etr = $"{(timeRemaining.Days > 0 ? $"{timeRemaining.Days:N0}d " : string.Empty)}{timeRemaining.Hours,2:00}:{timeRemaining.Minutes,2:00}.{timeRemaining.Seconds % 60,2:00}";
-
-                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {expected:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: {etr}          ");
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} Queue: {core.QueueSize:N0}");
                     }
                     catch
                     {
-                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} / {expected:N0} ({percent:N2}%) Queue: {core.QueueSize:N0} ETR: ∞          ");
+                        Console.Write($"  {DateTime.Now:HH:mm:ss}: {depthCount:N0} Queue: {core.QueueSize:N0}");
                     }
 
                     Console.CursorLeft = y;
