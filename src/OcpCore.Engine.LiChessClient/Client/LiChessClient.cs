@@ -14,7 +14,7 @@ public sealed class LiChessClient : IDisposable
 {
     private const int WaitAttempts = 6;
 
-    private const int Depth = 3;
+    private const int Depth = 5;
     
     private readonly HttpClient _client;
 
