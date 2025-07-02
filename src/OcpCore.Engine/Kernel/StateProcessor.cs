@@ -27,7 +27,7 @@ public class StateProcessor
 
     private Action<StateProcessor, bool> _callback;
 
-    private Dictionary<int, string> _bestMoves = [];
+    private Dictionary<int, (int Score, string Move)> _bestMoves = [];
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
