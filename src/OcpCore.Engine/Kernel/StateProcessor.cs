@@ -167,18 +167,18 @@ public class StateProcessor
         
         var score = _engineColour == Colour.Black ? game.State.BlackScore : game.State.WhiteScore;
 
-        bool addToBeestScores;
+        bool addToBestScores;
 
         if (! _bestMoves.TryGetValue(node.Depth, out var bestMove))
         {
-            addToBeestScores = true;
+            addToBestScores = true;
         }
         else
         {
-            addToBeestScores = score > bestMove.Score;
+            addToBestScores = score > bestMove.Score;
         }
 
-        if (addToBeestScores)
+        if (addToBestScores)
         {
             _bestMoves[node.Depth] = (score, $"{from.ToStandardNotation()}{to.ToStandardNotation()}");
         }
