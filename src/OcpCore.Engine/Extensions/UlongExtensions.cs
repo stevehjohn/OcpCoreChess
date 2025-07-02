@@ -17,4 +17,29 @@ public static class UlongExtensions
 
         return zeros;
     }
+
+    public static int PopRandomBit(this ref ulong value)
+    {
+        if (value == 0)
+            return -1;
+
+        var setCount = BitOperations.PopCount(value);
+
+        var target = Random.Shared.Next(setCount);
+
+        var mask = value;
+
+        while (target-- > 0)
+        {
+            mask &= mask - 1;
+        }
+
+        var selected = mask & ~(mask - 1);
+
+        var index = BitOperations.TrailingZeroCount(selected);
+
+        value ^= selected;
+
+        return index;
+    }
 }

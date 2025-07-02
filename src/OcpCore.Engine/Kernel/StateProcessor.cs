@@ -103,7 +103,7 @@ public class StateProcessor
         
         var pieces = game[game.State.Player];
 
-        var from = pieces.PopBit();
+        var from = pieces.PopRandomBit();
 
         while (from > -1)
         {
@@ -111,16 +111,16 @@ public class StateProcessor
 
             var moves = _pieceCache[kind].GetMoves(game, from);
 
-            var to = moves.PopBit();
+            var to = moves.PopRandomBit();
 
             while (to > -1)
             {
                 ProcessMove(node, kind, from, to);
 
-                to = moves.PopBit();
+                to = moves.PopRandomBit();
             }
 
-            from = pieces.PopBit();
+            from = pieces.PopRandomBit();
         }
     }
 
