@@ -165,7 +165,7 @@ public sealed class Core : IDisposable
         return allowedMoves;
     }
 
-    private (MoveOutcome OutCome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
+    private (MoveOutcome Outcome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
     {
         _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
