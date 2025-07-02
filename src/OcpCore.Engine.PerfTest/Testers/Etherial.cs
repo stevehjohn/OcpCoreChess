@@ -38,7 +38,7 @@ public static class Etherial
             var pass = false;
             
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(depth, () => pass = TestComplete(core, depth, parts[1..]))
+            core.GetMove(depth, _ => pass = TestComplete(core, depth, parts[1..]))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
