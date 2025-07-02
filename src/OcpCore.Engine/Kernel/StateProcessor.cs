@@ -18,7 +18,9 @@ public class StateProcessor
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private readonly PerfTestCollector _perfTestCollector;
-    
+
+    private readonly Colour _engineColour;
+
     private int _maxDepth;
 
     private long[] _depthCounts;
@@ -33,8 +35,10 @@ public class StateProcessor
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
+    public StateProcessor(Colour engineColour, PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
     {
+        _engineColour = engineColour;
+        
         _centralQueue = centralQueue;
 
         _perfTestCollector = perfTestCollector;

@@ -47,7 +47,7 @@ public sealed class Coordinator : IDisposable
 
         for (var i = 0; i < Threads; i++)
         {
-            _processors[i] = new StateProcessor(_queue, perfTestCollector);
+            _processors[i] = new StateProcessor(_engineColour, _queue, perfTestCollector);
         }
     }
 
