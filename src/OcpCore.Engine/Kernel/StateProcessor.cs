@@ -167,7 +167,7 @@ public class StateProcessor
         
         var score = _engineColour == Colour.Black ? game.State.BlackScore : game.State.WhiteScore;
 
-        var addToBeestScores = false;
+        bool addToBeestScores = ! _bestMoves.ContainsKey(node.Depth);
 
         if (addToBeestScores)
         {
