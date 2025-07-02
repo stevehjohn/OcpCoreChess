@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Engine.General;
 using OcpCore.Engine.General;
 using OcpCore.Engine.LiChessClient.Client.Models;
 using OcpCore.Engine.LiChessClient.Exceptions;
@@ -246,20 +247,20 @@ public sealed class LiChessClient : IDisposable
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
             {
-                case PlyOutcome.EngineInCheckmate:
+                case MoveOutcome.EngineInCheckmate:
                     OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
                     return -1;
                 
-                case PlyOutcome.OpponentInCheckmate:
+                case MoveOutcome.OpponentInCheckmate:
                     await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.Move}", null);
                     
                     OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
                     return 1;
                 
-                case PlyOutcome.Stalemate:
-                    OutputLine("&NL;  &Gray;Stalemate...");
+                // case PlyOutcome.Stalemate:
+                //     OutputLine("&NL;  &Gray;Stalemate...");
 
                     return 0;
             }
@@ -277,22 +278,17 @@ public sealed class LiChessClient : IDisposable
             
             OutputLine();
             
-            _core.OutputBoard();
+            //_core.OutputBoard();
         }
         else
         {
-            if (moves.Length <= _core.MoveCount)
-            {
-                return 0;
-            }
-
             _core.MakeMove(lastMove);
 
             OutputLine($"&NL;  &Green;Opponent&White;: {lastMove}");
                         
             OutputLine();
             
-            _core.OutputBoard(! engineIsWhite);
+            // _core.OutputBoard(! engineIsWhite);
 
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
@@ -303,19 +299,19 @@ public sealed class LiChessClient : IDisposable
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
             {
-                case PlyOutcome.EngineInCheckmate:
+                case MoveOutcome.EngineInCheckmate:
                     OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
                     return -1;
-                case PlyOutcome.OpponentInCheckmate:
+                case MoveOutcome.OpponentInCheckmate:
                     await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.Move}", null);
                     
                     OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
                     return 1;
                 
-                case PlyOutcome.Stalemate:
-                    OutputLine("&NL;  &Gray;Stalemate...");
+                // case PlyOutcome.Stalemate:
+                //     OutputLine("&NL;  &Gray;Stalemate...");
 
                     return 0;
             }
@@ -333,7 +329,7 @@ public sealed class LiChessClient : IDisposable
 
             OutputLine();
             
-            _core.OutputBoard(! engineIsWhite);
+            //_core.OutputBoard(! engineIsWhite);
         }
 
         return 0;
@@ -345,7 +341,7 @@ public sealed class LiChessClient : IDisposable
         
         for (var i = 0; i < Depth; i++)
         {
-            OutputLine($"  &Cyan;Ply&White;: {i + 1}  &Cyan;Best Score&White;: {_core.GetBestScore(i + 1)}");
+            //OutputLine($"  &Cyan;Ply&White;: {i + 1}  &Cyan;Best Score&White;: {_core.GetBestScore(i + 1)}");
         }
     }
 
