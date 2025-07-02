@@ -233,8 +233,10 @@ public class CoreTests
     [InlineData(Colour.White, "")]
     [InlineData(Colour.White, "d7d6")]
     [InlineData(Colour.White, "d7d6,e7e6")]
+    [InlineData(Colour.White, "d7d6,e7e6,a7a5")]
     [InlineData(Colour.Black, "c2c3")]
     [InlineData(Colour.Black, "c2c3,d2d3")]
+    [InlineData(Colour.Black, "c2c3,d2d3g2g4")]
     public void EnginePlaysAsCorrectColour(Colour engineColour, string opponentMoves)
     {
         var core = new Core(engineColour);
