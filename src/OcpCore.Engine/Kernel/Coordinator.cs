@@ -15,6 +15,8 @@ public sealed class Coordinator : IDisposable
 
     private readonly int _parallelDepthThreshold;
 
+    private readonly Colour _engineColour;
+    
     private int _maxDepth;
     
     private long[] _depthCounts;
@@ -35,8 +37,10 @@ public sealed class Coordinator : IDisposable
 
     public bool IsParallel => _countdownEvent != null;
 
-    public Coordinator(PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
+    public Coordinator(Colour engineColour, PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
+        _engineColour = engineColour;
+        
         _parallelDepthThreshold = parallelDepthThreshold;
         
         _processors = new StateProcessor[Threads];

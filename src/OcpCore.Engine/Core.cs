@@ -150,7 +150,7 @@ public sealed class Core : IDisposable
 
     private void GetMoveInternal(int depth, Action callback = null)
     {
-        _coordinator = new Coordinator(_perfTestCollector);
+        _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
         _coordinator.StartProcessing(_game, depth);
 
