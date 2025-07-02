@@ -246,19 +246,19 @@ public sealed class LiChessClient : IDisposable
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
             {
-                case MoveOutcome.EngineInCheckmate:
+                case PlyOutcome.EngineInCheckmate:
                     OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
                     return -1;
                 
-                case MoveOutcome.OpponentInCheckmate:
+                case PlyOutcome.OpponentInCheckmate:
                     await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.Move}", null);
                     
                     OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
                     return 1;
                 
-                case MoveOutcome.Stalemate:
+                case PlyOutcome.Stalemate:
                     OutputLine("&NL;  &Gray;Stalemate...");
 
                     return 0;
@@ -303,18 +303,18 @@ public sealed class LiChessClient : IDisposable
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (engineMove.Outcome)
             {
-                case MoveOutcome.EngineInCheckmate:
+                case PlyOutcome.EngineInCheckmate:
                     OutputLine("&NL;  &Magenta;Got nothing :(&White;...");
             
                     return -1;
-                case MoveOutcome.OpponentInCheckmate:
+                case PlyOutcome.OpponentInCheckmate:
                     await Post<NullRequest, BasicResponse>($"bot/game/{id}/move/{engineMove.Move}", null);
                     
                     OutputLine("&NL;  &Green;Checkmate :)&White;...");
 
                     return 1;
                 
-                case MoveOutcome.Stalemate:
+                case PlyOutcome.Stalemate:
                     OutputLine("&NL;  &Gray;Stalemate...");
 
                     return 0;

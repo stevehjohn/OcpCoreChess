@@ -24,77 +24,77 @@ public static class Basic
         1_981_066_775_000_396_239
     ];
 
-    private static readonly Dictionary<(int Ply, MoveOutcome Outcome), long> ExpectedOutcomes = new()
+    private static readonly Dictionary<(int Ply, PlyOutcome Outcome), long> ExpectedOutcomes = new()
     {
-        { (1, MoveOutcome.Capture), 0 },
-        { (1, MoveOutcome.EnPassant), 0 },
-        { (1, MoveOutcome.Castle), 0 },
-        { (1, MoveOutcome.Promotion), 0 },
-        { (1, MoveOutcome.Check), 0 },
-        { (1, MoveOutcome.CheckMate), 0 },
+        { (1, PlyOutcome.Capture), 0 },
+        { (1, PlyOutcome.EnPassant), 0 },
+        { (1, PlyOutcome.Castle), 0 },
+        { (1, PlyOutcome.Promotion), 0 },
+        { (1, PlyOutcome.Check), 0 },
+        { (1, PlyOutcome.CheckMate), 0 },
 
-        { (2, MoveOutcome.Capture), 0 },
-        { (2, MoveOutcome.EnPassant), 0 },
-        { (2, MoveOutcome.Castle), 0 },
-        { (2, MoveOutcome.Promotion), 0 },
-        { (2, MoveOutcome.Check), 0 },
-        { (2, MoveOutcome.CheckMate), 0 },
+        { (2, PlyOutcome.Capture), 0 },
+        { (2, PlyOutcome.EnPassant), 0 },
+        { (2, PlyOutcome.Castle), 0 },
+        { (2, PlyOutcome.Promotion), 0 },
+        { (2, PlyOutcome.Check), 0 },
+        { (2, PlyOutcome.CheckMate), 0 },
 
-        { (3, MoveOutcome.Capture), 34 },
-        { (3, MoveOutcome.EnPassant), 0 },
-        { (3, MoveOutcome.Castle), 0 },
-        { (3, MoveOutcome.Promotion), 0 },
-        { (3, MoveOutcome.Check), 12 },
-        { (3, MoveOutcome.CheckMate), 0 },
+        { (3, PlyOutcome.Capture), 34 },
+        { (3, PlyOutcome.EnPassant), 0 },
+        { (3, PlyOutcome.Castle), 0 },
+        { (3, PlyOutcome.Promotion), 0 },
+        { (3, PlyOutcome.Check), 12 },
+        { (3, PlyOutcome.CheckMate), 0 },
 
-        { (4, MoveOutcome.Capture), 1_576 },
-        { (4, MoveOutcome.EnPassant), 0 },
-        { (4, MoveOutcome.Castle), 0 },
-        { (4, MoveOutcome.Promotion), 0 },
-        { (4, MoveOutcome.Check), 469 },
-        { (4, MoveOutcome.CheckMate), 8 },
+        { (4, PlyOutcome.Capture), 1_576 },
+        { (4, PlyOutcome.EnPassant), 0 },
+        { (4, PlyOutcome.Castle), 0 },
+        { (4, PlyOutcome.Promotion), 0 },
+        { (4, PlyOutcome.Check), 469 },
+        { (4, PlyOutcome.CheckMate), 8 },
 
-        { (5, MoveOutcome.Capture), 82_719 },
-        { (5, MoveOutcome.EnPassant), 258 },
-        { (5, MoveOutcome.Castle), 0 },
-        { (5, MoveOutcome.Promotion), 0 },
-        { (5, MoveOutcome.Check), 27_351 },
-        { (5, MoveOutcome.CheckMate), 347 },
+        { (5, PlyOutcome.Capture), 82_719 },
+        { (5, PlyOutcome.EnPassant), 258 },
+        { (5, PlyOutcome.Castle), 0 },
+        { (5, PlyOutcome.Promotion), 0 },
+        { (5, PlyOutcome.Check), 27_351 },
+        { (5, PlyOutcome.CheckMate), 347 },
 
-        { (6, MoveOutcome.Capture), 2_812_008 },
-        { (6, MoveOutcome.EnPassant), 5_248 },
-        { (6, MoveOutcome.Castle), 0 },
-        { (6, MoveOutcome.Promotion), 0 },
-        { (6, MoveOutcome.Check), 809_099 },
-        { (6, MoveOutcome.CheckMate), 10_828 },
+        { (6, PlyOutcome.Capture), 2_812_008 },
+        { (6, PlyOutcome.EnPassant), 5_248 },
+        { (6, PlyOutcome.Castle), 0 },
+        { (6, PlyOutcome.Promotion), 0 },
+        { (6, PlyOutcome.Check), 809_099 },
+        { (6, PlyOutcome.CheckMate), 10_828 },
 
-        { (7, MoveOutcome.Capture), 108_329_926 },
-        { (7, MoveOutcome.EnPassant), 319_617 },
-        { (7, MoveOutcome.Castle), 883_453 },
-        { (7, MoveOutcome.Promotion), 0 },
-        { (7, MoveOutcome.Check), 33_103_848 },
-        { (7, MoveOutcome.CheckMate), 0435_767 },
+        { (7, PlyOutcome.Capture), 108_329_926 },
+        { (7, PlyOutcome.EnPassant), 319_617 },
+        { (7, PlyOutcome.Castle), 883_453 },
+        { (7, PlyOutcome.Promotion), 0 },
+        { (7, PlyOutcome.Check), 33_103_848 },
+        { (7, PlyOutcome.CheckMate), 0435_767 },
 
-        { (8, MoveOutcome.Capture), 3_523_740_106 },
-        { (8, MoveOutcome.EnPassant), 7_187_977 },
-        { (8, MoveOutcome.Castle), 23_605_205 },
-        { (8, MoveOutcome.Promotion), 0 },
-        { (8, MoveOutcome.Check), 968_981_593 },
-        { (8, MoveOutcome.CheckMate), 9_852_036 },
+        { (8, PlyOutcome.Capture), 3_523_740_106 },
+        { (8, PlyOutcome.EnPassant), 7_187_977 },
+        { (8, PlyOutcome.Castle), 23_605_205 },
+        { (8, PlyOutcome.Promotion), 0 },
+        { (8, PlyOutcome.Check), 968_981_593 },
+        { (8, PlyOutcome.CheckMate), 9_852_036 },
 
-        { (9, MoveOutcome.Capture), 125_208_536_153 },
-        { (9, MoveOutcome.EnPassant), 319_496_827 },
-        { (9, MoveOutcome.Castle), 1_784_356_000 },
-        { (9, MoveOutcome.Promotion), 17_334_376 },
-        { (9, MoveOutcome.Check), 36_095_901_903 },
-        { (9, MoveOutcome.CheckMate), 400_191_963 },
+        { (9, PlyOutcome.Capture), 125_208_536_153 },
+        { (9, PlyOutcome.EnPassant), 319_496_827 },
+        { (9, PlyOutcome.Castle), 1_784_356_000 },
+        { (9, PlyOutcome.Promotion), 17_334_376 },
+        { (9, PlyOutcome.Check), 36_095_901_903 },
+        { (9, PlyOutcome.CheckMate), 400_191_963 },
 
-        { (10, MoveOutcome.Capture), 3_717_978_816_064 },
-        { (10, MoveOutcome.EnPassant), 1_180_218_978 },
-        { (10, MoveOutcome.Castle), 18_006_111_736 },
-        { (10, MoveOutcome.Promotion), 151_104_215 },
-        { (10, MoveOutcome.Check), 1_498_305_037_159 },
-        { (10, MoveOutcome.CheckMate), 16_362_105_050 }
+        { (10, PlyOutcome.Capture), 3_717_978_816_064 },
+        { (10, PlyOutcome.EnPassant), 1_180_218_978 },
+        { (10, PlyOutcome.Castle), 18_006_111_736 },
+        { (10, PlyOutcome.Promotion), 151_104_215 },
+        { (10, PlyOutcome.Check), 1_498_305_037_159 },
+        { (10, PlyOutcome.CheckMate), 16_362_105_050 }
     };
 
     public static void Test(int depth)
@@ -196,12 +196,12 @@ public static class Basic
 
             if (depth >= 10)
             {
-                Console.WriteLine($"      Capture:  {core.GetOutcomeCount(depth, MoveOutcome.Capture),15:N0}");
-                Console.WriteLine($"      En Passant: {core.GetOutcomeCount(depth, MoveOutcome.EnPassant),13:N0}");
-                Console.WriteLine($"      Castle: {core.GetOutcomeCount(depth, MoveOutcome.Castle),17:N0}");
-                Console.WriteLine($"      Promotion:  {core.GetOutcomeCount(depth, MoveOutcome.Promotion),13:N0}");
-                Console.WriteLine($"      Check: {core.GetOutcomeCount(depth, MoveOutcome.Check),18:N0}");
-                Console.WriteLine($"      Check Mate: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate),13:N0}");
+                Console.WriteLine($"      Capture:  {core.GetOutcomeCount(depth, PlyOutcome.Capture),15:N0}");
+                Console.WriteLine($"      En Passant: {core.GetOutcomeCount(depth, PlyOutcome.EnPassant),13:N0}");
+                Console.WriteLine($"      Castle: {core.GetOutcomeCount(depth, PlyOutcome.Castle),17:N0}");
+                Console.WriteLine($"      Promotion:  {core.GetOutcomeCount(depth, PlyOutcome.Promotion),13:N0}");
+                Console.WriteLine($"      Check: {core.GetOutcomeCount(depth, PlyOutcome.Check),18:N0}");
+                Console.WriteLine($"      Check Mate: {core.GetOutcomeCount(depth, PlyOutcome.CheckMate),13:N0}");
 
                 Console.WriteLine();
 
@@ -210,76 +210,76 @@ public static class Basic
 
             Console.WriteLine();
 
-            Console.Write($"      Capture:  {core.GetOutcomeCount(depth, MoveOutcome.Capture),15:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetOutcomeCount(depth, MoveOutcome.Capture) ? "✓" : string.Empty)}");
+            Console.Write($"      Capture:  {core.GetOutcomeCount(depth, PlyOutcome.Capture),15:N0}");
+            Console.Write($" {(ExpectedOutcomes[(depth, PlyOutcome.Capture)] == core.GetOutcomeCount(depth, PlyOutcome.Capture) ? "✓" : string.Empty)}");
 
-            if (ExpectedOutcomes[(depth, MoveOutcome.Capture)] == core.GetOutcomeCount(depth, MoveOutcome.Capture))
+            if (ExpectedOutcomes[(depth, PlyOutcome.Capture)] == core.GetOutcomeCount(depth, PlyOutcome.Capture))
             {
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.Capture) - ExpectedOutcomes[(depth, MoveOutcome.Capture)],13:N0}");
+                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, PlyOutcome.Capture) - ExpectedOutcomes[(depth, PlyOutcome.Capture)],13:N0}");
             }
 
-            Console.Write($"      En Passant: {core.GetOutcomeCount(depth, MoveOutcome.EnPassant),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetOutcomeCount(depth, MoveOutcome.EnPassant) ? "✓" : string.Empty)}");
+            Console.Write($"      En Passant: {core.GetOutcomeCount(depth, PlyOutcome.EnPassant),13:N0}");
+            Console.Write($" {(ExpectedOutcomes[(depth, PlyOutcome.EnPassant)] == core.GetOutcomeCount(depth, PlyOutcome.EnPassant) ? "✓" : string.Empty)}");
 
-            if (ExpectedOutcomes[(depth, MoveOutcome.EnPassant)] == core.GetOutcomeCount(depth, MoveOutcome.EnPassant))
+            if (ExpectedOutcomes[(depth, PlyOutcome.EnPassant)] == core.GetOutcomeCount(depth, PlyOutcome.EnPassant))
             {
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.EnPassant) - ExpectedOutcomes[(depth, MoveOutcome.EnPassant)],13:N0}");
+                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, PlyOutcome.EnPassant) - ExpectedOutcomes[(depth, PlyOutcome.EnPassant)],13:N0}");
             }
 
-            Console.Write($"      Castle:     {core.GetOutcomeCount(depth, MoveOutcome.Castle),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetOutcomeCount(depth, MoveOutcome.Castle) ? "✓" : string.Empty)}");
+            Console.Write($"      Castle:     {core.GetOutcomeCount(depth, PlyOutcome.Castle),13:N0}");
+            Console.Write($" {(ExpectedOutcomes[(depth, PlyOutcome.Castle)] == core.GetOutcomeCount(depth, PlyOutcome.Castle) ? "✓" : string.Empty)}");
 
-            if (ExpectedOutcomes[(depth, MoveOutcome.Castle)] == core.GetOutcomeCount(depth, MoveOutcome.Castle))
+            if (ExpectedOutcomes[(depth, PlyOutcome.Castle)] == core.GetOutcomeCount(depth, PlyOutcome.Castle))
             {
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.Castle) - ExpectedOutcomes[(depth, MoveOutcome.Castle)],13:N0}");
+                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, PlyOutcome.Castle) - ExpectedOutcomes[(depth, PlyOutcome.Castle)],13:N0}");
             }
 
-            Console.Write($"      Promotion:  {core.GetOutcomeCount(depth, MoveOutcome.Promotion),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetOutcomeCount(depth, MoveOutcome.Promotion) ? "✓" : string.Empty)}");
+            Console.Write($"      Promotion:  {core.GetOutcomeCount(depth, PlyOutcome.Promotion),13:N0}");
+            Console.Write($" {(ExpectedOutcomes[(depth, PlyOutcome.Promotion)] == core.GetOutcomeCount(depth, PlyOutcome.Promotion) ? "✓" : string.Empty)}");
 
-            if (ExpectedOutcomes[(depth, MoveOutcome.Promotion)] == core.GetOutcomeCount(depth, MoveOutcome.Promotion))
+            if (ExpectedOutcomes[(depth, PlyOutcome.Promotion)] == core.GetOutcomeCount(depth, PlyOutcome.Promotion))
             {
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.Promotion) - ExpectedOutcomes[(depth, MoveOutcome.Promotion)],13:N0}");
+                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, PlyOutcome.Promotion) - ExpectedOutcomes[(depth, PlyOutcome.Promotion)],13:N0}");
             }
 
-            Console.Write($"      Check:     {core.GetOutcomeCount(depth, MoveOutcome.Check),14:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetOutcomeCount(depth, MoveOutcome.Check) ? "✓" : string.Empty)}");
+            Console.Write($"      Check:     {core.GetOutcomeCount(depth, PlyOutcome.Check),14:N0}");
+            Console.Write($" {(ExpectedOutcomes[(depth, PlyOutcome.Check)] == core.GetOutcomeCount(depth, PlyOutcome.Check) ? "✓" : string.Empty)}");
 
-            if (ExpectedOutcomes[(depth, MoveOutcome.Check)] == core.GetOutcomeCount(depth, MoveOutcome.Check))
+            if (ExpectedOutcomes[(depth, PlyOutcome.Check)] == core.GetOutcomeCount(depth, PlyOutcome.Check))
             {
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.Check) - ExpectedOutcomes[(depth, MoveOutcome.Check)],13:N0}");
+                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, PlyOutcome.Check) - ExpectedOutcomes[(depth, PlyOutcome.Check)],13:N0}");
             }
 
-            Console.Write($"      Check Mate: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate),13:N0}");
-            Console.Write($" {(ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetOutcomeCount(depth, MoveOutcome.CheckMate) ? "✓" : string.Empty)}");
+            Console.Write($"      Check Mate: {core.GetOutcomeCount(depth, PlyOutcome.CheckMate),13:N0}");
+            Console.Write($" {(ExpectedOutcomes[(depth, PlyOutcome.CheckMate)] == core.GetOutcomeCount(depth, PlyOutcome.CheckMate) ? "✓" : string.Empty)}");
 
-            if (ExpectedOutcomes[(depth, MoveOutcome.CheckMate)] == core.GetOutcomeCount(depth, MoveOutcome.CheckMate))
+            if (ExpectedOutcomes[(depth, PlyOutcome.CheckMate)] == core.GetOutcomeCount(depth, PlyOutcome.CheckMate))
             {
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
+                Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, PlyOutcome.CheckMate) - ExpectedOutcomes[(depth, PlyOutcome.CheckMate)],13:N0}");
             }
         }
 

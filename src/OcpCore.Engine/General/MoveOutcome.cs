@@ -1,14 +1,9 @@
-namespace OcpCore.Engine.General;
+namespace Engine.General;
 
-[Flags]
 public enum MoveOutcome
 {
-    Move      = 1,
-    Castle    = 2,
-    EnPassant = 4,
-    Capture   = 8,
-    Check     = 16,
-    Promotion = 32,
-    CheckMate = 64,
-    Null      = 128
+    EngineInCheckmate   = 0,
+    Move                = 1,
+    Stalemate           = 2,
+    OpponentInCheckmate = 3
 }

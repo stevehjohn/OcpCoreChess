@@ -1,4 +1,5 @@
 using System.Numerics;
+using Engine.General;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
@@ -32,7 +33,7 @@ public sealed class Core : IDisposable
 
     public long GetDepthCount(int ply) => _coordinator.GetDepthCount(ply);
 
-    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
+    public long GetOutcomeCount(int ply, PlyOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
 
     public bool IsBusy => _cancellationTokenSource != null;
 
@@ -150,13 +151,13 @@ public sealed class Core : IDisposable
         return allowedMoves;
     }
 
-    private (MoveOutcome OutCome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
+    private (PlyOutcome OutCome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
     {
         _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
         _coordinator.StartProcessing(_game, depth);
 
-        var bestMove = _coordinator.BestMoves.Count == 0 ? (Score: 0, Outcome: MoveOutcome.Null, Move: string.Empty) : _coordinator.BestMoves.Last().Value;
+        var bestMove = _coordinator.BestMoves.Count == 0 ? (Score: 0, Outcome: PlyOutcome.Null, Move: string.Empty) : _coordinator.BestMoves.Last().Value;
 
         callback?.Invoke((bestMove.Outcome, bestMove.Move));
 

@@ -21,7 +21,7 @@ public class StateProcessor
 
     private readonly Colour _engineColour;
 
-    private readonly Dictionary<int, (int Score, MoveOutcome Outcome, string Move)> _bestMoves = [];
+    private readonly Dictionary<int, (int Score, PlyOutcome Outcome, string Move)> _bestMoves = [];
 
     private int _maxDepth;
 
@@ -31,11 +31,11 @@ public class StateProcessor
 
     private Action<StateProcessor, bool> _callback;
 
-    public IReadOnlyDictionary<int, (int Score, MoveOutcome Outcome, string Move)> BestMoves => _bestMoves;
+    public IReadOnlyDictionary<int, (int Score, PlyOutcome Outcome, string Move)> BestMoves => _bestMoves;
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
-    public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
+    public long GetOutcomeCount(int ply, PlyOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
     public StateProcessor(Colour engineColour, PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
     {
@@ -152,17 +152,17 @@ public class StateProcessor
 
         if (copy.IsKingInCheck(opponent))
         {
-            outcomes |= MoveOutcome.Check;
+            outcomes |= PlyOutcome.Check;
 
             if (! CanMove(copy, opponent))
             {
-                outcomes |= MoveOutcome.CheckMate;
+                outcomes |= PlyOutcome.CheckMate;
             }
         }
 
         IncrementOutcomes(ply, outcomes);
 
-        if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
+        if (depth > 1 && (outcomes & (PlyOutcome.CheckMate | PlyOutcome.Promotion)) == 0)
         {
             Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
         }
@@ -186,9 +186,9 @@ public class StateProcessor
         }
     }
 
-    private bool HandlePromotion(ref MoveOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
+    private bool HandlePromotion(ref PlyOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
     {
-        if ((outcomes & MoveOutcome.Promotion) == 0)
+        if ((outcomes & PlyOutcome.Promotion) == 0)
         {
             return false;
         }
@@ -205,13 +205,13 @@ public class StateProcessor
 
             if (copy.IsKingInCheck(opponent))
             {
-                outcomes |= MoveOutcome.Check;
+                outcomes |= PlyOutcome.Check;
 
                 checks++;
 
                 if (! CanMove(copy, opponent))
                 {
-                    outcomes |= MoveOutcome.CheckMate;
+                    outcomes |= PlyOutcome.CheckMate;
 
                     checkmates++;
                 }
@@ -231,13 +231,13 @@ public class StateProcessor
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int CalculatePriority(Game game, MoveOutcome outcome, int target, Kind player, Colour opponent)
+    private int CalculatePriority(Game game, PlyOutcome outcome, int target, Kind player, Colour opponent)
     {
-        var priority = ((int) MoveOutcome.CheckMate - (1 << BitOperations.Log2((uint) outcome))) * 100;
+        var priority = ((int) PlyOutcome.CheckMate - (1 << BitOperations.Log2((uint) outcome))) * 100;
 
-        if ((outcome & MoveOutcome.Capture) > 0)
+        if ((outcome & PlyOutcome.Capture) > 0)
         {
-            if ((outcome & MoveOutcome.EnPassant) > 0)
+            if ((outcome & PlyOutcome.EnPassant) > 0)
             {
                 priority += (10 - Scores.Pawn) * 10;
             }
@@ -320,7 +320,7 @@ public class StateProcessor
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IncrementOutcomes(int ply, MoveOutcome outcomes)
+    private void IncrementOutcomes(int ply, PlyOutcome outcomes)
     {
         while (outcomes > 0)
         {
@@ -328,25 +328,25 @@ public class StateProcessor
 
             _outcomes[ply][outcome + 1]++;
 
-            outcomes ^= (MoveOutcome) (1 << outcome);
+            outcomes ^= (PlyOutcome) (1 << outcome);
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IncrementPromotionOutcomes(int ply, MoveOutcome outcomes, int checks, int checkmates)
+    private void IncrementPromotionOutcomes(int ply, PlyOutcome outcomes, int checks, int checkmates)
     {
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Move) + 1] += 4;
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Move) + 1] += 4;
                 
-        if ((outcomes & MoveOutcome.Capture) > 0)
+        if ((outcomes & PlyOutcome.Capture) > 0)
         {
-            _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Capture) + 1] += 4;
+            _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Capture) + 1] += 4;
         }
 
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Promotion) + 1] += 4;
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Promotion) + 1] += 4;
 
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.Check) + 1] += checks;
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Check) + 1] += checks;
 
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) MoveOutcome.CheckMate) + 1] += checkmates;
+        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.CheckMate) + 1] += checkmates;
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -111,7 +111,7 @@ public struct Game
         return GetKindInternal(1ul << cell);
     }
     
-    public MoveOutcome MakeMove(int from, int to)
+    public PlyOutcome MakeMove(int from, int to)
     {
         var fromBit = 1ul << from;
 
@@ -131,7 +131,7 @@ public struct Game
 
         var kind = GetKindInternal(fromBit);
 
-        var outcome = MoveOutcome.Move;
+        var outcome = PlyOutcome.Move;
 
         if (kind == Kind.King)
         {
@@ -315,9 +315,9 @@ public struct Game
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void HandleCapture(int to, ref MoveOutcome outcome)
+    private void HandleCapture(int to, ref PlyOutcome outcome)
     {
-        outcome |= MoveOutcome.Capture;
+        outcome |= PlyOutcome.Capture;
 
         var capturedKind = GetKind(to);
 
@@ -358,11 +358,11 @@ public struct Game
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-    private void HandlePawnSpecifics(int to, ref MoveOutcome outcome)
+    private void HandlePawnSpecifics(int to, ref PlyOutcome outcome)
     {
         if (to == State.EnPassantTarget)
         {
-            outcome |= MoveOutcome.EnPassant | MoveOutcome.Capture;
+            outcome |= PlyOutcome.EnPassant | PlyOutcome.Capture;
 
             var target = 1ul << (State.EnPassantTarget.Value + (State.Player == Colour.White ? -Constants.Files : Constants.Files));
 
@@ -386,12 +386,12 @@ public struct Game
 
         if (Cell.GetRank(to) is 0 or 7)
         {
-            outcome |= MoveOutcome.Promotion;
+            outcome |= PlyOutcome.Promotion;
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void HandleKingSpecifics(int from, int to, ref MoveOutcome outcome)
+    private void HandleKingSpecifics(int from, int to, ref PlyOutcome outcome)
     {
         if (State.Player == Colour.White)
         {
@@ -404,7 +404,7 @@ public struct Game
 
         if (Math.Abs(from - to) == 2)
         {
-            outcome |= MoveOutcome.Castle;
+            outcome |= PlyOutcome.Castle;
             
             if (from < to)
             {

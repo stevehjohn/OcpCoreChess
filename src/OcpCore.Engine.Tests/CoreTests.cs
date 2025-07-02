@@ -21,17 +21,17 @@ public class CoreTests
         
         Assert.Equal(count, core.GetDepthCount(ply));
         
-        Assert.Equal(capture, core.GetOutcomeCount(ply, MoveOutcome.Capture));
+        Assert.Equal(capture, core.GetOutcomeCount(ply, PlyOutcome.Capture));
         
-        Assert.Equal(enPassant, core.GetOutcomeCount(ply, MoveOutcome.EnPassant));
+        Assert.Equal(enPassant, core.GetOutcomeCount(ply, PlyOutcome.EnPassant));
         
-        Assert.Equal(castle, core.GetOutcomeCount(ply, MoveOutcome.Castle));
+        Assert.Equal(castle, core.GetOutcomeCount(ply, PlyOutcome.Castle));
         
-        Assert.Equal(promotion, core.GetOutcomeCount(ply, MoveOutcome.Promotion));
+        Assert.Equal(promotion, core.GetOutcomeCount(ply, PlyOutcome.Promotion));
         
-        Assert.Equal(check, core.GetOutcomeCount(ply, MoveOutcome.Check));
+        Assert.Equal(check, core.GetOutcomeCount(ply, PlyOutcome.Check));
         
-        Assert.Equal(mate, core.GetOutcomeCount(ply, MoveOutcome.CheckMate));
+        Assert.Equal(mate, core.GetOutcomeCount(ply, PlyOutcome.CheckMate));
     }
 
     [Theory]

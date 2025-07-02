@@ -127,12 +127,12 @@ public class StateProcessorTests
         
         Assert.Equal(expectedMoves, processor.GetDepthCount(1));
 
-        Assert.Equal(promotions, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.Promotion));
+        Assert.Equal(promotions, processor.GetOutcomeCount(1, (PlyOutcome) (int) PlyOutcome.Promotion));
         
-        Assert.Equal(captures, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.Capture));
+        Assert.Equal(captures, processor.GetOutcomeCount(1, (PlyOutcome) (int) PlyOutcome.Capture));
         
-        Assert.Equal(checks, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.Check));
+        Assert.Equal(checks, processor.GetOutcomeCount(1, (PlyOutcome) (int) PlyOutcome.Check));
         
-        Assert.Equal(checkmates, processor.GetOutcomeCount(1, (MoveOutcome) (int) MoveOutcome.CheckMate));
+        Assert.Equal(checkmates, processor.GetOutcomeCount(1, (PlyOutcome) (int) PlyOutcome.CheckMate));
     }
 }

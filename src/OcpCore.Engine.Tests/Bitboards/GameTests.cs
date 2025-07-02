@@ -245,11 +245,11 @@ public class GameTests
 
         if (promotionExpected)
         {
-            Assert.True((outcome & MoveOutcome.Promotion) > 0);
+            Assert.True((outcome & PlyOutcome.Promotion) > 0);
         }
         else
         {
-            Assert.False((outcome & MoveOutcome.Promotion) > 0);
+            Assert.False((outcome & PlyOutcome.Promotion) > 0);
         }
     }
 
