@@ -40,6 +40,8 @@ public sealed class Core : IDisposable
 
     public IReadOnlyDictionary<string, long> PerftData => _perfTestCollector?.Counts;
 
+    public Colour Player => _engineColour;
+
     public Core(Colour engineColour, bool collectPerft = false)
     {
         _engineColour = engineColour;
