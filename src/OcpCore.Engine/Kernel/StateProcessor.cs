@@ -21,6 +21,8 @@ public class StateProcessor
 
     private readonly Colour _engineColour;
 
+    private readonly Dictionary<int, (int Score, string Move)> _bestMoves = [];
+
     private int _maxDepth;
 
     private long[] _depthCounts;
@@ -28,8 +30,6 @@ public class StateProcessor
     private long[][] _outcomes;
 
     private Action<StateProcessor, bool> _callback;
-
-    private Dictionary<int, (int Score, string Move)> _bestMoves = [];
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
