@@ -119,7 +119,7 @@ public static class Basic
 
             // ReSharper disable once AccessToModifiedClosure
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(maxDepth, () => PlyComplete(core, maxDepth, stopwatch))
+            core.GetMove(maxDepth, bestMove => PlyComplete(core, maxDepth, stopwatch, bestMove))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
@@ -173,7 +173,7 @@ public static class Basic
         }
     }
 
-    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch)
+    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch, string bestMove)
     {
         stopwatch.Stop();
 
@@ -282,6 +282,10 @@ public static class Basic
                 Console.WriteLine($"  Delta: {core.GetOutcomeCount(depth, MoveOutcome.CheckMate) - ExpectedOutcomes[(depth, MoveOutcome.CheckMate)],13:N0}");
             }
         }
+
+        Console.WriteLine();
+        
+        Console.WriteLine($"Best move: {bestMove}.");
 
         Console.WriteLine();
 
