@@ -33,7 +33,7 @@ public static class Lct2
         
             Console.WriteLine();
             
-            Console.WriteLine($"  Test: {i + 1,3}/{tests.Length,3}  Depth: {depth}  FEN: {parts[0]} Best move: {expectedBestMove}");
+            Console.WriteLine($"  Test: {i + 1,3} /{tests.Length,3}  Depth: {depth}  FEN: {parts[0]} Best move: {expectedBestMove}");
             
             Console.WriteLine();
 
