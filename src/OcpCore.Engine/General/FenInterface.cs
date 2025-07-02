@@ -144,9 +144,9 @@ public static class FenInterface
             enPassantTarget = parts[3].FromStandardNotation();
         }
 
-        int halfmoves;
+        var halfmoves = 0;
 
-        int fullmoves;
+        var fullmoves = 0;
 
         if (parts.Length == 6)
         {
