@@ -9,5 +9,6 @@ public enum MoveOutcome
     Capture   = 8,
     Check     = 16,
     Promotion = 32,
-    CheckMate = 64
+    CheckMate = 64,
+    Null      = 128
 }

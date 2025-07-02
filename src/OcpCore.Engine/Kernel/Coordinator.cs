@@ -16,7 +16,7 @@ public sealed class Coordinator : IDisposable
 
     private readonly int _parallelDepthThreshold;
 
-    private readonly ConcurrentDictionary<int, (int Score, string Move)> _bestMoves = [];
+    private readonly ConcurrentDictionary<int, (int Score, MoveOutcome Outcome, string Move)> _bestMoves = [];
 
     private int _maxDepth;
     
@@ -34,7 +34,7 @@ public sealed class Coordinator : IDisposable
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public IReadOnlyDictionary<int, (int Score, string Move)> BestMoves => _bestMoves;
+    public IReadOnlyDictionary<int, (int Score, MoveOutcome Outcome, string Move)> BestMoves => _bestMoves;
 
     public int QueueSize { get; private set; }
 

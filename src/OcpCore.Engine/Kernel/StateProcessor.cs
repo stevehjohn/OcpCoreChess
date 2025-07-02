@@ -21,7 +21,7 @@ public class StateProcessor
 
     private readonly Colour _engineColour;
 
-    private readonly Dictionary<int, (int Score, string Move)> _bestMoves = [];
+    private readonly Dictionary<int, (int Score, MoveOutcome Outcome, string Move)> _bestMoves = [];
 
     private int _maxDepth;
 
@@ -31,7 +31,7 @@ public class StateProcessor
 
     private Action<StateProcessor, bool> _callback;
 
-    public IReadOnlyDictionary<int, (int Score, string Move)> BestMoves => _bestMoves;
+    public IReadOnlyDictionary<int, (int Score, MoveOutcome Outcome, string Move)> BestMoves => _bestMoves;
 
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
@@ -182,7 +182,7 @@ public class StateProcessor
 
         if (addToBestScores)
         {
-            _bestMoves[node.Depth] = (score, $"{from.ToStandardNotation()}{to.ToStandardNotation()}");
+            _bestMoves[node.Depth] = (score, outcomes, $"{from.ToStandardNotation()}{to.ToStandardNotation()}");
         }
     }
 

@@ -150,17 +150,17 @@ public sealed class Core : IDisposable
         return allowedMoves;
     }
 
-    private string GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
+    private (MoveOutcome OutCome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
     {
         _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
         _coordinator.StartProcessing(_game, depth);
 
-        var bestMove = _coordinator.BestMoves.Count == 0 ? string.Empty : _coordinator.BestMoves.Last().Value.Move;
+        var bestMove = _coordinator.BestMoves.Count == 0 ? (Score: 0, Outcome: MoveOutcome.Null, Move: string.Empty) : _coordinator.BestMoves.Last().Value;
 
-        callback?.Invoke(bestMove);
+        callback?.Invoke((bestMove.Outcome, bestMove.Move));
 
-        return bestMove;
+        return (bestMove.Outcome, bestMove.Move);
     }
     
     private static int PopPiecePosition(ref ulong pieces)
