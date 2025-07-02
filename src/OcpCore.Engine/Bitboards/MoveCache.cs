@@ -219,10 +219,6 @@ public class MoveCache
 
     private static ulong GenerateAntiDiagonalMoves(int cell)
     {
-        if (cell == 62)
-        {
-        }
-
         var rank = Cell.GetRank(cell);
         
         var file = Cell.GetFile(cell);
