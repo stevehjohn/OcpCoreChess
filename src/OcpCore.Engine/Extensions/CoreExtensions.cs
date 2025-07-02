@@ -24,6 +24,8 @@ public static class CoreExtensions
         {
             if (state[i] == '|')
             {
+                Console.BackgroundColor = ConsoleColor.Black;
+                
                 Console.WriteLine();
                 
                 Console.Write("  ");
