@@ -238,7 +238,7 @@ public sealed class LiChessClient : IDisposable
             lastMove = moves[^1];
         }
 
-        if (_core.Player == Colour.White && engineIsWhite)
+        if (_core.CurrentPlayer == _core.Player)
         {
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
@@ -282,16 +282,21 @@ public sealed class LiChessClient : IDisposable
         }
         else
         {
+            if (moves.Length == 0)
+            {
+                return 0;
+            }
+
             _core.MakeMove(lastMove);
 
             OutputLine($"&NL;  &Green;Opponent&White;: {lastMove}");
-                        
+
             OutputLine();
-            
+
             _core.OutputBoard(! engineIsWhite);
 
             OutputLine("&NL;  &Cyan;Thinking&White;...");
-            
+
             var engineMove = _core.GetMove(Depth);
 
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
