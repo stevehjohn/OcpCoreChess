@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{DD6E
 	ProjectSection(SolutionItems) = preProject
 		..\test.sh = ..\test.sh
 		..\perf-test.sh = ..\perf-test.sh
+		..\play-lichess.sh = ..\play-lichess.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcpCore.Engine.PerfTest", "OcpCore.Engine.PerfTest\OcpCore.Engine.PerfTest.csproj", "{81C10F1C-2994-41EA-8355-20EA7F053ABA}"

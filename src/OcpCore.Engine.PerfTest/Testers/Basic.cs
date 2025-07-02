@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Engine.General;
 using OcpCore.Engine.General;
 
 namespace OcpCore.Engine.PerfTest.Testers;
@@ -173,7 +174,7 @@ public static class Basic
         }
     }
 
-    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch, string bestMove)
+    private static void PlyComplete(Core core, int maxDepth, Stopwatch stopwatch, (MoveOutcome Outcome, string Move)  bestMove)
     {
         stopwatch.Stop();
 

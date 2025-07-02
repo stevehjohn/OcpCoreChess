@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
@@ -523,5 +524,44 @@ public struct Game
         this[colour] |= toBit;
 
         this[kind] |= toBit;
+    }
+
+    public override string ToString()
+    {
+        var builder = new StringBuilder();
+            
+        for (var rank = 0; rank < Constants.Ranks; rank++)
+        {
+            for (var file = 0; file < Constants.Files; file++)
+            {
+                var position = rank * Constants.Ranks + file;
+
+                var bit = 1UL << (position - 1);
+
+                var character = piece.Kind switch
+                {
+                    Kind.Rook => 'R',
+                    Kind.Knight => 'N',
+                    Kind.Bishop => 'B',
+                    Kind.Queen => 'Q',
+                    Kind.King => 'K',
+                    _ => 'P'
+                };
+                
+                if ((this[Colour.Black] & bit) > 0)
+                {
+                    character = char.ToLowerInvariant(character);
+                }
+
+                builder.Append(character);
+            }
+
+            if (rank < Constants.Ranks - 1)
+            {
+                builder.Append('|');
+            }
+        }
+
+        return builder.ToString();
     }
 }

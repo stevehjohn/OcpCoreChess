@@ -200,4 +200,9 @@ public sealed class Core : IDisposable
 
         _coordinator = null;
     }
+
+    public override string ToString()
+    {
+        return _game.ToString();
+    }
 }

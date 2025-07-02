@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Engine.General;
 using OcpCore.Engine.General;
 
 namespace OcpCore.Engine.PerfTest.Testers;
@@ -109,7 +110,7 @@ public static class Etherial
         Console.WriteLine();
     }
 
-    private static bool TestComplete(Core core, int depth, string[] test, string bestMove)
+    private static bool TestComplete(Core core, int depth, string[] test, (MoveOutcome Outcome, string Move) bestMove)
     {
         Console.Write("                                                                          ");
 

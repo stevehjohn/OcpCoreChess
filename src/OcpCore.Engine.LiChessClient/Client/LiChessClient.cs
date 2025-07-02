@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Engine.General;
+using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.LiChessClient.Client.Models;
 using OcpCore.Engine.LiChessClient.Exceptions;
@@ -278,7 +279,7 @@ public sealed class LiChessClient : IDisposable
             
             OutputLine();
             
-            //_core.OutputBoard();
+            _core.OutputBoard();
         }
         else
         {
@@ -288,7 +289,7 @@ public sealed class LiChessClient : IDisposable
                         
             OutputLine();
             
-            // _core.OutputBoard(! engineIsWhite);
+            _core.OutputBoard(! engineIsWhite);
 
             OutputLine("&NL;  &Cyan;Thinking&White;...");
             
@@ -329,7 +330,7 @@ public sealed class LiChessClient : IDisposable
 
             OutputLine();
             
-            //_core.OutputBoard(! engineIsWhite);
+            _core.OutputBoard(! engineIsWhite);
         }
 
         return 0;
