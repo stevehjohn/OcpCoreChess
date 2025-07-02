@@ -42,6 +42,8 @@ public sealed class Core : IDisposable
 
     // ReSharper disable once ConvertToAutoPropertyWhenPossible
     public Colour Player => _engineColour;
+
+    public Colour CurrentPlayer => _game.State.Player;
     
     public (Colour Colour, Kind Kind) this[string position] 
     {
