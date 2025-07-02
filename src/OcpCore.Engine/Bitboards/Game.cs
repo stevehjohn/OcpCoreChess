@@ -538,7 +538,46 @@ public struct Game
 
                 var bit = 1UL << (position - 1);
 
-                var character = piece.Kind switch
+                Kind? kind = null;
+
+                if ((this[Kind.Pawn] & bit) > 0)
+                {
+                    kind = Kind.Pawn;
+                }
+
+                if ((this[Kind.Rook] & bit) > 0)
+                {
+                    kind = Kind.Rook;
+                }
+
+                if ((this[Kind.Knight] & bit) > 0)
+                {
+                    kind = Kind.Knight;
+                }
+
+                if ((this[Kind.Bishop] & bit) > 0)
+                {
+                    kind = Kind.Bishop;
+                }
+
+                if ((this[Kind.Queen] & bit) > 0)
+                {
+                    kind = Kind.Queen;
+                }
+
+                if ((this[Kind.King] & bit) > 0)
+                {
+                    kind = Kind.King;
+                }
+                
+                if (kind == null)
+                {
+                    builder.Append(' ');
+                    
+                    continue;
+                }
+
+                var character = kind switch
                 {
                     Kind.Rook => 'R',
                     Kind.Knight => 'N',

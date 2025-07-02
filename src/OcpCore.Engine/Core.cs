@@ -1,5 +1,4 @@
 using System.Numerics;
-using Engine.General;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.Exceptions;
 using OcpCore.Engine.Extensions;
@@ -41,6 +40,7 @@ public sealed class Core : IDisposable
 
     public IReadOnlyDictionary<string, long> PerftData => _perfTestCollector?.Counts;
 
+    // ReSharper disable once ConvertToAutoPropertyWhenPossible
     public Colour Player => _engineColour;
 
     public Core(Colour engineColour, bool collectPerft = false)

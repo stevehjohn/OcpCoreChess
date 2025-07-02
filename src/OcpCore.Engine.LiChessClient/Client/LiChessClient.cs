@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Engine.General;
 using OcpCore.Engine.Extensions;
 using OcpCore.Engine.General;
 using OcpCore.Engine.LiChessClient.Client.Models;
@@ -263,7 +262,7 @@ public sealed class LiChessClient : IDisposable
                 // case PlyOutcome.Stalemate:
                 //     OutputLine("&NL;  &Gray;Stalemate...");
 
-                    return 0;
+                    // return 0;
             }
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");

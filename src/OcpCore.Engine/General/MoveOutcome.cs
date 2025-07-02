@@ -1,4 +1,4 @@
-namespace Engine.General;
+namespace OcpCore.Engine.General;
 
 public enum MoveOutcome
 {

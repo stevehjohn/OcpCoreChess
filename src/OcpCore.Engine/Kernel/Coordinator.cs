@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General;
@@ -117,6 +118,7 @@ public sealed class Coordinator : IDisposable
         _cancellationTokenSource = null;
     }
 
+    [SuppressMessage("Performance", "CA1854:Prefer the \'IDictionary.TryGetValue(TKey, out TValue)\' method")]
     private void CoalesceResults(StateProcessor processor, bool isComplete)
     {
         for (var depth = 1; depth <= _maxDepth; depth++)
