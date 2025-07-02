@@ -164,6 +164,15 @@ public class StateProcessor
         {
             Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
         }
+        
+        var score = _engineColour == Colour.Black ? game.State.BlackScore : game.State.WhiteScore;
+
+        var addToBeestScores = false;
+
+        if (addToBeestScores)
+        {
+            _bestMoves[node.Depth] = (score, $"{from.ToStandardNotation()}{to.ToStandardNotation()}");
+        }
     }
 
     private bool HandlePromotion(ref MoveOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
