@@ -120,10 +120,10 @@ public sealed class Coordinator : IDisposable
         for (var depth = 1; depth <= _maxDepth; depth++)
         {
             Interlocked.Add(ref _depthCounts[depth], processor.GetDepthCount(depth));
-
+            
             if (processor.BestMoves.TryGetValue(depth, out var bestMove))
             {
-                if (bestMove.Score > _bestMoves[depth].Score)
+                if (! _bestMoves.ContainsKey(depth) || bestMove.Score > _bestMoves[depth].Score)
                 {
                     _bestMoves[depth] = bestMove;
                 }
