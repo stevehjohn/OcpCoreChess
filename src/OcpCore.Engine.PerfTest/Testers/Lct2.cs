@@ -9,7 +9,7 @@ public static class Lct2
 {
     public static void Test()
     {
-        var tests = File.ReadAllLines("Data/lcd2-bm.epd");
+        var tests = File.ReadAllLines("Data/lct2-bm.epd");
 
         var stopwatch = Stopwatch.StartNew();
 
