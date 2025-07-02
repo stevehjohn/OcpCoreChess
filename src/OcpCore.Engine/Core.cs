@@ -158,7 +158,7 @@ public sealed class Core : IDisposable
 
         callback?.Invoke();
 
-        return "";
+        return _coordinator.BestMoves.Last().Value.Move;
     }
     
     private static int PopPiecePosition(ref ulong pieces)

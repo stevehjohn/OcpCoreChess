@@ -33,7 +33,9 @@ public sealed class Coordinator : IDisposable
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
-    
+
+    public IReadOnlyDictionary<int, (int Score, string Move)> BestMoves => _bestMoves;
+
     public int QueueSize { get; private set; }
 
     public bool IsParallel => _countdownEvent != null;
