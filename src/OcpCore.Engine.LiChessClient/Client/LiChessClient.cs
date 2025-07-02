@@ -205,8 +205,6 @@ public sealed class LiChessClient : IDisposable
                     
                     continue;
                 }
-
-                _core = new Core(Colour.Black);
             }
 
             if (state == null)
