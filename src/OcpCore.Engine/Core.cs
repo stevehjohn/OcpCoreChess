@@ -86,12 +86,12 @@ public sealed class Core : IDisposable
         _game.MakeMove(position, target);
     }
 
-    public void GetMove(int depth)
+    public string GetMove(int depth)
     {
-        GetMoveInternal(depth);
+        return GetMoveInternal(depth);
     }
     
-    public Task GetMove(int depth, Action callback)
+    public Task GetMove(int depth, Action<string> callback)
     {
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -104,7 +104,7 @@ public sealed class Core : IDisposable
             _cancellationTokenSource = null;
 
             _getMoveTask = null;
-            
+
         }, _cancellationToken);
 
         return _getMoveTask;
@@ -148,13 +148,17 @@ public sealed class Core : IDisposable
         return allowedMoves;
     }
 
-    private void GetMoveInternal(int depth, Action callback = null)
+    private string GetMoveInternal(int depth, Action<string> callback = null)
     {
-        _coordinator = new Coordinator(_perfTestCollector);
+        _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
         _coordinator.StartProcessing(_game, depth);
 
-        callback?.Invoke();
+        var bestMove = _coordinator.BestMoves.Count == 0 ? string.Empty : _coordinator.BestMoves.Last().Value.Move;
+
+        callback?.Invoke(bestMove);
+
+        return bestMove;
     }
     
     private static int PopPiecePosition(ref ulong pieces)

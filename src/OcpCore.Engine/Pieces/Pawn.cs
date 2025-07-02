@@ -38,14 +38,11 @@ public class Pawn : Piece
         {
             var target = game.State.EnPassantTarget.Value;
             
-            if (Cell.GetRank(position) == Ranks.WhiteEnPassantTarget - 1 && Cell.GetRank(target) == Ranks.WhiteEnPassantTarget && Math.Abs(position - target) is 7 or 9)
+            if ((Cell.GetRank(position) == Ranks.WhiteEnPassantTarget - 1 && Cell.GetRank(target) == Ranks.WhiteEnPassantTarget && Math.Abs(position - target) is 7 or 9)
+                || (Cell.GetRank(position) == Ranks.BlackEnPassantTarget + 1 && Cell.GetRank(target) == Ranks.BlackEnPassantTarget && Math.Abs(position - target) is 7 or 9))
             {
                 moves |= 1ul << target;
             } 
-            else if (Cell.GetRank(position) == Ranks.BlackEnPassantTarget + 1 && Cell.GetRank(target) == Ranks.BlackEnPassantTarget && Math.Abs(position - target) is 7 or 9)
-            {
-                moves |= 1ul << target;
-            }
         }
 
         return moves;

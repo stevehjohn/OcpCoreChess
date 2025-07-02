@@ -38,7 +38,7 @@ public static class Etherial
             var pass = false;
             
             // ReSharper disable once AccessToDisposedClosure
-            core.GetMove(depth, () => pass = TestComplete(core, depth, parts[1..]))
+            core.GetMove(depth, bestMove => pass = TestComplete(core, depth, parts[1..], bestMove))
                 .ContinueWith(task =>
                 {
                     if (task.Exception != null)
@@ -109,7 +109,7 @@ public static class Etherial
         Console.WriteLine();
     }
 
-    private static bool TestComplete(Core core, int depth, string[] test)
+    private static bool TestComplete(Core core, int depth, string[] test, string bestMove)
     {
         Console.Write("                                                                          ");
 
@@ -138,11 +138,13 @@ public static class Etherial
 
                 pass = false;
             }
-            
-            Console.WriteLine();
 
+            Console.WriteLine();
+            
             part++;
         }
+
+        Console.WriteLine($"    Best move: {bestMove}.");
 
         return pass;
     }

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Numerics;
 using OcpCore.Engine.Bitboards;
 using OcpCore.Engine.General;
@@ -15,6 +16,8 @@ public sealed class Coordinator : IDisposable
 
     private readonly int _parallelDepthThreshold;
 
+    private readonly ConcurrentDictionary<int, (int Score, string Move)> _bestMoves = [];
+
     private int _maxDepth;
     
     private long[] _depthCounts;
@@ -30,12 +33,14 @@ public sealed class Coordinator : IDisposable
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
-    
+
+    public IReadOnlyDictionary<int, (int Score, string Move)> BestMoves => _bestMoves;
+
     public int QueueSize { get; private set; }
 
     public bool IsParallel => _countdownEvent != null;
 
-    public Coordinator(PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
+    public Coordinator(Colour engineColour, PerfTestCollector perfTestCollector = null, int parallelDepthThreshold = 6)
     {
         _parallelDepthThreshold = parallelDepthThreshold;
         
@@ -43,7 +48,7 @@ public sealed class Coordinator : IDisposable
 
         for (var i = 0; i < Threads; i++)
         {
-            _processors[i] = new StateProcessor(_queue, perfTestCollector);
+            _processors[i] = new StateProcessor(engineColour, _queue, perfTestCollector);
         }
     }
 
@@ -117,6 +122,14 @@ public sealed class Coordinator : IDisposable
         for (var depth = 1; depth <= _maxDepth; depth++)
         {
             Interlocked.Add(ref _depthCounts[depth], processor.GetDepthCount(depth));
+            
+            if (processor.BestMoves.TryGetValue(depth, out var bestMove))
+            {
+                if (! _bestMoves.ContainsKey(depth) || bestMove.Score > _bestMoves[depth].Score)
+                {
+                    _bestMoves[depth] = bestMove;
+                }
+            }
         }
 
         if (isComplete)

@@ -100,7 +100,7 @@ public static class Stockfish
             core.MakeMove(move);
         }
         
-        core.GetMove(depth, () =>
+        core.GetMove(depth, _ =>
         {
         });
 

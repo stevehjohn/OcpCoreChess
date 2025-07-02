@@ -18,7 +18,11 @@ public class StateProcessor
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private readonly PerfTestCollector _perfTestCollector;
-    
+
+    private readonly Colour _engineColour;
+
+    private readonly Dictionary<int, (int Score, string Move)> _bestMoves = [];
+
     private int _maxDepth;
 
     private long[] _depthCounts;
@@ -27,12 +31,16 @@ public class StateProcessor
 
     private Action<StateProcessor, bool> _callback;
 
+    public IReadOnlyDictionary<int, (int Score, string Move)> BestMoves => _bestMoves;
+
     public long GetDepthCount(int ply) => _depthCounts[ply];
 
     public long GetOutcomeCount(int ply, MoveOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
 
-    public StateProcessor(PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
+    public StateProcessor(Colour engineColour, PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
     {
+        _engineColour = engineColour;
+        
         _centralQueue = centralQueue;
 
         _perfTestCollector = perfTestCollector;
@@ -157,6 +165,24 @@ public class StateProcessor
         if (depth > 1 && (outcomes & (MoveOutcome.CheckMate | MoveOutcome.Promotion)) == 0)
         {
             Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
+        }
+        
+        var score = _engineColour == Colour.Black ? game.State.BlackScore : game.State.WhiteScore;
+
+        bool addToBestScores;
+
+        if (! _bestMoves.TryGetValue(node.Depth, out var bestMove))
+        {
+            addToBestScores = true;
+        }
+        else
+        {
+            addToBestScores = score > bestMove.Score;
+        }
+
+        if (addToBestScores)
+        {
+            _bestMoves[node.Depth] = (score, $"{from.ToStandardNotation()}{to.ToStandardNotation()}");
         }
     }
 
