@@ -308,10 +308,10 @@ public sealed class LiChessClient : IDisposable
 
                     return 1;
                 
-                // case PlyOutcome.Stalemate:
-                //     OutputLine("&NL;  &Gray;Stalemate...");
-                //
-                //     return 0;
+                case MoveOutcome.Stalemate:
+                    OutputLine("&NL;  &Gray;Stalemate...");
+                
+                    return 0;
             }
 
             OutputLine($"&NL;  &Green;Engine&White;: {engineMove}");
