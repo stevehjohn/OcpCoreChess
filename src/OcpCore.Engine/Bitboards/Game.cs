@@ -114,7 +114,7 @@ public struct Game
 
     public Colour GetColour(int cell)
     {
-        var bit = 1UL << cell - 1;
+        var bit = 1UL << cell;
         
         if ((this[Colour.White] & bit) > 0)
         {

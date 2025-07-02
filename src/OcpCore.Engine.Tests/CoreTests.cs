@@ -230,10 +230,10 @@ public class CoreTests
     }
 
     [Theory]
-    // [InlineData(Colour.White, "")]
-    // [InlineData(Colour.White, "d7d6")]
-    // [InlineData(Colour.White, "d7d6,e7e6")]
-    // [InlineData(Colour.Black, "c2c3")]
+    [InlineData(Colour.White, "")]
+    [InlineData(Colour.White, "d7d6")]
+    [InlineData(Colour.White, "d7d6,e7e6")]
+    [InlineData(Colour.Black, "c2c3")]
     [InlineData(Colour.Black, "c2c3,d2d3")]
     public void EnginePlaysAsCorrectColour(Colour engineColour, string opponentMoves)
     {
@@ -261,12 +261,12 @@ public class CoreTests
             core.OutputBoard();
 
             move = core.GetMove(3).Move;
+
+            Assert.Equal(engineColour == Colour.White ? Colour.White : Colour.Black, core[move[..2]].Colour);
             
             core.MakeMove(move);
         
             core.OutputBoard();
-
-            Assert.Equal(engineColour == Colour.White ? Colour.White : Colour.Black, core[move[..2]].Colour);
         }
     }
 }
