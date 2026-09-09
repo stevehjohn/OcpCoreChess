@@ -12,13 +12,27 @@ Passes:
 
 ## Functionality TODOs
 
-- Minimax and Alpha/Beta pruning.
 - Figure out why adjusting the priority for attackers hits performance so much.
 - Add undo move to core using a stack.
 - Move ordering:
   - Moves that don't go onto an attacked square?
   - Randomness to break ties?
   - Test
+
+## Move search
+
+`Core.GetMove(depth)` uses fixed-depth minimax (negamax) with alpha-beta pruning,
+material-based move ordering, and material evaluation. Depth is measured in plies.
+Checkmate scores favor faster wins and delaying losses; stalemate scores zero.
+All four promotions are searched and returned with UCI suffixes (`q`, `r`, `b`, `n`).
+`Core.MakeMove` applies these promotions. Search does not change the board.
+`SearchNodes` and `SearchCutoffs` report the most recent search's work.
+
+For exhaustive perft enumeration, construct `Core` with `collectPerft: true`.
+In that mode, `GetMove` retains the existing enumeration behavior and the
+`GetDepthCount`, `GetOutcomeCount`, and `PerftData` diagnostics remain available.
+Use the default mode for playing chess. Evaluation currently uses material only;
+quiescence, repetition detection, and the fifty-move rule are not implemented.
 
 ## Current Best Timings
 

@@ -30,6 +30,10 @@ public sealed class Core : IDisposable
 
     private Task _getMoveTask;
 
+    public long SearchNodes { get; private set; }
+
+    public long SearchCutoffs { get; private set; }
+
     public long GetDepthCount(int ply) => _coordinator.GetDepthCount(ply);
 
     public long GetOutcomeCount(int ply, PlyOutcome outcome) => _coordinator.GetOutcomeCount(ply, outcome);
@@ -102,7 +106,25 @@ public sealed class Core : IDisposable
             throw new InvalidMoveException($"{move} is not a valid move for a {kind}.");
         }
     
-        _game.MakeMove(position, target);
+        var copy = new Game(_game);
+
+        var outcome = copy.MakeMove(position, target);
+
+        if ((outcome & PlyOutcome.Promotion) != 0)
+        {
+            var promotion = move.Length == 5 ? move[4] switch
+            {
+                'q' => Kind.Queen,
+                'r' => Kind.Rook,
+                'b' => Kind.Bishop,
+                'n' => Kind.Knight,
+                _ => throw new InvalidMoveException("Invalid promotion piece.")
+            } : Kind.Queen;
+
+            copy.PromotePawn(target, promotion);
+        }
+
+        _game = copy;
     }
 
     public (MoveOutcome Outcome, string Move) GetMove(int depth)
@@ -169,6 +191,38 @@ public sealed class Core : IDisposable
 
     private (MoveOutcome Outcome, string Move) GetMoveInternal(int depth, Action<(MoveOutcome Outcome, string Move)> callback = null)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(depth, 1);
+
+        if (_perfTestCollector == null)
+        {
+            var search = new MinimaxSearch();
+
+            var result = search.FindBestMove(_game, depth);
+
+            SearchNodes = search.NodesVisited;
+
+            SearchCutoffs = search.Cutoffs;
+
+            var searchOutcome = MoveOutcome.Move;
+
+            if (result.Move.Length == 0)
+            {
+                searchOutcome = ! _game.IsKingInCheck(_game.State.Player)
+                    ? MoveOutcome.Stalemate
+                    : _engineColour == _game.State.Player
+                        ? MoveOutcome.EngineInCheckmate
+                        : MoveOutcome.OpponentInCheckmate;
+            }
+
+            callback?.Invoke((searchOutcome, result.Move));
+
+            return (searchOutcome, result.Move);
+        }
+
+        _perfTestCollector.Clear();
+
+        _coordinator?.Dispose();
+
         _coordinator = new Coordinator(_engineColour, _perfTestCollector);
         
         _coordinator.StartProcessing(_game, depth);

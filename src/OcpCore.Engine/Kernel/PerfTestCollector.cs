@@ -8,6 +8,11 @@ public class PerfTestCollector
 
     public IReadOnlyDictionary<string, long> Counts => _counts;
     
+    public void Clear()
+    {
+        _counts.Clear();
+    }
+
     public void AddCount(int ply, int maxDepth, int root, int count)
     {
         var node = $"{(root >> 8).ToStandardNotation()}{(root & 0xFF).ToStandardNotation()}";
