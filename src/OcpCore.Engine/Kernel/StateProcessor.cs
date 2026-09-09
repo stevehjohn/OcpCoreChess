@@ -9,19 +9,11 @@ namespace OcpCore.Engine.Kernel;
 
 public class StateProcessor
 {
-    private const int CentralPoolMax = 1_000;
-    
-    private readonly PriorityQueue<Node, int> _centralQueue;
-    
-    private readonly PriorityQueue<Node, int> _localQueue = new();
-    
+    private readonly Queue<Node> _centralQueue;
+
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
     private readonly PerfTestCollector _perfTestCollector;
-
-    private readonly Colour _engineColour;
-
-    private readonly Dictionary<int, (int Score, PlyOutcome Outcome, string Move)> _bestMoves = [];
 
     private int _maxDepth;
 
@@ -29,81 +21,105 @@ public class StateProcessor
 
     private long[][] _outcomes;
 
-    private Action<StateProcessor, bool> _callback;
+    private CancellationToken _cancellationToken;
 
-    public IReadOnlyDictionary<int, (int Score, PlyOutcome Outcome, string Move)> BestMoves => _bestMoves;
+    private List<Node> _seeds;
 
-    public long GetDepthCount(int ply) => _depthCounts[ply];
-
-    public long GetOutcomeCount(int ply, PlyOutcome outcome) => _outcomes[ply][BitOperations.Log2((byte) outcome) + 1];
-
-    public StateProcessor(Colour engineColour, PriorityQueue<Node, int> centralQueue, PerfTestCollector perfTestCollector = null)
+    public long GetDepthCount(int ply)
     {
-        _engineColour = engineColour;
-        
+        var counts = Volatile.Read(ref _depthCounts);
+
+        return counts == null ? 0 : Volatile.Read(ref counts[ply]);
+    }
+
+    public long GetOutcomeCount(int ply, PlyOutcome outcome)
+    {
+        var outcomes = Volatile.Read(ref _outcomes);
+
+        return outcomes == null ? 0 : Volatile.Read(ref outcomes[ply][BitOperations.Log2((byte) outcome) + 1]);
+    }
+
+    public StateProcessor(Colour engineColour, Queue<Node> centralQueue, PerfTestCollector perfTestCollector = null)
+    {
         _centralQueue = centralQueue;
 
         _perfTestCollector = perfTestCollector;
     }
 
-    public void StartProcessing(int maxDepth, Action<StateProcessor, bool> callback, CancellationToken cancellationToken)
+    private void Initialise(int maxDepth, CancellationToken cancellationToken)
     {
         _maxDepth = maxDepth;
 
-        _callback = callback;
-        
-        _depthCounts = new long[maxDepth + 1];
+        _cancellationToken = cancellationToken;
 
-        _outcomes = new long[maxDepth + 1][];
+        Volatile.Write(ref _depthCounts, new long[maxDepth + 1]);
 
-        for (var i = 1; i <= _maxDepth; i++)
+        var outcomes = new long[maxDepth + 1][];
+
+        for (var ply = 0; ply <= maxDepth; ply++)
         {
-            _depthCounts[i] = 0;
-
-            _outcomes[i] = new long[Constants.MoveOutcomes + 1];
+            outcomes[ply] = new long[Constants.MoveOutcomes + 1];
         }
-        
-        // ReSharper disable once InconsistentlySynchronizedField
-        while (_centralQueue.Count > 0)
+
+        Volatile.Write(ref _outcomes, outcomes);
+    }
+
+    internal List<Node> PrepareWork(Game game, int maxDepth, CancellationToken cancellationToken)
+    {
+        Initialise(maxDepth, cancellationToken);
+
+        _seeds = [];
+
+        ProcessWorkItem(new Node(game, maxDepth, -1));
+
+        var seeds = _seeds;
+
+        _seeds = null;
+
+        return seeds;
+    }
+
+    public void StartProcessing(int maxDepth, Action<StateProcessor, bool> callback, CancellationToken cancellationToken)
+    {
+        Initialise(maxDepth, cancellationToken);
+
+        while (true)
         {
+            Node node;
+
             lock (_centralQueue)
             {
-                for (var i = 0; i < Math.Max(1, _centralQueue.Count / Coordinator.Threads); i++)
+                if (_centralQueue.Count == 0)
                 {
-                    if (_centralQueue.TryDequeue(out var workItem, out var priority))
-                    {
-                        _localQueue.Enqueue(workItem, priority);
-                        
-                        continue;
-                    }
-                    
                     break;
                 }
-            }
 
-            while (_localQueue.Count > 0)
-            {
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
-                var node = _localQueue.Dequeue();
-                
-                ProcessWorkItem(node);
+                node = _centralQueue.Dequeue();
             }
+
+            ProcessWorkItem(node);
         }
 
-        callback(this, true);
+        callback?.Invoke(this, true);
     }
 
     private void ProcessWorkItem(Node node)
     {
+        if (_cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         var game = node.Game;
         
         var pieces = game[game.State.Player];
 
-        var from = pieces.PopRandomBit();
+        var from = pieces.PopBit();
 
         while (from > -1)
         {
@@ -111,20 +127,20 @@ public class StateProcessor
 
             var moves = _pieceCache[kind].GetMoves(game, from);
 
-            var to = moves.PopRandomBit();
+            var to = moves.PopBit();
 
             while (to > -1)
             {
-                ProcessMove(node, kind, from, to);
+                ProcessMove(node, from, to);
 
-                to = moves.PopRandomBit();
+                to = moves.PopBit();
             }
 
-            from = pieces.PopRandomBit();
+            from = pieces.PopBit();
         }
     }
 
-    private void ProcessMove(Node node, Kind kind, int from, int to)
+    private void ProcessMove(Node node, int from, int to)
     {
         var (game, depth, root) = (node.Game, node.Depth, node.Root);
 
@@ -143,7 +159,7 @@ public class StateProcessor
 
         var ply = _maxDepth - depth + 1;
 
-        if (HandlePromotion(ref outcomes, copy, ply, root, from, to, depth, opponent))
+        if (HandlePromotion(outcomes, copy, ply, root, from, to, depth, opponent))
         {
             return;
         }
@@ -164,96 +180,51 @@ public class StateProcessor
 
         if (depth > 1 && (outcomes & (PlyOutcome.CheckMate | PlyOutcome.Promotion)) == 0)
         {
-            Enqueue(copy, depth - 1, root, CalculatePriority(game, outcomes, to, kind, opponent));
-        }
-        
-        var score = _engineColour == Colour.Black ? game.State.BlackScore : game.State.WhiteScore;
-
-        bool addToBestScores;
-
-        if (! _bestMoves.TryGetValue(node.Depth, out var bestMove))
-        {
-            addToBestScores = true;
-        }
-        else
-        {
-            addToBestScores = score > bestMove.Score;
-        }
-
-        if (addToBestScores)
-        {
-            _bestMoves[node.Depth] = (score, outcomes, $"{from.ToStandardNotation()}{to.ToStandardNotation()}");
+            Continue(copy, depth - 1, root);
         }
     }
 
-    private bool HandlePromotion(ref PlyOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
+    private bool HandlePromotion(PlyOutcome outcomes, Game game, int ply, int root, int from, int to, int depth, Colour opponent)
     {
         if ((outcomes & PlyOutcome.Promotion) == 0)
         {
             return false;
         }
 
-        var checks = 0;
-
-        var checkmates = 0;
+        if (ply == 1)
+        {
+            root = from << 8 | to;
+        }
 
         for (var kind = Kind.Rook; kind < Kind.King; kind++)
         {
             var copy = new Game(game);
-            
+
             copy.PromotePawn(to, kind);
+
+            var promotionOutcomes = outcomes;
 
             if (copy.IsKingInCheck(opponent))
             {
-                outcomes |= PlyOutcome.Check;
-
-                checks++;
+                promotionOutcomes |= PlyOutcome.Check;
 
                 if (! CanMove(copy, opponent))
                 {
-                    outcomes |= PlyOutcome.CheckMate;
-
-                    checkmates++;
+                    promotionOutcomes |= PlyOutcome.CheckMate;
                 }
             }
 
-            if (depth > 1)
+            IncrementCounts(ply, 1, ref root, from, to);
+
+            IncrementOutcomes(ply, promotionOutcomes);
+
+            if (depth > 1 && (promotionOutcomes & PlyOutcome.CheckMate) == 0)
             {
-                Enqueue(copy, depth - 1, root, CalculatePriority(copy, outcomes, to, kind, opponent));
+                Continue(copy, depth - 1, root);
             }
         }
-        
-        IncrementCounts(ply, 4, ref root, from, to);
-
-        IncrementPromotionOutcomes(ply, outcomes, checks, checkmates);
 
         return true;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int CalculatePriority(Game game, PlyOutcome outcome, int target, Kind player, Colour opponent)
-    {
-        var priority = ((int) PlyOutcome.CheckMate - (1 << BitOperations.Log2((uint) outcome))) * 100;
-
-        if ((outcome & PlyOutcome.Capture) > 0)
-        {
-            if ((outcome & PlyOutcome.EnPassant) > 0)
-            {
-                priority += (10 - Scores.Pawn) * 10;
-            }
-            else
-            {
-                var capturedPiece = game.GetKind(target);
-        
-                priority += (10 - _pieceCache[capturedPiece].Value) * 10;
-            }
-        
-            priority += _pieceCache[player].Value;
-        }
-
-        priority += game.CellHasAttackers(target, opponent) ? 10_000 : 0;
-        
-        return priority;
     }
 
     private bool CanMove(Game game, Colour colour)
@@ -297,16 +268,6 @@ public class StateProcessor
     {
         _depthCounts[ply] += count;
 
-        if (_depthCounts[ply] > 1_000)
-        {
-            _callback(this, false);
-
-            for (var i = 0; i <= _maxDepth; i++)
-            {
-                _depthCounts[i] = 0;
-            }
-        }
-        
         if (_perfTestCollector != null)
         {
             if (ply == 1)
@@ -331,37 +292,17 @@ public class StateProcessor
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IncrementPromotionOutcomes(int ply, PlyOutcome outcomes, int checks, int checkmates)
+    private void Continue(Game game, int depth, int root)
     {
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Move) + 1] += 4;
-                
-        if ((outcomes & PlyOutcome.Capture) > 0)
+        var node = new Node(game, depth, root);
+
+        if (_seeds != null)
         {
-            _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Capture) + 1] += 4;
-        }
-
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Promotion) + 1] += 4;
-
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.Check) + 1] += checks;
-
-        _outcomes[ply][BitOperations.TrailingZeroCount((int) PlyOutcome.CheckMate) + 1] += checkmates;
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Enqueue(Game game, int depth, int root, int priority)
-    {
-        // ReSharper disable once InconsistentlySynchronizedField - Doesn't need to be exactly 1,000.
-        if (_centralQueue.Count < CentralPoolMax)
-        {
-            lock (_centralQueue)
-            {
-                _centralQueue.Enqueue(new Node(game, depth, root), priority);
-            }
+            _seeds.Add(node);
         }
         else
         {
-            _localQueue.Enqueue(new Node(game, depth, root), priority);
+            ProcessWorkItem(node);
         }
     }
 }

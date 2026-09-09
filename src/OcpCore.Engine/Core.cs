@@ -227,20 +227,22 @@ public sealed class Core : IDisposable
         
         _coordinator.StartProcessing(_game, depth);
 
-        var bestMove = _coordinator.BestMoves.Count == 0 ? (Score: 0, Outcome: PlyOutcome.Null, Move: string.Empty) : _coordinator.BestMoves.Last().Value;
+        var outcome = MoveOutcome.Move;
 
-        var outcome = bestMove.Outcome switch
+        if (_coordinator.GetDepthCount(1) == 0)
         {
-            PlyOutcome.CheckMate => _engineColour == _game.State.Player ? MoveOutcome.EngineInCheckmate : MoveOutcome.OpponentInCheckmate,
-            PlyOutcome.Null => MoveOutcome.Stalemate,
-            _ => MoveOutcome.Move
-        };
-        
-        callback?.Invoke((outcome, bestMove.Move));
+            outcome = ! _game.IsKingInCheck(_game.State.Player)
+                ? MoveOutcome.Stalemate
+                : _engineColour == _game.State.Player
+                    ? MoveOutcome.EngineInCheckmate
+                    : MoveOutcome.OpponentInCheckmate;
+        }
 
-        return (outcome, bestMove.Move);
+        callback?.Invoke((outcome, string.Empty));
+
+        return (outcome, string.Empty);
     }
-    
+
     private static int PopPiecePosition(ref ulong pieces)
     {
         var emptyMoves = BitOperations.TrailingZeroCount(pieces);

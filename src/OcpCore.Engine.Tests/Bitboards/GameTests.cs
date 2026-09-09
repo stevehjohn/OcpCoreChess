@@ -324,4 +324,26 @@ public class GameTests
         
         Assert.Equal("rnbqkbnr|pppppppp|        |        |        |        |PPPPPPPP|RNBQKBNR", _game.ToString());
     }
+
+    [Fact]
+    public void CopyDoesNotShareMutableState()
+    {
+        _game.ParseFen(Constants.InitialBoardFen);
+
+        var copy = new Game(_game);
+
+        copy.MakeMove(12, 28);
+
+        Assert.Equal(Colour.White, _game.State.Player);
+
+        Assert.Null(_game.State.EnPassantTarget);
+
+        Assert.Equal(Colour.Black, copy.State.Player);
+
+        Assert.Equal(20, copy.State.EnPassantTarget);
+
+        Assert.True(_game.IsKind(Kind.Pawn, 12));
+
+        Assert.True(copy.IsKind(Kind.Pawn, 28));
+    }
 }

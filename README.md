@@ -29,10 +29,34 @@ All four promotions are searched and returned with UCI suffixes (`q`, `r`, `b`, 
 `SearchNodes` and `SearchCutoffs` report the most recent search's work.
 
 For exhaustive perft enumeration, construct `Core` with `collectPerft: true`.
-In that mode, `GetMove` retains the existing enumeration behavior and the
-`GetDepthCount`, `GetOutcomeCount`, and `PerftData` diagnostics remain available.
+In that mode, `GetMove` performs exhaustive enumeration and returns an empty move
+string. The `GetDepthCount`, `GetOutcomeCount`, and `PerftData` diagnostics remain
+available; node and outcome counts can also be read while enumeration runs.
 Use the default mode for playing chess. Evaluation currently uses material only;
 quiescence, repetition detection, and the fifty-move rule are not implemented.
+
+## Perft performance
+
+Perft uses deterministic depth-first traversal without move ordering or best-move
+tracking. Board state is a value type, so copying a board does not allocate a
+`State` object. `Game.State` returns a snapshot; changes to that snapshot do not
+change the board.
+
+At the parallel threshold, legal root moves become independent work items.
+Workers traverse their subtrees locally and merge integer-indexed divide counts
+once at completion. Move notation is formatted only when reading `PerftData`.
+Promotion variants sharing the same source and target are combined in that report.
+
+Run `./perf-test.sh bench` for three depth-5 measurements in each of serial and
+parallel modes, with a depth-3 warm-up. Each run verifies 4,865,609 leaf nodes and
+retains capture, en passant, castling, promotion, check, and checkmate counting.
+The benchmark reports traversal time and process-wide managed allocation during
+traversal; coordinator construction and result formatting are outside the measurement.
+The first measured run can still include tiered compilation overhead.
+
+The regression suite also checks all 128 reference corpus entries at depths up
+to three (or the first available depth), serial/parallel equivalence, repeated
+runs, and the initial position through depth six.
 
 ## Current Best Timings
 
