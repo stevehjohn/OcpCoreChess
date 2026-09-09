@@ -71,7 +71,10 @@ public class StateTests
 
         Assert.Equal(fullmoves, state.Fullmoves);
 
-        var property = state.GetType().GetMethod(methodToInvoke)!;
+        // Reflection mutates a boxed value type; retain that box until invocation completes.
+        object boxedState = state;
+
+        var property = typeof(State).GetMethod(methodToInvoke)!;
 
         var whiteScoreDelta = 0;
 
@@ -82,7 +85,7 @@ public class StateTests
             case nameof(State.SetEnPassantTarget):
                 enPassantTarget = rng.Next(Constants.Cells);
 
-                property.Invoke(state, [enPassantTarget]);
+                property.Invoke(boxedState, [enPassantTarget]);
 
                 break;
 
@@ -97,43 +100,45 @@ public class StateTests
                     _ => Castle.All
                 };
 
-                property.Invoke(state, [castleStatus]);
+                property.Invoke(boxedState, [castleStatus]);
 
                 break;
 
             case nameof(State.UpdateWhiteScore):
                 whiteScoreDelta = rng.Next(Scores.Initial);
 
-                property.Invoke(state, [whiteScoreDelta]);
+                property.Invoke(boxedState, [whiteScoreDelta]);
 
                 break;
 
             case nameof(State.UpdateBlackScore):
                 blackScoreDelta = rng.Next(Scores.Initial);
 
-                property.Invoke(state, [blackScoreDelta]);
+                property.Invoke(boxedState, [blackScoreDelta]);
 
                 break;
 
             case nameof(State.SetWhiteKingCell):
                 whiteKingCell = rng.Next(Constants.Cells);
 
-                property.Invoke(state, [whiteKingCell]);
+                property.Invoke(boxedState, [whiteKingCell]);
 
                 break;
 
             case nameof(State.SetBlackKingCell):
                 blackKingCell = rng.Next(Constants.Cells);
 
-                property.Invoke(state, [blackKingCell]);
+                property.Invoke(boxedState, [blackKingCell]);
 
                 break;
 
             default:
-                property.Invoke(state, null);
+                property.Invoke(boxedState, null);
 
                 break;
         }
+
+        state = (State) boxedState;
 
         switch (methodToInvoke)
         {

@@ -2,7 +2,7 @@ using OcpCore.Engine.General.StaticData;
 
 namespace OcpCore.Engine.General;
 
-public class State
+public struct State
 {
     private ulong _state;
 

@@ -103,7 +103,7 @@ public static class Basic
 
         for (var maxDepth = 1; maxDepth <= depth; maxDepth++)
         {
-            using var core = new Core(Colour.White);
+            using var core = new Core(Colour.White, true);
 
             Console.WriteLine($"  Created engine {Core.Name} by {Core.Author}");
 
@@ -285,7 +285,7 @@ public static class Basic
 
         Console.WriteLine();
         
-        Console.WriteLine($"  Best move: {bestMove}.");
+
 
         Console.WriteLine();
 

@@ -23,7 +23,7 @@ public static class Etherial
 
             var fen = parts[0];
             
-            using var core = new Core(Colour.White, fen);
+            using var core = new Core(Colour.White, fen, true);
 
             var depth = parts[^1][1] - '0';
         

@@ -12,6 +12,13 @@ public static class EntryPoint
         
         if (arguments.Length > 0)
         {
+            if (arguments[0] == "bench")
+            {
+                Benchmark.Test();
+
+                return;
+            }
+
             if (arguments[0].StartsWith("st", StringComparison.InvariantCultureIgnoreCase))
             {
                 Etherial.Test();

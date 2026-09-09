@@ -4,21 +4,58 @@ namespace OcpCore.Engine.Kernel;
 
 public class PerfTestCollector
 {
-    private readonly Dictionary<string, long> _counts = [];
+    // Root moves use from << 8 | to. Format notation only when reporting.
+    private readonly long[] _counts = new long[64 << 8];
 
-    public IReadOnlyDictionary<string, long> Counts => _counts;
-    
+    private readonly bool[] _roots = new bool[64 << 8];
+
+    public IReadOnlyDictionary<string, long> Counts
+    {
+        get
+        {
+            var counts = new Dictionary<string, long>();
+
+            for (var root = 0; root < _counts.Length; root++)
+            {
+                if (_roots[root])
+                {
+                    var move = $"{(root >> 8).ToStandardNotation()}{(root & 0xFF).ToStandardNotation()}";
+
+                    counts.Add(move, _counts[root]);
+                }
+            }
+
+            return counts;
+        }
+    }
+
+    public void Clear()
+    {
+        Array.Clear(_counts);
+
+        Array.Clear(_roots);
+    }
+
     public void AddCount(int ply, int maxDepth, int root, int count)
     {
-        var node = $"{(root >> 8).ToStandardNotation()}{(root & 0xFF).ToStandardNotation()}";
-        
         if (ply == 1)
         {
-            _counts.Add(node, maxDepth == 1 ? 1 : 0);
+            _roots[root] = true;
         }
-        else if (ply == maxDepth)
+
+        if (ply == maxDepth)
         {
-            _counts[node] += count;
+            _counts[root] += count;
+        }
+    }
+
+    internal void Merge(PerfTestCollector collector)
+    {
+        for (var root = 0; root < _counts.Length; root++)
+        {
+            _roots[root] |= collector._roots[root];
+
+            _counts[root] += collector._counts[root];
         }
     }
 }

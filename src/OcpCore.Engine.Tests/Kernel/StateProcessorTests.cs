@@ -15,9 +15,9 @@ public class StateProcessorTests
         
         game.ParseFen(Constants.InitialBoardFen);
         
-        var queue = new PriorityQueue<Node, int>();
+        var queue = new Queue<Node>();
 
-        queue.Enqueue(new Node(game, 1, -1), 0);
+        queue.Enqueue(new Node(game, 1, -1));
         
         var processor = new StateProcessor(Colour.White, queue);
         
@@ -37,13 +37,13 @@ public class StateProcessorTests
     [Fact]
     public void DoesNotDequeueAllItems()
     {
-        var queue = new PriorityQueue<Node, int>();
+        var queue = new Queue<Node>();
 
         var game = new Game();
         
         for (var i = 0; i < Coordinator.Threads * 10; i++)
         {
-            queue.Enqueue(new Node(game, 1, -1), 0);
+            queue.Enqueue(new Node(game, 1, -1));
         }
 
         var processor = new StateProcessor(Colour.White, queue);
@@ -62,7 +62,7 @@ public class StateProcessorTests
     [Fact]
     public void CanHandleAnEmptyQueueGracefully()
     {
-        var queue = new PriorityQueue<Node, int>();
+        var queue = new Queue<Node>();
 
         var processor = new StateProcessor(Colour.White, queue);
         
@@ -79,7 +79,7 @@ public class StateProcessorTests
     [Fact]
     public void DoesNotFreezeIfQueueIsLocked()
     {
-        var queue = new PriorityQueue<Node, int>();
+        var queue = new Queue<Node>();
 
         var processor = new StateProcessor(Colour.White, queue);
         
@@ -111,9 +111,9 @@ public class StateProcessorTests
         
         game.ParseFen(fen);
         
-        var queue = new PriorityQueue<Node, int>();
+        var queue = new Queue<Node>();
 
-        queue.Enqueue(new Node(game, 2, -1), 0);
+        queue.Enqueue(new Node(game, 2, -1));
         
         var processor = new StateProcessor(Colour.White, queue);
         

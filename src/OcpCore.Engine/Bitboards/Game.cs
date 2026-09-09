@@ -16,7 +16,9 @@ public struct Game
     
     private readonly PieceCache _pieceCache = PieceCache.Instance;
 
-    public State State { get; private set; } 
+    private State _state;
+
+    public State State => _state;
 
     public ulong this[Colour colour]
     {
@@ -87,14 +89,14 @@ public struct Game
 
     public Game()
     {
-        State = new State();
+        _state = new State();
     }
 
     public Game(Game game)
     {
         _planes = game._planes;
 
-        State = new State(game.State);
+        _state = game._state;
     }
 
     public bool IsKind(Kind kind, int cell)
@@ -172,7 +174,7 @@ public struct Game
         
         UpdateCastleState(kind, player, from);
         
-        State.InvertPlayer();
+        _state.InvertPlayer();
 
         return outcome;
     }
@@ -329,7 +331,7 @@ public struct Game
 
     public void ParseFen(string fen)
     {
-        State = FenInterface.ParseFen(fen, ref _planes);
+        _state = FenInterface.ParseFen(fen, ref _planes);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -341,11 +343,11 @@ public struct Game
 
         if (State.Player == Colour.White)
         {
-            State.UpdateBlackScore(-_pieceCache[capturedKind].Value);
+            _state.UpdateBlackScore(-_pieceCache[capturedKind].Value);
         }
         else
         {
-            State.UpdateWhiteScore(-_pieceCache[capturedKind].Value);
+            _state.UpdateWhiteScore(-_pieceCache[capturedKind].Value);
         }
 
         if ((this[Kind.Rook] & (1ul << to)) > 0)
@@ -366,11 +368,11 @@ public struct Game
 
             if (State.Player == Colour.White && rank == 7)
             {
-                State.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
+                _state.RemoveCastleRights(file == 0 ? Castle.BlackQueenSide : Castle.BlackKingSide);
             }
             else if (rank == 0)
             {
-                State.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
+                _state.RemoveCastleRights(file == 0 ? Castle.WhiteQueenSide : Castle.WhiteKingSide);
             }
         }
     }
@@ -394,11 +396,11 @@ public struct Game
             
             if (State.Player == Colour.White)
             {
-                State.UpdateBlackScore(-Scores.Pawn);
+                _state.UpdateBlackScore(-Scores.Pawn);
             }
             else
             {
-                State.UpdateWhiteScore(-Scores.Pawn);
+                _state.UpdateWhiteScore(-Scores.Pawn);
             }
         }
 
@@ -413,11 +415,11 @@ public struct Game
     {
         if (State.Player == Colour.White)
         {
-            State.SetWhiteKingCell(to);
+            _state.SetWhiteKingCell(to);
         }
         else
         {
-            State.SetBlackKingCell(to);
+            _state.SetBlackKingCell(to);
         }
 
         if (Math.Abs(from - to) == 2)
@@ -450,13 +452,13 @@ public struct Game
 
             if (Math.Abs(delta) == Constants.Ranks * 2)
             {
-                State.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
+                _state.SetEnPassantTarget(delta > 0 ? position - Constants.Files : position + Constants.Files);
                 
                 return;
             }
         }
 
-        State.SetEnPassantTarget(null);
+        _state.SetEnPassantTarget(null);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -469,7 +471,7 @@ public struct Game
 
         if (kind == Kind.King)
         {
-            State.RemoveCastleRights(colour == Colour.White ? Castle.White : Castle.Black);
+            _state.RemoveCastleRights(colour == Colour.White ? Castle.White : Castle.Black);
             
             return;
         }
@@ -479,11 +481,11 @@ public struct Game
         switch (file)
         {
             case 0:
-                State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
+                _state.RemoveCastleRights(colour == Colour.White ? Castle.WhiteQueenSide : Castle.BlackQueenSide);
             
                 return;
             case 7:
-                State.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
+                _state.RemoveCastleRights(colour == Colour.White ? Castle.WhiteKingSide : Castle.BlackKingSide);
                 break;
         }
     }

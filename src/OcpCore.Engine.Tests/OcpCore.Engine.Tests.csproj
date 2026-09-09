@@ -23,4 +23,8 @@
       <ProjectReference Include="..\OcpCore.Engine\OcpCore.Engine.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="../OcpCore.Engine.PerfTest/Data/standard.epd" Link="Data/standard.epd" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
 </Project>

@@ -15,7 +15,7 @@ public class CoreTests
     [InlineData(5, 4_865_609, 82_719, 258, 0, 0, 27_351, 347)]
     public void ReturnsExpectedCountAtPly(int ply, int count, int capture, int enPassant, int castle, int promotion, int check, int mate)
     {
-        using var core = new Core(Colour.White);
+        using var core = new Core(Colour.White, true);
     
         core.GetMove(ply);
         
@@ -152,7 +152,7 @@ public class CoreTests
     [InlineData("4k3/8/8/8/1b2r3/8/3QP3/4K3 w - - 0 1", 6, 119, 2074)]
     public void EdgeCaseTests(string fen, params int[] depths)
     {
-        using var core = new Core(Colour.White, fen);
+        using var core = new Core(Colour.White, fen, true);
 
         for (var d = 0; d < depths.Length; d++)
         {
@@ -165,7 +165,7 @@ public class CoreTests
     [Fact]
     public void CanHandleStaleMates()
     {
-        var core = new Core(Colour.White, "7k/5Q2/6KP/8/8/8/8/8 b - - 0 1");
+        var core = new Core(Colour.White, "7k/5Q2/6KP/8/8/8/8/8 b - - 0 1", true);
 
         core.GetMove(2);
         
